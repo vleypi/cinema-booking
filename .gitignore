@@ -1,0 +1,35 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Node
+node_modules/
+.pnpm-store/
+
+# Backend (NestJS)
+backend/dist/
+backend/coverage/
+
+# Frontend (Next.js)
+frontend/*/.next/
+frontend/*/out/
+frontend/*/next-env.d.ts
+frontend/*/*.tsbuildinfo
+
+# Docker
+docker/postgres-data/
