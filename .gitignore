@@ -33,3 +33,5 @@ frontend/*/*.tsbuildinfo
 
 # Docker
 docker/postgres-data/
+
+/layouts
