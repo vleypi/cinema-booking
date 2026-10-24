@@ -1,21 +1,39 @@
-import { Module } from '@nestjs/common';
-import { createObserveModule } from '@nestjs/observe';
-import { AppController } from './app.controller.js';
-import { AppService } from './app.service.js';
-
-export const { ObserveModule, ObserveInstrument } = createObserveModule();
+import { Module, ValidationPipe } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AllExceptionsFilter } from '@/common/filters/all-exceptions.filter.js';
+import { createValidationException } from '@/common/validation/validation-errors.js';
+import { type EnvironmentVariables, validateEnvironment } from '@/config/environment.js';
+import { createDatabaseOptions } from '@/database/database.options.js';
+import { HealthModule } from '@/modules/health/health.module.js';
 
 @Module({
   imports: [
-    // Distributed tracing, auto-correlated logs, request/job metrics, error
-    // telemetry, alarms, and more — out of the box. Sign up at https://observe.nestjs.com
-    ObserveModule.forRoot({
-      appKey: 'YOUR_APP_KEY',
-      appSecret: 'YOUR_APP_SECRET',
-      serviceId: 'backend',
+    ConfigModule.forRoot({ isGlobal: true, validate: validateEnvironment }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService<EnvironmentVariables, true>) => ({
+        ...createDatabaseOptions({
+          NODE_ENV: config.get('NODE_ENV', { infer: true }),
+          DATABASE_URL: config.get('DATABASE_URL', { infer: true }),
+        }),
+        autoLoadEntities: true,
+      }),
     }),
+    HealthModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    { provide: APP_FILTER, useClass: AllExceptionsFilter },
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+        exceptionFactory: createValidationException,
+      }),
+    },
+  ],
 })
 export class AppModule {}
