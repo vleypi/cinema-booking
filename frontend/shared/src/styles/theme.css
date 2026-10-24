@@ -1,0 +1,23 @@
+@source "../";
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand: #4262ff;
+  --color-brand-soft: #f1f3ff;
+  --color-ink: #050038;
+  --color-ray: #ffd233;
+
+  --spacing-sidebar: 17.5rem;
+  --spacing-sidebar-collapsed: 4.75rem;
+  --spacing-header: 3.75rem;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
