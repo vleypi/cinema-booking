@@ -1,5 +1,9 @@
 name: cinema-booking
 
+x-app-build: &app-build
+  context: ..
+  dockerfile: docker/Dockerfile
+
 services:
   postgres:
     image: postgres:17-alpine
@@ -20,8 +24,10 @@ services:
 
   backend:
     build:
-      context: ../backend
-      dockerfile: ../docker/backend.Dockerfile
+      <<: *app-build
+      target: backend
+      args:
+        APP: backend
     restart: unless-stopped
     environment:
       PORT: 3000
@@ -32,27 +38,27 @@ services:
       postgres:
         condition: service_healthy
 
-  client:
+  cinema:
     build:
-      context: ../frontend/client
-      dockerfile: ../../docker/next.Dockerfile
+      <<: *app-build
+      target: next
       args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+        APP: cinema
     restart: unless-stopped
     ports:
-      - "${CLIENT_PORT:-3001}:3000"
+      - "${CINEMA_PORT:-3001}:3000"
     depends_on:
       - backend
 
-  admin:
+  crm:
     build:
-      context: ../frontend/admin
-      dockerfile: ../../docker/next.Dockerfile
+      <<: *app-build
+      target: next
       args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+        APP: crm
     restart: unless-stopped
     ports:
-      - "${ADMIN_PORT:-3002}:3000"
+      - "${CRM_PORT:-3002}:3000"
     depends_on:
       - backend
 
