@@ -30,5 +30,22 @@ export const ROLE_PERMISSIONS: Record<StaffRole, Permission[]> = {
   [StaffRole.Controller]: CONTROLLER,
 };
 
+const ROLE_MANAGE_PERMISSION: Record<StaffRole, Permission | null> = {
+  [StaffRole.SuperAdmin]: null,
+  [StaffRole.Admin]: Permission.ManageAdmins,
+  [StaffRole.Manager]: Permission.ManageStaff,
+  [StaffRole.Cashier]: Permission.ManageStaff,
+  [StaffRole.Controller]: Permission.ManageStaff,
+};
+
 export const canAccessCinema = ({ role, cinemas }: StaffUser, cinemaId: string): boolean =>
   role === StaffRole.SuperAdmin || cinemas.some((cinema) => cinema.id === cinemaId);
+
+export const canAccessStaff = (actor: StaffUser, target: StaffUser): boolean =>
+  actor.role === StaffRole.SuperAdmin || target.cinemas.some((cinema) => canAccessCinema(actor, cinema.id));
+
+export const canManageRole = ({ role }: StaffUser, targetRole: StaffRole): boolean => {
+  const permission = ROLE_MANAGE_PERMISSION[targetRole];
+
+  return permission !== null && ROLE_PERMISSIONS[role].includes(permission);
+};

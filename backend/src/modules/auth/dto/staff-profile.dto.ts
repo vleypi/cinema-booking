@@ -1,39 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { StaffRole } from '@/modules/staff/staff-role.enum.js';
+import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { Permission } from '@/modules/auth/permissions.js';
+import { StaffDto } from '@/modules/staff/dto/staff.dto.js';
 
-export class StaffCinemaDto {
-  @ApiProperty({ example: '1' })
-  id: string;
-
-  @ApiProperty({ example: 'Луч' })
-  name: string;
-
-  @ApiProperty({ example: 'luch' })
-  slug: string;
-}
-
-export class StaffProfileDto {
-  @ApiProperty({ example: '1' })
-  id: string;
-
-  @ApiProperty({ example: 'admin' })
-  login: string;
-
-  @ApiProperty()
-  fullName: string;
-
-  @ApiProperty({ enum: StaffRole, enumName: 'StaffRole' })
-  role: StaffRole;
-
-  @ApiProperty()
-  mustChangePassword: boolean;
-
+export class StaffProfileDto extends OmitType(StaffDto, ['isBlocked']) {
   @ApiProperty({ enum: Permission, enumName: 'Permission', isArray: true })
   permissions: Permission[];
-
-  @ApiProperty({ type: [StaffCinemaDto] })
-  cinemas: StaffCinemaDto[];
 }
 
 export class SessionDto {

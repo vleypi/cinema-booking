@@ -8,7 +8,9 @@ import { createValidationException } from '@/common/validation/validation-errors
 import { EnvironmentVariables, validateEnvironment } from '@/config/environment.js';
 import { createDatabaseOptions } from '@/database/database.options.js';
 import { AuthModule } from '@/modules/auth/auth.module.js';
+import { CinemasModule } from '@/modules/cinemas/cinemas.module.js';
 import { HealthModule } from '@/modules/health/health.module.js';
+import { StaffModule } from '@/modules/staff/staff.module.js';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { HealthModule } from '@/modules/health/health.module.js';
     }),
     RedisModule,
     AuthModule,
+    CinemasModule,
+    StaffModule,
     HealthModule,
   ],
   providers: [
