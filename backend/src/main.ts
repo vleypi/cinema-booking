@@ -1,10 +1,11 @@
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { AppModule, ObserveInstrument } from './app.module.js';
+import { AppModule } from './app.module.js';
+import { configureApp } from './app.setup.js';
+import { setupSwagger } from '@/common/swagger/setup-swagger.js';
+import type { EnvironmentVariables } from '@/config/environment.js';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    instrument: ObserveInstrument,
-  });
-  await app.listen(process.env.PORT ?? 3000);
-}
-await bootstrap();
+const app = configureApp(await NestFactory.create(AppModule));
+setupSwagger(app);
+
+await app.listen(app.get<ConfigService<EnvironmentVariables, true>>(ConfigService).get('PORT', { infer: true }));
