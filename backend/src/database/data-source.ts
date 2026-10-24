@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { validateEnvironment } from '@/config/environment.js';
-import { createDatabaseOptions } from './database.options.js';
+import { DatabaseEnvironment, validateEnvironment } from '@/config/environment.js';
+import { createDatabaseOptions } from '@/database/database.options.js';
 
-export default new DataSource(createDatabaseOptions(validateEnvironment(process.env)));
+export default new DataSource(createDatabaseOptions(validateEnvironment(process.env, DatabaseEnvironment)));

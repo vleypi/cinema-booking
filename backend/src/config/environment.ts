@@ -1,5 +1,5 @@
-import { plainToInstance } from 'class-transformer';
-import { IsEnum, IsInt, IsUrl, Max, Min, validateSync } from 'class-validator';
+import { type ClassConstructor, plainToInstance, Transform } from 'class-transformer';
+import { IsBoolean, IsEnum, IsInt, IsString, IsUrl, Max, Min, MinLength, validateSync } from 'class-validator';
 
 export enum NodeEnvironment {
   Development = 'development',
@@ -7,21 +7,38 @@ export enum NodeEnvironment {
   Test = 'test',
 }
 
-export class EnvironmentVariables {
+const SECRET_MIN_LENGTH = 32;
+
+const parseBoolean = (value: unknown, fallback: boolean): boolean => (value === undefined ? fallback : value === true || value === 'true');
+
+export class DatabaseEnvironment {
   @IsEnum(NodeEnvironment)
   NODE_ENV: NodeEnvironment = NodeEnvironment.Development;
-
-  @IsInt()
-  @Min(1)
-  @Max(65535)
-  PORT: number = 3000;
 
   @IsUrl({ protocols: ['postgres', 'postgresql'], require_tld: false })
   DATABASE_URL: string;
 }
 
-export const validateEnvironment = (config: Record<string, unknown>): EnvironmentVariables => {
-  const environment = plainToInstance(EnvironmentVariables, config, { enableImplicitConversion: true });
+export class EnvironmentVariables extends DatabaseEnvironment {
+  @IsInt()
+  @Min(1)
+  @Max(65535)
+  PORT: number = 3000;
+
+  @IsUrl({ protocols: ['redis'], require_tld: false })
+  REDIS_URL: string;
+
+  @IsString()
+  @MinLength(SECRET_MIN_LENGTH)
+  JWT_ACCESS_SECRET: string;
+
+  @Transform(({ obj }: { obj: Record<string, unknown> }) => parseBoolean(obj.COOKIE_SECURE, true))
+  @IsBoolean()
+  COOKIE_SECURE: boolean = true;
+}
+
+export const validateEnvironment = <T extends object>(config: Record<string, unknown>, environmentClass: ClassConstructor<T>): T => {
+  const environment = plainToInstance(environmentClass, config, { enableImplicitConversion: true });
   const errors = validateSync(environment);
 
   if (errors.length > 0) {

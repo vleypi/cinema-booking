@@ -1,5 +1,5 @@
-import dataSource from './data-source.js';
-import { SEEDS } from './seeds.js';
+import dataSource from '@/database/data-source.js';
+import { SEEDS } from '@/database/seeds.js';
 
 await dataSource.initialize();
 
