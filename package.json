@@ -7,8 +7,10 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
     "check": "turbo run lint test build && turbo run typecheck",
-    "up": "docker compose -f docker/docker-compose.yml up --build"
+    "up": "docker compose -f docker/docker-compose.yml up --build",
+    "db:test": "docker compose -f docker/docker-compose.yml --profile test up -d postgres-test"
   },
   "engines": {
     "node": ">=24"
