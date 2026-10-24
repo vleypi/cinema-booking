@@ -13,7 +13,8 @@ RUN pnpm install --frozen-lockfile
 
 FROM deps AS build
 ARG APP
-ENV NEXT_TELEMETRY_DISABLED=1
+ARG API_URL=http://backend:3000
+ENV NEXT_TELEMETRY_DISABLED=1 API_URL=$API_URL
 COPY --from=pruner /app/out/full/ .
 RUN pnpm turbo run build --filter=${APP}
 
@@ -32,7 +33,8 @@ CMD ["node", "dist/main"]
 
 FROM node:24-alpine AS next
 ARG APP
-ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 HOSTNAME=0.0.0.0 PORT=3000
+ARG API_URL=http://backend:3000
+ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 HOSTNAME=0.0.0.0 PORT=3000 API_URL=$API_URL
 WORKDIR /app
 COPY --from=build /app/frontend/${APP}/.next/standalone ./
 COPY --from=build /app/frontend/${APP}/.next/static ./frontend/${APP}/.next/static
