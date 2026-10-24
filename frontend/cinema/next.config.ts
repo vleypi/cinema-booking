@@ -1,8 +1,3 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  output: "standalone",
-  reactCompiler: true,
-};
+import { nextConfig } from "@luch/shared/next";
 
 export default nextConfig;

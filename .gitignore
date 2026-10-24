@@ -21,6 +21,9 @@ pnpm-debug.log*
 node_modules/
 .pnpm-store/
 
+# Turborepo
+.turbo/
+
 # Backend (NestJS)
 backend/dist/
 backend/coverage/
@@ -29,7 +32,7 @@ backend/coverage/
 frontend/*/.next/
 frontend/*/out/
 frontend/*/next-env.d.ts
-frontend/*/*.tsbuildinfo
+*.tsbuildinfo
 
 # Docker
 docker/postgres-data/
