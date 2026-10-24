@@ -1,6 +1,8 @@
 import { defineConfig } from 'vitest/config';
 
 const TEST_DATABASE_URL = 'postgres://postgres:postgres@localhost:5433/cinema_test';
+const TEST_REDIS_URL = 'redis://localhost:6380/0';
+const TEST_JWT_ACCESS_SECRET = 'test-access-secret-that-is-long-enough';
 
 export default defineConfig({
   resolve: { tsconfigPaths: true },
@@ -17,6 +19,9 @@ export default defineConfig({
           env: {
             NODE_ENV: 'test',
             DATABASE_URL: process.env.TEST_DATABASE_URL ?? TEST_DATABASE_URL,
+            REDIS_URL: process.env.TEST_REDIS_URL ?? TEST_REDIS_URL,
+            JWT_ACCESS_SECRET: TEST_JWT_ACCESS_SECRET,
+            COOKIE_SECURE: 'false',
           },
         },
       },
