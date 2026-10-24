@@ -74,6 +74,9 @@ services:
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-}
       COOKIE_SECURE: ${COOKIE_SECURE:-true}
       SEED_SUPER_ADMIN_PASSWORD: ${SEED_SUPER_ADMIN_PASSWORD:-}
+      MEDIA_DIR: /app/backend/storage/media
+    volumes:
+      - media-data:/app/backend/storage/media
     ports:
       - "${BACKEND_PORT:-3000}:3000"
     depends_on:
@@ -111,3 +114,4 @@ services:
 
 volumes:
   postgres-data:
+  media-data:
