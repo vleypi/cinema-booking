@@ -8,32 +8,10 @@ import { SeatType } from '@/modules/halls/seat-type.enum.js';
 import { StaffRole } from '@/modules/staff/staff-role.enum.js';
 import { loginAs, type StaffAgent } from '@test/support/auth.helpers.js';
 import { createTestApp } from '@test/support/create-test-app.js';
+import { buildUseCaseSeats, cinemaHallsUrl, HALL_BODY, HALLS_URL, ROWS, SEATS_PER_ROW } from '@test/support/hall.fixture.js';
 import { createCinema, createStaff } from '@test/support/staff.fixture.js';
 
-const HALLS_URL = `/${API_PREFIX}/halls`;
 const PRICE_ZONES_URL = `/${API_PREFIX}/price-zones`;
-const cinemaHallsUrl = (cinemaId: string) => `/${API_PREFIX}/cinemas/${cinemaId}/halls`;
-
-const HALL_BODY = { name: 'Зал 1', format: 'Лазер 4K', basePrice: 40000, useTimeBands: true };
-const ROWS = 7;
-const SEATS_PER_ROW = 10;
-const AISLE_AFTER_SEAT = 5;
-
-const buildUseCaseSeats = (priceZoneId: string, vipZoneId = priceZoneId) =>
-  Array.from({ length: ROWS * SEATS_PER_ROW }, (_, index) => {
-    const row = Math.floor(index / SEATS_PER_ROW) + 1;
-    const number = (index % SEATS_PER_ROW) + 1;
-    const isWheelchair = row === ROWS && (number === 1 || number === SEATS_PER_ROW);
-
-    return {
-      row,
-      number,
-      posX: number > AISLE_AFTER_SEAT ? number : number - 1,
-      posY: row - 1,
-      type: isWheelchair ? SeatType.Wheelchair : SeatType.Standard,
-      priceZoneId: row > ROWS / 2 ? vipZoneId : priceZoneId,
-    };
-  });
 
 describe('Halls', () => {
   let app: INestApplication;
@@ -184,11 +162,20 @@ describe('Halls', () => {
       }
     });
 
-    it('keeps hall settings away from a manager', async () => {
+    it('lets a manager see the halls for the schedule but not change them', async () => {
+      const hall = await createHall();
       const manager = await loginAs(app, await createStaff(app, { role: StaffRole.Manager, cinemaIds: [cinemaId] }));
 
-      await manager.get(cinemaHallsUrl(cinemaId)).expect(403);
+      await manager.get(cinemaHallsUrl(cinemaId)).expect(200);
       await manager.post(cinemaHallsUrl(cinemaId)).send(HALL_BODY).expect(403);
+      await manager.patch(`${HALLS_URL}/${hall.id}`).send({ name: 'Зал' }).expect(403);
+      await manager.get(`${HALLS_URL}/${hall.id}/layout`).expect(403);
+    });
+
+    it('keeps the halls away from a cashier', async () => {
+      const cashier = await loginAs(app, await createStaff(app, { role: StaffRole.Cashier, cinemaIds: [cinemaId] }));
+
+      await cashier.get(cinemaHallsUrl(cinemaId)).expect(403);
     });
   });
 });
