@@ -1,11 +1,12 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, type Repository } from 'typeorm';
 import { rethrowUniqueViolation } from '@/common/database/unique-violation.js';
 import { hashPassword } from '@/common/security/password.js';
-import { fieldError } from '@/common/validation/validation-errors.js';
+import { invalidField } from '@/common/validation/validation-errors.js';
 import { AUTH_MESSAGES } from '@/modules/auth/auth.constant.js';
 import { canAccessCinema, canAccessStaff, canManageRole } from '@/modules/auth/permissions.js';
+import { CINEMA_MESSAGES } from '@/modules/cinemas/cinemas.constant.js';
 import { Cinema } from '@/modules/cinemas/entities/cinema.entity.js';
 import type { CreateStaffDto } from '@/modules/staff/dto/create-staff.dto.js';
 import { type StaffDto, toStaffDto } from '@/modules/staff/dto/staff.dto.js';
@@ -69,7 +70,7 @@ export class StaffService {
     if (!cinemaIds.every((cinemaId) => canAccessCinema(actor, cinemaId))) throw new ForbiddenException(AUTH_MESSAGES.cinemaAccessDenied);
 
     const cinemas = await this.cinemas.findBy({ id: In(cinemaIds) });
-    if (cinemas.length !== cinemaIds.length) throw new BadRequestException(fieldError('cinemaIds', STAFF_MESSAGES.cinemaNotFound));
+    if (cinemas.length !== cinemaIds.length) throw invalidField('cinemaIds', CINEMA_MESSAGES.notFound);
 
     return cinemas;
   }

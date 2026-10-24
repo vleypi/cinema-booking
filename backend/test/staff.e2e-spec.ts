@@ -3,6 +3,7 @@ import request from 'supertest';
 import { API_PREFIX } from '@/app.setup.js';
 import { RedisClient } from '@/common/redis/redis.client.js';
 import { AUTH_MESSAGES } from '@/modules/auth/auth.constant.js';
+import { CINEMA_MESSAGES } from '@/modules/cinemas/cinemas.constant.js';
 import { STAFF_MESSAGES } from '@/modules/staff/staff.constant.js';
 import { StaffRole } from '@/modules/staff/staff-role.enum.js';
 import { AUTH_URL, loginAs, type StaffAgent } from '@test/support/auth.helpers.js';
@@ -95,7 +96,7 @@ describe('Staff', () => {
     it('rejects an unknown cinema', async () => {
       const response = await superAdmin.post(STAFF_URL).send(staffBody(StaffRole.Cashier, [UNKNOWN_ID])).expect(400);
 
-      expect(response.body.errors).toEqual({ cinemaIds: [STAFF_MESSAGES.cinemaNotFound] });
+      expect(response.body.errors).toEqual({ cinemaIds: [CINEMA_MESSAGES.notFound] });
     });
 
     it('validates the request body', async () => {

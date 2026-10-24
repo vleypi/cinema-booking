@@ -27,6 +27,7 @@ node_modules/
 # Backend (NestJS)
 backend/dist/
 backend/coverage/
+backend/storage/
 
 # Frontend (Next.js)
 frontend/*/.next/

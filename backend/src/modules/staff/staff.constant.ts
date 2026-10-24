@@ -4,5 +4,4 @@ export const STAFF_MESSAGES = {
   notFound: 'Сотрудник не найден',
   loginTaken: 'Логин уже занят',
   loginFormat: 'Логин может содержать только латинские буквы, цифры, точку, дефис и подчеркивание',
-  cinemaNotFound: 'Кинотеатр не найден',
 } as const;

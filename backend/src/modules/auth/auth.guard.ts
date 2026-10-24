@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import type { Request } from 'express';
 import { AUTH_MESSAGES, REQUIRED_PERMISSIONS, AUTH_COOKIE_NAMES } from '@/modules/auth/auth.constant.js';
 import { AuthService } from '@/modules/auth/auth.service.js';
-import { canAccessCinema, type Permission, ROLE_PERMISSIONS } from '@/modules/auth/permissions.js';
+import { type Permission, ROLE_PERMISSIONS } from '@/modules/auth/permissions.js';
 import type { StaffUser } from '@/modules/staff/entities/staff-user.entity.js';
 
 export interface IAuthRequest extends Request {
@@ -27,7 +27,7 @@ export class AuthGuard implements CanActivate {
     if (!permissions.every((permission) => ROLE_PERMISSIONS[staff.role].includes(permission))) {
       throw new ForbiddenException(AUTH_MESSAGES.permissionDenied);
     }
-    if (typeof cinemaId === 'string' && !canAccessCinema(staff, cinemaId)) throw new ForbiddenException(AUTH_MESSAGES.cinemaAccessDenied);
+    if (typeof cinemaId === 'string') await this.auth.assertCinemaAccess(staff, cinemaId);
 
     request.staff = staff;
     return true;

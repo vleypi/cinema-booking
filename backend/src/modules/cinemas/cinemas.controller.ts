@@ -1,6 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { ParseIdPipe } from '@/common/validation/parse-id.pipe.js';
 import { Auth } from '@/modules/auth/auth.decorator.js';
 import { Permission } from '@/modules/auth/permissions.js';
 import { CinemasService } from '@/modules/cinemas/cinemas.service.js';
@@ -33,7 +32,7 @@ export class CinemasController {
   @ApiOkResponse({ type: CinemaDto })
   @ApiNotFoundResponse()
   @ApiConflictResponse()
-  update(@Param('cinemaId', ParseIdPipe) cinemaId: string, @Body() dto: UpdateCinemaDto): Promise<CinemaDto> {
+  update(@Param('cinemaId') cinemaId: string, @Body() dto: UpdateCinemaDto): Promise<CinemaDto> {
     return this.cinemas.update(cinemaId, dto);
   }
 }

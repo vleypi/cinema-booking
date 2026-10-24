@@ -1,7 +1,6 @@
 import type { INestApplication } from '@nestjs/common';
 import { API_PREFIX } from '@/app.setup.js';
 import { RedisClient } from '@/common/redis/redis.client.js';
-import { INVALID_ID_MESSAGE } from '@/common/validation/parse-id.pipe.js';
 import { CINEMA_MESSAGES } from '@/modules/cinemas/cinemas.constant.js';
 import { StaffRole } from '@/modules/staff/staff-role.enum.js';
 import { loginAs, type StaffAgent } from '@test/support/auth.helpers.js';
@@ -76,12 +75,18 @@ describe('Cinemas', () => {
     expect(response.body.errors.slug).toContain(CINEMA_MESSAGES.slugFormat);
   });
 
-  it('answers 404 for an unknown cinema and 400 for a malformed id', async () => {
-    const missing = await superAdmin.patch(`${CINEMAS_URL}/${UNKNOWN_ID}`).send({ isPublished: false }).expect(404);
-    const malformed = await superAdmin.patch(`${CINEMAS_URL}/abc`).send({ isPublished: false }).expect(400);
+  it('rejects null for a required field instead of failing in the database', async () => {
+    const { body: created } = await superAdmin.post(CINEMAS_URL).send(cinemaBody()).expect(201);
 
-    expect(missing.body.message).toBe(CINEMA_MESSAGES.notFound);
-    expect(malformed.body.message).toBe(INVALID_ID_MESSAGE);
+    const response = await superAdmin.patch(`${CINEMAS_URL}/${created.id}`).send({ name: null, isPublished: null }).expect(400);
+
+    expect(Object.keys(response.body.errors).sort()).toEqual(['isPublished', 'name']);
+  });
+
+  it.each([UNKNOWN_ID, 'abc'])('answers 404 for the cinema id %s', async (cinemaId) => {
+    const response = await superAdmin.patch(`${CINEMAS_URL}/${cinemaId}`).send({ isPublished: false }).expect(404);
+
+    expect(response.body.message).toBe(CINEMA_MESSAGES.notFound);
   });
 
   it('keeps cinema management to the super admin', async () => {

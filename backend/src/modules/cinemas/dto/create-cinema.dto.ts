@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsInt, IsMilitaryTime, IsNotEmpty, IsString, IsTimeZone, Matches, Max, MaxLength, Min } from 'class-validator';
+import { IsBoolean, IsInt, IsNotEmpty, IsString, IsTimeZone, Matches, Max, MaxLength, Min } from 'class-validator';
+import { IsTimeOfDay } from '@/common/validation/is-time-of-day.decorator.js';
 import {
   CINEMA_ADDRESS_MAX_LENGTH,
   CINEMA_MESSAGES,
@@ -32,12 +33,10 @@ export class CreateCinemaDto {
   @IsTimeZone()
   timezone: string;
 
-  @ApiProperty({ example: '10:00' })
-  @IsMilitaryTime()
+  @IsTimeOfDay()
   opensAt: string;
 
-  @ApiProperty({ example: '02:00' })
-  @IsMilitaryTime()
+  @IsTimeOfDay()
   closesAt: string;
 
   @ApiProperty({ example: 15 })
