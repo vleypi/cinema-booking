@@ -75,6 +75,14 @@ describe('Cinemas', () => {
     expect(response.body.errors.slug).toContain(CINEMA_MESSAGES.slugFormat);
   });
 
+  it('rejects null for a required field instead of failing in the database', async () => {
+    const { body: created } = await superAdmin.post(CINEMAS_URL).send(cinemaBody()).expect(201);
+
+    const response = await superAdmin.patch(`${CINEMAS_URL}/${created.id}`).send({ name: null, isPublished: null }).expect(400);
+
+    expect(Object.keys(response.body.errors).sort()).toEqual(['isPublished', 'name']);
+  });
+
   it.each([UNKNOWN_ID, 'abc'])('answers 404 for the cinema id %s', async (cinemaId) => {
     const response = await superAdmin.patch(`${CINEMAS_URL}/${cinemaId}`).send({ isPublished: false }).expect(404);
 
