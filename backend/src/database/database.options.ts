@@ -1,8 +1,6 @@
 import { fileURLToPath } from 'node:url';
 import type { DataSourceOptions } from 'typeorm';
-import { NodeEnvironment, type EnvironmentVariables } from '@/config/environment.js';
-
-type DatabaseEnvironment = Pick<EnvironmentVariables, 'NODE_ENV' | 'DATABASE_URL'>;
+import { type DatabaseEnvironment, NodeEnvironment } from '@/config/environment.js';
 
 const resolveFromSource = (pattern: string) => fileURLToPath(new URL(pattern, import.meta.url));
 
