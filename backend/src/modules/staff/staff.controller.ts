@@ -17,7 +17,7 @@ export class StaffController {
   @Get('cinemas/:cinemaId/staff')
   @Auth(Permission.ManageStaff)
   @ApiOkResponse({ type: [StaffDto] })
-  findByCinema(@Param('cinemaId', ParseIdPipe) cinemaId: string): Promise<StaffDto[]> {
+  findByCinema(@Param('cinemaId') cinemaId: string): Promise<StaffDto[]> {
     return this.staff.findByCinema(cinemaId);
   }
 

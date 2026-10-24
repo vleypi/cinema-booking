@@ -6,6 +6,9 @@ import { CINEMA_MESSAGES } from '@/modules/cinemas/cinemas.constant.js';
 import type { CreateCinemaDto } from '@/modules/cinemas/dto/create-cinema.dto.js';
 import type { UpdateCinemaDto } from '@/modules/cinemas/dto/update-cinema.dto.js';
 import { Cinema } from '@/modules/cinemas/entities/cinema.entity.js';
+import { TimeBand } from '@/modules/time-bands/entities/time-band.entity.js';
+import { buildTimeBands } from '@/modules/time-bands/time-band-schedule.js';
+import { DEFAULT_TIME_BANDS } from '@/modules/time-bands/time-bands.constant.js';
 
 @Injectable()
 export class CinemasService {
@@ -16,7 +19,14 @@ export class CinemasService {
   }
 
   async create(dto: CreateCinemaDto): Promise<Cinema> {
-    const { id } = await this.cinemas.save(this.cinemas.create(dto)).catch(rethrowUniqueViolation('slug', CINEMA_MESSAGES.slugTaken));
+    const { id } = await this.cinemas.manager
+      .transaction(async (manager) => {
+        const cinema = await manager.save(manager.create(Cinema, dto));
+        await manager.insert(TimeBand, buildTimeBands(cinema.id, DEFAULT_TIME_BANDS));
+
+        return cinema;
+      })
+      .catch(rethrowUniqueViolation('slug', CINEMA_MESSAGES.slugTaken));
 
     return this.#findOne(id);
   }
