@@ -7,6 +7,6 @@ export const Logo = () => (
       <rect x="24" y="8" width="30" height="24" rx="7" className="fill-brand" />
       <rect x="44" y="8" width="30" height="24" rx="7" className="fill-ink" />
     </g>
-    <path d="M55.5 14.5 Q55.5 12.5 57.3 13.5 L66 18.6 Q67.6 20 66 21.4 L57.3 26.5 Q55.5 27.5 55.5 25.5Z" className="fill-white" />
+    <path d="M55.8 16.2 Q55.8 14.6 57.2 15.4 L63 18.8 Q64.2 20 63 21.2 L57.2 24.6 Q55.8 25.4 55.8 23.8Z" className="fill-white" />
   </svg>
 );
