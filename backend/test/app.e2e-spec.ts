@@ -2,8 +2,8 @@ import type { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { API_PREFIX } from '@/app.setup.js';
 import { VALIDATION_FAILED_MESSAGE } from '@/common/validation/validation-errors.js';
-import { createTestApp } from './support/create-test-app.js';
-import { VALIDATION_PROBE_PATH, ValidationProbeController } from './support/validation-probe.controller.js';
+import { createTestApp } from '@test/support/create-test-app.js';
+import { VALIDATION_PROBE_PATH, ValidationProbeController } from '@test/support/validation-probe.controller.js';
 
 const PROBE_URL = `/${API_PREFIX}/${VALIDATION_PROBE_PATH}`;
 const VALID_PROBE = { name: 'Большой', items: [{ count: 2 }] };

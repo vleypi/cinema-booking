@@ -1,5 +1,5 @@
 import { BadRequestException, type ValidationError } from '@nestjs/common';
-import { collectFieldErrors, createValidationException, VALIDATION_FAILED_MESSAGE } from './validation-errors.js';
+import { collectFieldErrors, createValidationException, VALIDATION_FAILED_MESSAGE } from '@/common/validation/validation-errors.js';
 
 const error = (property: string, constraints?: Record<string, string>, children: ValidationError[] = []): ValidationError => ({
   property,
