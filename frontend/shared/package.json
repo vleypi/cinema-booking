@@ -1,0 +1,20 @@
+{
+  "name": "@luch/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./tsconfig.next.json": "./config/tsconfig.next.json",
+    "./eslint": "./config/eslint.config.mjs",
+    "./postcss": "./config/postcss.config.mjs",
+    "./next": "./config/next.config.mjs"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "catalog:",
+    "eslint-config-next": "catalog:"
+  },
+  "peerDependencies": {
+    "eslint": "catalog:",
+    "next": "catalog:"
+  }
+}

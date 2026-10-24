@@ -1,0 +1,20 @@
+{
+  "name": "luch",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "check": "turbo run lint test build && turbo run typecheck",
+    "up": "docker compose -f docker/docker-compose.yml up --build"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@12.4.1",
+  "devDependencies": {
+    "turbo": "^2.11.10"
+  }
+}

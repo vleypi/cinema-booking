@@ -1,8 +1,0 @@
-node_modules
-dist
-.next
-.git
-*.log
-.env
-.env.*
-!.env.example
