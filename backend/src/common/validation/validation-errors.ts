@@ -16,3 +16,5 @@ export const createValidationException = (errors: ValidationError[]) =>
   new BadRequestException({ message: VALIDATION_FAILED_MESSAGE, errors: collectFieldErrors(errors) });
 
 export const fieldError = (field: string, message: string) => ({ message: VALIDATION_FAILED_MESSAGE, errors: { [field]: [message] } });
+
+export const invalidField = (field: string, message: string) => new BadRequestException(fieldError(field, message));

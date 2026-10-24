@@ -1,12 +1,12 @@
 import { createHash, randomBytes } from 'node:crypto';
-import { BadRequestException, ForbiddenException, HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, MoreThan, type Repository } from 'typeorm';
 import { RedisClient } from '@/common/redis/redis.client.js';
 import { hashPassword, verifyPassword } from '@/common/security/password.js';
 import { isId } from '@/common/validation/parse-id.pipe.js';
-import { fieldError } from '@/common/validation/validation-errors.js';
+import { invalidField } from '@/common/validation/validation-errors.js';
 import { AUTH_MESSAGES, LOGIN_LOCK_SECONDS, LOGIN_MAX_ATTEMPTS, REFRESH_TOKEN_TTL_MS } from '@/modules/auth/auth.constant.js';
 import type { StaffProfileDto } from '@/modules/auth/dto/staff-profile.dto.js';
 import { RefreshToken, TokenOwnerType } from '@/modules/auth/entities/refresh-token.entity.js';
@@ -81,7 +81,7 @@ export class AuthService {
     const staff = await this.staffUsers.findOne({ where: { id: staffId }, select: { id: true, passwordHash: true } });
 
     if (!staff || !(await verifyPassword(currentPassword, staff.passwordHash))) {
-      throw new BadRequestException(fieldError('currentPassword', AUTH_MESSAGES.wrongCurrentPassword));
+      throw invalidField('currentPassword', AUTH_MESSAGES.wrongCurrentPassword);
     }
 
     await this.staffUsers.update({ id: staffId }, { passwordHash: await hashPassword(newPassword), mustChangePassword: false });

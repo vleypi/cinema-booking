@@ -1,5 +1,5 @@
 import { type ClassConstructor, plainToInstance, Transform } from 'class-transformer';
-import { IsBoolean, IsEnum, IsInt, IsString, IsUrl, Max, Min, MinLength, validateSync } from 'class-validator';
+import { IsBoolean, IsEnum, IsInt, IsNotEmpty, IsString, IsUrl, Max, Min, MinLength, validateSync } from 'class-validator';
 
 export enum NodeEnvironment {
   Development = 'development',
@@ -35,6 +35,10 @@ export class EnvironmentVariables extends DatabaseEnvironment {
   @Transform(({ obj }: { obj: Record<string, unknown> }) => parseBoolean(obj.COOKIE_SECURE, true))
   @IsBoolean()
   COOKIE_SECURE: boolean = true;
+
+  @IsString()
+  @IsNotEmpty()
+  MEDIA_DIR: string = 'storage/media';
 }
 
 export const validateEnvironment = <T extends object>(config: Record<string, unknown>, environmentClass: ClassConstructor<T>): T => {

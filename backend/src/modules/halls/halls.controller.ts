@@ -20,7 +20,7 @@ export class HallsController {
   constructor(private readonly halls: HallsService) {}
 
   @Get('cinemas/:cinemaId/halls')
-  @Auth(Permission.ManageHalls)
+  @Auth(Permission.ManageSchedule)
   @ApiOkResponse({ type: [HallDto] })
   findByCinema(@Param('cinemaId') cinemaId: string): Promise<HallDto[]> {
     return this.halls.findByCinema(cinemaId);

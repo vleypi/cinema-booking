@@ -1,7 +1,7 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
-import { fieldError } from '@/common/validation/validation-errors.js';
+import { invalidField } from '@/common/validation/validation-errors.js';
 import type { ReplaceTimeBandsDto } from '@/modules/time-bands/dto/replace-time-bands.dto.js';
 import { TimeBand } from '@/modules/time-bands/entities/time-band.entity.js';
 import { buildTimeBands, coversDayStart } from '@/modules/time-bands/time-band-schedule.js';
@@ -16,7 +16,7 @@ export class TimeBandsService {
   }
 
   async replace(cinemaId: string, { bands }: ReplaceTimeBandsDto): Promise<TimeBand[]> {
-    if (!coversDayStart(bands)) throw new BadRequestException(fieldError('bands', TIME_BAND_MESSAGES.dayStartMissing));
+    if (!coversDayStart(bands)) throw invalidField('bands', TIME_BAND_MESSAGES.dayStartMissing);
 
     await this.timeBands.manager.transaction(async (manager) => {
       await manager.delete(TimeBand, { cinemaId });
