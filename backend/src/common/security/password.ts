@@ -1,6 +1,9 @@
 import { argon2, randomBytes, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
 
+export const PASSWORD_MIN_LENGTH = 8;
+export const PASSWORD_MAX_LENGTH = 128;
+
 const deriveKey = promisify(argon2);
 const ARGON2_OPTIONS = { memory: 19456, passes: 2, parallelism: 1, tagLength: 32 };
 const SALT_LENGTH = 16;

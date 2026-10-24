@@ -5,13 +5,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, MoreThan, type Repository } from 'typeorm';
 import { RedisClient } from '@/common/redis/redis.client.js';
 import { hashPassword, verifyPassword } from '@/common/security/password.js';
-import { VALIDATION_FAILED_MESSAGE } from '@/common/validation/validation-errors.js';
+import { fieldError } from '@/common/validation/validation-errors.js';
 import { AUTH_MESSAGES, LOGIN_LOCK_SECONDS, LOGIN_MAX_ATTEMPTS, REFRESH_TOKEN_TTL_MS } from '@/modules/auth/auth.constant.js';
 import type { StaffProfileDto } from '@/modules/auth/dto/staff-profile.dto.js';
 import { RefreshToken, TokenOwnerType } from '@/modules/auth/entities/refresh-token.entity.js';
 import { ROLE_PERMISSIONS } from '@/modules/auth/permissions.js';
+import { toCinemaSummary } from '@/modules/cinemas/dto/cinema.dto.js';
 import { Cinema } from '@/modules/cinemas/entities/cinema.entity.js';
 import { StaffUser } from '@/modules/staff/entities/staff-user.entity.js';
+import { normalizeLogin } from '@/modules/staff/staff-login.js';
 import { StaffRole } from '@/modules/staff/staff-role.enum.js';
 
 export interface IAuthTokens {
@@ -37,7 +39,7 @@ export class AuthService {
   ) {}
 
   async login(login: string, password: string): Promise<IAuthSession> {
-    const normalizedLogin = login.trim().toLowerCase();
+    const normalizedLogin = normalizeLogin(login);
     const attemptsKey = `auth:login-attempts:${normalizedLogin}`;
     if (Number(await this.redis.get(attemptsKey)) >= LOGIN_MAX_ATTEMPTS) {
       throw new HttpException(AUTH_MESSAGES.loginLocked, HttpStatus.TOO_MANY_REQUESTS);
@@ -77,7 +79,7 @@ export class AuthService {
     const staff = await this.staffUsers.findOne({ where: { id: staffId }, select: { id: true, passwordHash: true } });
 
     if (!staff || !(await verifyPassword(currentPassword, staff.passwordHash))) {
-      throw new BadRequestException({ message: VALIDATION_FAILED_MESSAGE, errors: { currentPassword: [AUTH_MESSAGES.wrongCurrentPassword] } });
+      throw new BadRequestException(fieldError('currentPassword', AUTH_MESSAGES.wrongCurrentPassword));
     }
 
     await this.staffUsers.update({ id: staffId }, { passwordHash: await hashPassword(newPassword), mustChangePassword: false });
@@ -93,7 +95,7 @@ export class AuthService {
       role,
       mustChangePassword,
       permissions: ROLE_PERMISSIONS[role],
-      cinemas: visibleCinemas.map((cinema) => ({ id: cinema.id, name: cinema.name, slug: cinema.slug })),
+      cinemas: visibleCinemas.map(toCinemaSummary),
     };
   }
 

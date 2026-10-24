@@ -14,3 +14,5 @@ export const collectFieldErrors = (errors: ValidationError[], parentPath = ''): 
 
 export const createValidationException = (errors: ValidationError[]) =>
   new BadRequestException({ message: VALIDATION_FAILED_MESSAGE, errors: collectFieldErrors(errors) });
+
+export const fieldError = (field: string, message: string) => ({ message: VALIDATION_FAILED_MESSAGE, errors: { [field]: [message] } });
