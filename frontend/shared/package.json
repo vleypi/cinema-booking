@@ -7,14 +7,33 @@
     "./tsconfig.next.json": "./config/tsconfig.next.json",
     "./eslint": "./config/eslint.config.mjs",
     "./postcss": "./config/postcss.config.mjs",
-    "./next": "./config/next.config.mjs"
+    "./next": "./config/next.config.mjs",
+    "./api": "./src/api/index.ts",
+    "./api-url": "./config/api-url.mjs",
+    "./query": "./src/query/index.ts",
+    "./proxy": "./src/proxy/index.ts",
+    "./lib": "./src/lib/index.ts",
+    "./ui": "./src/ui/index.ts",
+    "./theme.css": "./src/styles/theme.css"
   },
   "dependencies": {
     "@tailwindcss/postcss": "catalog:",
-    "eslint-config-next": "catalog:"
+    "eslint-config-next": "catalog:",
+    "axios": "catalog:"
   },
   "peerDependencies": {
     "eslint": "catalog:",
-    "next": "catalog:"
+    "next": "catalog:",
+    "@tanstack/react-query": "catalog:",
+    "react": "catalog:",
+    "react-hook-form": "catalog:"
+  },
+  "devDependencies": {
+    "@tanstack/react-query": "catalog:",
+    "@types/react": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-hook-form": "catalog:",
+    "typescript": "catalog:"
   }
 }
