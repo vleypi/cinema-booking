@@ -4,6 +4,4 @@ export const STAFF_PAGE_TEXT = {
   add: "Добавить сотрудника",
   createTitle: "Новый сотрудник",
   editTitle: "Сотрудник",
-  noCinemaTitle: "Нет ни одного кинотеатра",
-  noCinemaDescription: "Сначала добавьте кинотеатр в разделе «Кинотеатры», затем заведите его сотрудников",
 } as const;
