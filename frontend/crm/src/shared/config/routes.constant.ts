@@ -6,4 +6,6 @@ export const ROUTES = {
   halls: "/halls",
   hall: (hallId: string) => `/halls/${hallId}`,
   prices: "/prices",
+  films: "/films",
+  schedule: "/schedule",
 } as const;

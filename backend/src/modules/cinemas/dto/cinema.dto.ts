@@ -7,6 +7,6 @@ export class CinemaDto extends CreateCinemaDto {
   id: string;
 }
 
-export class CinemaSummaryDto extends PickType(CinemaDto, ['id', 'name', 'slug']) {}
+export class CinemaSummaryDto extends PickType(CinemaDto, ['id', 'name', 'slug', 'timezone']) {}
 
-export const toCinemaSummary = ({ id, name, slug }: Cinema): CinemaSummaryDto => ({ id, name, slug });
+export const toCinemaSummary = ({ id, name, slug, timezone }: Cinema): CinemaSummaryDto => ({ id, name, slug, timezone });

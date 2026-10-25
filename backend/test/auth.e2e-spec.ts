@@ -5,6 +5,7 @@ import { API_PREFIX } from '@/app.setup.js';
 import { RedisClient } from '@/common/redis/redis.client.js';
 import { AUTH_MESSAGES, LOGIN_MAX_ATTEMPTS, AUTH_COOKIE_NAMES } from '@/modules/auth/auth.constant.js';
 import { Permission } from '@/modules/auth/permissions.js';
+import { DEFAULT_TIMEZONE } from '@/modules/cinemas/entities/cinema.entity.js';
 import { StaffUser } from '@/modules/staff/entities/staff-user.entity.js';
 import { StaffRole } from '@/modules/staff/staff-role.enum.js';
 import { ACCESS_PROBE_CONTROLLERS, PERMISSION_PROBE_PATH } from '@test/support/access-probe.controllers.js';
@@ -46,7 +47,7 @@ describe('Authentication', () => {
       const cookies = readSetCookies(response);
       const body = JSON.stringify(response.body);
 
-      expect(response.body).toMatchObject({ login: staff.login, role: StaffRole.Cashier, cinemas: [{ id: cinemaId }] });
+      expect(response.body).toMatchObject({ login: staff.login, role: StaffRole.Cashier, cinemas: [{ id: cinemaId, timezone: DEFAULT_TIMEZONE }] });
       expect(response.body.permissions).toContain(Permission.SellTickets);
       expect(Object.keys(cookies)).toEqual([AUTH_COOKIE_NAMES.access, AUTH_COOKIE_NAMES.refresh]);
       (response.headers['set-cookie'] as unknown as string[]).forEach((cookie) => expect(cookie).toMatch(/HttpOnly/));
