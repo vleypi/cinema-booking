@@ -1,4 +1,5 @@
 export { Badge, type BadgeTone } from "@/shared/ui/Badge";
+export { ConfirmModal } from "@/shared/ui/ConfirmModal";
 export { DataTable, type IDataTableColumn } from "@/shared/ui/DataTable";
 export { EmptyState } from "@/shared/ui/EmptyState";
 export { Logo } from "@/shared/ui/Logo";
