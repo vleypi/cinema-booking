@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { applyServerErrors } from "@luch/shared/lib";
-import { Button, FormError, Icon, TextField } from "@luch/shared/ui";
+import { Button, FormError, Icon, ModalFooter, TextField } from "@luch/shared/ui";
 import { useForm } from "react-hook-form";
 import { MULTIPLIER_LIMITS } from "@/shared/config";
 import type { IPriceZone } from "@/entities/hall";
@@ -49,7 +49,7 @@ export const PriceZoneForm = ({ cinemaId, hallId, priceZone, onDone }: IPriceZon
         {...register("multiplier", { valueAsNumber: true })}
       />
       <FormError message={errors.root?.server?.message} />
-      <div className="mt-2 flex flex-wrap items-center gap-2">
+      <ModalFooter>
         {priceZone && (
           <Button variant="danger" className="px-3" isLoading={isRemoving} disabled={isSaving} onClick={() => onRemove(priceZone.id)}>
             <Icon name="trash" className="size-4" />
@@ -64,7 +64,7 @@ export const PriceZoneForm = ({ cinemaId, hallId, priceZone, onDone }: IPriceZon
             {priceZone ? SAVE_PRICE_ZONE_TEXT.save : SAVE_PRICE_ZONE_TEXT.create}
           </Button>
         </div>
-      </div>
+      </ModalFooter>
     </form>
   );
 };

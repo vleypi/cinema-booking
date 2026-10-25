@@ -1,5 +1,6 @@
 import { joinClassNames } from "@luch/shared/lib";
 import type { KeyboardEvent, ReactNode } from "react";
+import { CARD_CLASS_NAME } from "@/shared/ui/ui.constant";
 
 export interface IDataTableColumn<TRow> {
   key: string;
@@ -30,7 +31,7 @@ export const DataTable = <TRow,>({ columns, rows, getRowKey, isLoading, emptyTex
   };
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-200">
+    <div className={joinClassNames(CARD_CLASS_NAME, "overflow-x-auto")}>
       <table className="w-full min-w-xl text-left text-sm">
         <thead className="bg-gray-50 text-xs font-medium tracking-wider text-gray-500 uppercase">
           <tr>

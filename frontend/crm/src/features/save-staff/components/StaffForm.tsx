@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { applyServerErrors } from "@luch/shared/lib";
-import { Button, CheckboxField, FormError, SelectField, TextField } from "@luch/shared/ui";
+import { Button, CheckboxField, FormError, ModalFooter, SelectField, TextField } from "@luch/shared/ui";
 import { Controller, useForm } from "react-hook-form";
 import type { ICinemaSummary } from "@/shared/api";
 import { STAFF_ROLE_LABELS, type StaffRole } from "@/shared/config";
@@ -65,14 +65,14 @@ export const StaffForm = ({ member, roles, cinemas, currentCinemaId, onDone }: I
       />
       {!isNew && <CheckboxField label={SAVE_STAFF_TEXT.isBlocked} description={SAVE_STAFF_TEXT.isBlockedHint} {...register("isBlocked")} />}
       <FormError message={errors.root?.server?.message} />
-      <div className="mt-2 flex justify-end gap-2">
+      <ModalFooter>
         <Button variant="secondary" onClick={onDone} disabled={isPending}>
           {SAVE_STAFF_TEXT.cancel}
         </Button>
         <Button type="submit" isLoading={isPending}>
           {isNew ? SAVE_STAFF_TEXT.create : SAVE_STAFF_TEXT.save}
         </Button>
-      </div>
+      </ModalFooter>
     </form>
   );
 };

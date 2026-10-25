@@ -16,8 +16,8 @@ export const LoginPage = ({ next }: ILoginPageProps) => (
         <LoginForm next={next} />
       </div>
     </main>
-    <aside className="relative hidden overflow-hidden bg-ink lg:flex lg:items-end lg:p-16">
-      <div className="absolute -top-24 -right-40 h-40 w-[140%] -rotate-12 bg-ray" />
+    <aside className="relative hidden overflow-hidden bg-forest lg:flex lg:items-end lg:p-16">
+      <div className="absolute -top-24 -right-40 h-40 w-[140%] -rotate-12 bg-lime" />
       <p className="relative max-w-md text-3xl leading-snug font-semibold text-white">{LOGIN_PAGE_TEXT.tagline}</p>
     </aside>
   </div>

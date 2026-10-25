@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { applyServerErrors } from "@luch/shared/lib";
-import { Button, FormError, SelectField, TextField } from "@luch/shared/ui";
+import { Button, FormError, ModalFooter, SelectField, TextField } from "@luch/shared/ui";
 import { useForm, useWatch } from "react-hook-form";
 import { formatRubles } from "@/shared/lib";
 import { EmptyState } from "@/shared/ui";
@@ -74,14 +74,14 @@ export const SessionForm = ({ cinemaId, date, films, halls, onDone, onCancel }: 
         />
       </div>
       <FormError message={errors.root?.server?.message} />
-      <div className="mt-2 flex justify-end gap-2">
+      <ModalFooter>
         <Button variant="secondary" onClick={onCancel} disabled={isPending}>
           {CREATE_SESSION_TEXT.cancel}
         </Button>
         <Button type="submit" isLoading={isPending}>
           {CREATE_SESSION_TEXT.create}
         </Button>
-      </div>
+      </ModalFooter>
     </form>
   );
 };

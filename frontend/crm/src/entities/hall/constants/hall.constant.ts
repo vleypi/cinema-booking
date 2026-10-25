@@ -21,12 +21,12 @@ export const SEAT_SHAPE_CLASSES: Record<SeatType, string> = {
 export const PRICE_ZONE_COLORS = [
   "bg-brand text-white",
   "bg-ray text-ink",
-  "bg-emerald-500 text-white",
+  "bg-indigo-500 text-white",
   "bg-rose-500 text-white",
   "bg-violet-500 text-white",
   "bg-sky-500 text-white",
   "bg-orange-500 text-white",
-  "bg-teal-700 text-white",
+  "bg-pink-400 text-white",
 ] as const;
 
 export const MISSING_PRICE_ZONE_COLOR = "bg-gray-300 text-white";

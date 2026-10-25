@@ -10,7 +10,6 @@ export interface INavItem {
 }
 
 export const NAV_ITEMS: readonly INavItem[] = [
-  { href: ROUTES.cinemas, label: "Кинотеатры", icon: "building", permission: PERMISSIONS.manageCinemas },
   { href: ROUTES.staff, label: "Сотрудники", icon: "users", permission: PERMISSIONS.manageStaff },
   { href: ROUTES.halls, label: "Залы", icon: "seats", permission: PERMISSIONS.manageHalls },
   { href: ROUTES.prices, label: "Цены", icon: "tag", permission: PERMISSIONS.manageHalls },
