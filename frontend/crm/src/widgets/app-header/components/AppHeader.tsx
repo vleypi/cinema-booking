@@ -10,13 +10,13 @@ export const AppHeader = () => {
   const { toggle } = useSidebar();
 
   return (
-    <header className="flex h-header shrink-0 items-center justify-between gap-4 border-b border-gray-200 bg-white px-4 md:px-6">
+    <header className="flex h-header shrink-0 items-center justify-between gap-4 border-b border-gray-200 bg-white pr-4 pl-4 md:pr-6">
       <div className="flex min-w-0 items-center gap-3">
         <button
           type="button"
           onClick={toggle}
           aria-label={APP_HEADER_TEXT.toggleMenu}
-          className="rounded-lg p-2 text-gray-700 transition hover:bg-gray-100"
+          className="rounded-lg px-3 py-2 text-gray-700 transition hover:bg-gray-100"
         >
           <Icon name="menu" />
         </button>
