@@ -39,7 +39,7 @@ export const TimeBandRow = ({ index, register, errors, endsAt, canRemove, onRemo
       onClick={onRemove}
       disabled={!canRemove}
       aria-label={EDIT_TIME_BANDS_TEXT.remove}
-      className="grid size-9 place-items-center self-end rounded-lg text-gray-400 transition hover:bg-red-50 hover:text-red-600 disabled:pointer-events-none disabled:opacity-30 sm:mb-0.5"
+      className="grid size-9 place-items-center self-end rounded-lg text-gray-500 transition hover:bg-red-50 hover:text-red-600 disabled:pointer-events-none disabled:opacity-30 sm:mb-0.5"
     >
       <Icon name="trash" className="size-4" />
     </button>

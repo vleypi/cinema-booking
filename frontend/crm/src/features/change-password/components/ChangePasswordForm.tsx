@@ -25,7 +25,7 @@ export const ChangePasswordForm = () => {
   return (
     <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
       <h1 className="text-xl font-bold text-ink">{CHANGE_PASSWORD_TEXT.title}</h1>
-      <p className="mt-1 mb-6 text-sm text-gray-400">{CHANGE_PASSWORD_TEXT.description}</p>
+      <p className="mt-1 mb-6 text-sm text-gray-500">{CHANGE_PASSWORD_TEXT.description}</p>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
         <TextField
           label={CHANGE_PASSWORD_TEXT.currentPassword}

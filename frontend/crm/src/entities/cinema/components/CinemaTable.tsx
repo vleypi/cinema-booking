@@ -17,7 +17,7 @@ const COLUMNS: readonly IDataTableColumn<ICinema>[] = [
     render: ({ name, slug }) => (
       <div>
         <p className="font-medium text-ink">{name}</p>
-        <p className="text-xs text-gray-400">/{slug}</p>
+        <p className="text-xs text-gray-500">/{slug}</p>
       </div>
     ),
   },

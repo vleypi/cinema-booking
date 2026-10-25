@@ -25,7 +25,7 @@ export const LayoutGrid = ({ draft, seats, priceZones, onPaint }: ILayoutGridPro
       <div className="mx-auto flex w-max flex-col items-center">
         <div className="mb-8 w-full max-w-lg px-8 text-center">
           <div className="h-1.5 rounded-full bg-gray-300" />
-          <p className="mt-2 text-xs tracking-widest text-gray-400 uppercase">{EDIT_LAYOUT_TEXT.screen}</p>
+          <p className="mt-2 text-xs tracking-widest text-gray-500 uppercase">{EDIT_LAYOUT_TEXT.screen}</p>
         </div>
         <div {...gesture} className="flex touch-none flex-col gap-1 select-none">
           {range(draft.rows).map((posY) => (

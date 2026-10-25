@@ -29,7 +29,7 @@ export const HallForm = ({ cinemaId, hall, onDone }: IHallFormProps) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
-      <TextField label={SAVE_HALL_TEXT.name} autoFocus error={errors.name?.message} {...register("name")} />
+      <TextField label={SAVE_HALL_TEXT.name} error={errors.name?.message} {...register("name")} />
       <TextField label={SAVE_HALL_TEXT.format} hint={SAVE_HALL_TEXT.formatHint} error={errors.format?.message} {...register("format")} />
       <TextField
         label={SAVE_HALL_TEXT.basePrice}

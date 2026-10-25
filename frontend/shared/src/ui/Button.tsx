@@ -12,7 +12,7 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   primary: "bg-brand text-white hover:bg-brand/90",
   secondary: "border border-gray-200 bg-white text-gray-700 hover:bg-gray-50",
   ghost: "text-gray-600 hover:bg-gray-100 hover:text-ink",
-  danger: "text-red-600 hover:bg-red-50",
+  danger: "text-red-700 hover:bg-red-50",
 };
 
 export const Button = ({ variant = "primary", isLoading = false, disabled, className, type = "button", ...props }: IButtonProps) => (

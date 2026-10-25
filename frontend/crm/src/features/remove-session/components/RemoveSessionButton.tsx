@@ -27,7 +27,7 @@ export const RemoveSessionButton = ({ sessionId }: IRemoveSessionButtonProps) =>
         onClick={() => setIsConfirming(true)}
         aria-label={REMOVE_SESSION_TEXT.remove}
         title={REMOVE_SESSION_TEXT.remove}
-        className="grid size-9 shrink-0 place-items-center rounded-lg text-gray-400 transition hover:bg-red-50 hover:text-red-600"
+        className="grid size-9 shrink-0 place-items-center rounded-lg text-gray-500 transition hover:bg-red-50 hover:text-red-600"
       >
         <Icon name="trash" className="size-4" />
       </button>

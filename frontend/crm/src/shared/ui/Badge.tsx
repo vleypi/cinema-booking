@@ -11,9 +11,9 @@ interface IBadgeProps {
 const TONE_CLASSES: Record<BadgeTone, string> = {
   neutral: "bg-gray-100 text-gray-600",
   brand: "bg-brand-soft text-brand",
-  success: "bg-green-50 text-green-600",
-  warning: "bg-amber-50 text-amber-600",
-  danger: "bg-red-50 text-red-500",
+  success: "bg-green-50 text-green-700",
+  warning: "bg-amber-50 text-amber-700",
+  danger: "bg-red-50 text-red-700",
 };
 
 export const Badge = ({ tone = "neutral", children }: IBadgeProps) => (

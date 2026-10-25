@@ -36,7 +36,7 @@ export const Modal = ({ isOpen, title, onClose, children }: IModalProps) => {
           type="button"
           onClick={onClose}
           aria-label={UI_TEXT.close}
-          className="grid size-8 place-items-center rounded-lg text-gray-400 transition hover:bg-gray-100 hover:text-ink"
+          className="grid size-8 place-items-center rounded-lg text-gray-500 transition hover:bg-gray-100 hover:text-ink"
         >
           <Icon name="close" className="size-4" />
         </button>

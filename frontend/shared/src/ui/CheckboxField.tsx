@@ -13,7 +13,7 @@ export const CheckboxField = ({ label, description, ...props }: ICheckboxFieldPr
       <input id={id} type="checkbox" className="mt-0.5 size-4 shrink-0 accent-brand" {...props} />
       <span className="flex flex-col">
         <span className="text-sm font-medium text-ink">{label}</span>
-        {description && <span className="text-xs text-gray-400">{description}</span>}
+        {description && <span className="text-xs text-gray-500">{description}</span>}
       </span>
     </label>
   );

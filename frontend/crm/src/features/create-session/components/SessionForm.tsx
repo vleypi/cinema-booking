@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { applyServerErrors } from "@luch/shared/lib";
 import { Button, FormError, SelectField, TextField } from "@luch/shared/ui";
 import { useForm, useWatch } from "react-hook-form";
-import { formatRubles, kopecksToRubles } from "@/shared/lib";
+import { formatRubles } from "@/shared/lib";
 import { EmptyState } from "@/shared/ui";
 import { FILM_TEXT, type IFilm } from "@/entities/film";
 import type { IHall } from "@/entities/hall";
@@ -68,7 +68,6 @@ export const SessionForm = ({ cinemaId, date, films, halls, onDone, onCancel }: 
           type="number"
           min={0}
           step={10}
-          placeholder={hall ? String(kopecksToRubles(hall.basePrice)) : undefined}
           hint={hall ? `${CREATE_SESSION_TEXT.hallPrice}: ${formatRubles(hall.basePrice)}` : CREATE_SESSION_TEXT.basePriceHint}
           error={errors.basePrice?.message}
           {...register("basePrice")}

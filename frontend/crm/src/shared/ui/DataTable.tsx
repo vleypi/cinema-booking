@@ -54,7 +54,7 @@ export const DataTable = <TRow,>({ columns, rows, getRowKey, isLoading, emptyTex
             ))}
           {!isLoading && !rows?.length && (
             <tr>
-              <td colSpan={columns.length} className="px-4 py-12 text-center text-gray-400">
+              <td colSpan={columns.length} className="px-4 py-12 text-center text-gray-500">
                 {emptyText}
               </td>
             </tr>

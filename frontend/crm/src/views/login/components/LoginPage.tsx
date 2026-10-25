@@ -12,7 +12,7 @@ export const LoginPage = ({ next }: ILoginPageProps) => (
       <Logo />
       <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center py-12">
         <h1 className="text-3xl leading-tight font-bold tracking-tight text-ink">{LOGIN_PAGE_TEXT.title}</h1>
-        <p className="mt-2 mb-10 text-sm text-gray-400">{LOGIN_PAGE_TEXT.description}</p>
+        <p className="mt-2 mb-10 text-sm text-gray-500">{LOGIN_PAGE_TEXT.description}</p>
         <LoginForm next={next} />
       </div>
     </main>

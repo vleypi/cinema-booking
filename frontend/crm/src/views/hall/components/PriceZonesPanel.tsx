@@ -37,7 +37,7 @@ export const PriceZonesPanel = ({ hall }: IPriceZonesPanelProps) => {
                 className="inline-flex items-center gap-3 rounded-lg border border-gray-200 px-3 py-2 text-sm transition hover:border-gray-300 hover:bg-gray-50"
               >
                 <PriceZoneLabel priceZone={priceZone} priceZones={hall.priceZones} />
-                <Icon name="pencil" className="size-3.5 text-gray-400" />
+                <Icon name="pencil" className="size-3.5 text-gray-500" />
               </button>
             </li>
           ))}

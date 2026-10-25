@@ -20,7 +20,7 @@ const COLUMNS: readonly IDataTableColumn<IStaffMember>[] = [
     render: ({ fullName, login }) => (
       <div>
         <p className="font-medium text-ink">{fullName}</p>
-        <p className="text-xs text-gray-400">{login}</p>
+        <p className="text-xs text-gray-500">{login}</p>
       </div>
     ),
   },
