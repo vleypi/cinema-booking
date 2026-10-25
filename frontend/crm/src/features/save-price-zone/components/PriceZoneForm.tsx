@@ -37,7 +37,7 @@ export const PriceZoneForm = ({ cinemaId, hallId, priceZone, onDone }: IPriceZon
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
-      <TextField label={SAVE_PRICE_ZONE_TEXT.name} hint={SAVE_PRICE_ZONE_TEXT.nameHint} autoFocus error={errors.name?.message} {...register("name")} />
+      <TextField label={SAVE_PRICE_ZONE_TEXT.name} hint={SAVE_PRICE_ZONE_TEXT.nameHint} error={errors.name?.message} {...register("name")} />
       <TextField
         label={SAVE_PRICE_ZONE_TEXT.multiplier}
         type="number"

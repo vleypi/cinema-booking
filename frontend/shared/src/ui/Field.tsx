@@ -15,11 +15,11 @@ export const Field = ({ id, label, error, hint, children }: IFieldProps) => (
     </label>
     {children}
     {error ? (
-      <p id={`${id}-error`} className="text-sm text-red-500">
+      <p id={`${id}-error`} className="text-sm text-red-600">
         {error}
       </p>
     ) : (
-      hint && <p className="text-xs text-gray-400">{hint}</p>
+      hint && <p className="text-xs text-gray-500">{hint}</p>
     )}
   </div>
 );

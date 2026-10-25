@@ -23,7 +23,7 @@ export const CinemaChecklist = ({ cinemas, value, onChange, error }: ICinemaChec
           <CheckboxField key={id} label={name} checked={value.includes(id)} onChange={(event) => toggle(id, event.target.checked)} />
         ))}
       </div>
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
     </fieldset>
   );
 };

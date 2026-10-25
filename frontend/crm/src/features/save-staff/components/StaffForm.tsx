@@ -40,7 +40,7 @@ export const StaffForm = ({ member, roles, cinemas, currentCinemaId, onDone }: I
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
-      <TextField label={SAVE_STAFF_TEXT.fullName} autoFocus error={errors.fullName?.message} {...register("fullName")} />
+      <TextField label={SAVE_STAFF_TEXT.fullName} error={errors.fullName?.message} {...register("fullName")} />
       <TextField
         label={SAVE_STAFF_TEXT.login}
         readOnly={!isNew}

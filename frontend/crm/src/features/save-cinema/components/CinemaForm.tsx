@@ -38,7 +38,7 @@ export const CinemaForm = ({ cinema, onDone }: ICinemaFormProps) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
-      <TextField label={SAVE_CINEMA_TEXT.name} autoFocus error={errors.name?.message} {...register("name")} />
+      <TextField label={SAVE_CINEMA_TEXT.name} error={errors.name?.message} {...register("name")} />
       <TextField label={SAVE_CINEMA_TEXT.slug} hint={SAVE_CINEMA_TEXT.slugHint} error={errors.slug?.message} {...register("slug")} />
       <TextField label={SAVE_CINEMA_TEXT.address} error={errors.address?.message} {...register("address")} />
       <SelectField label={SAVE_CINEMA_TEXT.timezone} options={TIMEZONE_OPTIONS} error={errors.timezone?.message} {...register("timezone")} />

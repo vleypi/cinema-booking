@@ -16,10 +16,10 @@ export const HallSchedule = ({ hall, sessions, timeZone }: IHallScheduleProps) =
   <section className="min-w-0 rounded-xl border border-gray-200">
     <header className="flex items-baseline justify-between gap-3 border-b border-gray-100 px-4 py-3">
       <h2 className="font-semibold text-ink">{hall.name}</h2>
-      <span className="text-xs text-gray-400">{hall.format}</span>
+      <span className="text-xs text-gray-500">{hall.format}</span>
     </header>
     {sessions.length === 0 ? (
-      <p className="px-4 py-6 text-center text-sm text-gray-400">{SCHEDULE_PAGE_TEXT.noSessions}</p>
+      <p className="px-4 py-6 text-center text-sm text-gray-500">{SCHEDULE_PAGE_TEXT.noSessions}</p>
     ) : (
       <div className="divide-y divide-gray-100 px-4">
         {sessions.map((session) => (

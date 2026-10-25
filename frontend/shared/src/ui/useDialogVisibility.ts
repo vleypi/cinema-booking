@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
+const FIRST_FIELD_SELECTOR = "input:not([type=hidden]):not([type=file]):not([type=checkbox]):not([disabled]), select:not([disabled]), textarea:not([disabled])";
+
 export const useDialogVisibility = (isOpen: boolean) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -9,7 +11,10 @@ export const useDialogVisibility = (isOpen: boolean) => {
     const dialog = dialogRef.current;
     if (!dialog) return;
 
-    if (isOpen && !dialog.open) dialog.showModal();
+    if (isOpen && !dialog.open) {
+      dialog.showModal();
+      dialog.querySelector<HTMLElement>(FIRST_FIELD_SELECTOR)?.focus();
+    }
     if (!isOpen && dialog.open) dialog.close();
   }, [isOpen]);
 

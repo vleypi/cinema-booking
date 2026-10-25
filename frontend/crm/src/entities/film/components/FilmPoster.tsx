@@ -14,7 +14,7 @@ export const FilmPoster = ({ src, title, className }: IFilmPosterProps) => (
     {src ? (
       <Image src={src} alt={title} fill unoptimized className="object-cover" />
     ) : (
-      <div className="flex h-full flex-col items-center justify-center gap-2 text-gray-300">
+      <div className="flex h-full flex-col items-center justify-center gap-2 text-gray-600">
         <Icon name="photo" className="size-8" />
         <span className="text-xs">{FILM_TEXT.noPoster}</span>
       </div>

@@ -8,7 +8,7 @@ export const SidebarFooter = () => (
     </span>
     <span className="min-w-0 transition-opacity duration-200 md:group-data-[expanded=false]:opacity-0">
       <span className="block truncate text-sm font-bold text-ink">{SIDEBAR_NAV_TEXT.footerTitle}</span>
-      <span className="block truncate text-xs text-gray-400">{SIDEBAR_NAV_TEXT.footerSubtitle}</span>
+      <span className="block truncate text-xs text-gray-500">{SIDEBAR_NAV_TEXT.footerSubtitle}</span>
     </span>
   </div>
 );

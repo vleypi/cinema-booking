@@ -54,7 +54,7 @@ export const FilmForm = ({ film, onDone }: IFilmFormProps) => {
           )}
         />
         <div className="flex flex-col gap-4">
-          <TextField label={SAVE_FILM_TEXT.title} autoFocus error={errors.title?.message} {...register("title")} />
+          <TextField label={SAVE_FILM_TEXT.title} error={errors.title?.message} {...register("title")} />
           <TextField label={SAVE_FILM_TEXT.genre} error={errors.genre?.message} {...register("genre")} />
           <div className="grid gap-4 sm:grid-cols-2">
             <SelectField label={SAVE_FILM_TEXT.ageRating} options={AGE_RATING_OPTIONS} error={errors.ageRating?.message} {...register("ageRating")} />

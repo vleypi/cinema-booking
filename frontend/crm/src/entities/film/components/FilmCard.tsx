@@ -23,7 +23,7 @@ export const FilmCard = ({ film, onSelect }: IFilmCardProps) => (
     </div>
     <div className="flex flex-col items-start gap-1.5">
       <p className="line-clamp-2 font-semibold text-ink">{film.title}</p>
-      <p className="text-xs text-gray-400">{describeFilm(film)}</p>
+      <p className="text-xs text-gray-500">{describeFilm(film)}</p>
       <Badge tone={FILM_STATUS_TONES[film.status]}>{FILM_STATUS_LABELS[film.status]}</Badge>
     </div>
   </button>

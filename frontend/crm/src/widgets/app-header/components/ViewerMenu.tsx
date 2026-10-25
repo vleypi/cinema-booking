@@ -26,7 +26,7 @@ export const ViewerMenu = () => {
           <ViewerAvatar viewer={viewer} size="sm" />
           <span className="min-w-0">
             <span className="block truncate text-sm font-medium text-ink">{viewer.fullName}</span>
-            <span className="block truncate text-xs text-gray-400">{STAFF_ROLE_LABELS[viewer.role]}</span>
+            <span className="block truncate text-xs text-gray-500">{STAFF_ROLE_LABELS[viewer.role]}</span>
           </span>
         </div>
         <div className="my-2 h-px bg-gray-100" />

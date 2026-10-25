@@ -19,7 +19,7 @@ const COLUMNS: readonly IDataTableColumn<IHall>[] = [
     render: ({ name, format }) => (
       <div>
         <p className="font-medium text-ink">{name}</p>
-        <p className="text-xs text-gray-400">{format}</p>
+        <p className="text-xs text-gray-500">{format}</p>
       </div>
     ),
   },
@@ -35,7 +35,7 @@ const COLUMNS: readonly IDataTableColumn<IHall>[] = [
           ))}
         </div>
       ) : (
-        <span className="text-gray-400">{HALL_TEXT.noZones}</span>
+        <span className="text-gray-500">{HALL_TEXT.noZones}</span>
       ),
   },
   { key: "timeBands", header: HALL_TEXT.timeBands, render: ({ useTimeBands }) => (useTimeBands ? HALL_TEXT.timeBandsOn : HALL_TEXT.timeBandsOff) },

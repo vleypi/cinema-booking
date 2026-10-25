@@ -41,10 +41,10 @@ export const LayoutEditorBody = ({ hall, layout, isSaving, isSaved, saveError, o
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-gray-100 pt-4">
         <div className="text-sm">
           <p className="font-medium text-ink">{layout ? `${EDIT_LAYOUT_TEXT.version} ${layout.version}` : EDIT_LAYOUT_TEXT.noLayout}</p>
-          <p className="text-gray-400">{isEmpty ? EDIT_LAYOUT_TEXT.emptyLayout : EDIT_LAYOUT_TEXT.versionHint}</p>
+          <p className="text-gray-500">{isEmpty ? EDIT_LAYOUT_TEXT.emptyLayout : EDIT_LAYOUT_TEXT.versionHint}</p>
         </div>
         <div className="flex items-center gap-2">
-          {isSaved && !isDirty && <span className="text-sm font-medium text-green-600">{EDIT_LAYOUT_TEXT.saved}</span>}
+          {isSaved && !isDirty && <span className="text-sm font-medium text-green-700">{EDIT_LAYOUT_TEXT.saved}</span>}
           {layout && isDirty && (
             <Button variant="ghost" onClick={reset} disabled={isSaving}>
               {EDIT_LAYOUT_TEXT.reset}

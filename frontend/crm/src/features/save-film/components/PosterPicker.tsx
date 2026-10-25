@@ -37,7 +37,7 @@ export const PosterPicker = ({ title, currentUrl, value, error, onChange }: IPos
           onChange={(event) => onChange(event.target.files?.[0] ?? null)}
         />
       </label>
-      {error ? <p className="text-sm text-red-500">{error}</p> : <p className="text-xs text-gray-400">{SAVE_FILM_TEXT.posterHint}</p>}
+      {error ? <p className="text-sm text-red-600">{error}</p> : <p className="text-xs text-gray-500">{SAVE_FILM_TEXT.posterHint}</p>}
     </div>
   );
 };

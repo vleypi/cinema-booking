@@ -55,7 +55,7 @@ export const TimeBandsForm = ({ cinemaId, timeBands }: ITimeBandsFormProps) => {
           {EDIT_TIME_BANDS_TEXT.add}
         </Button>
         <div className="ml-auto flex items-center gap-2">
-          {isSuccess && !isDirty && <span className="text-sm font-medium text-green-600">{EDIT_TIME_BANDS_TEXT.saved}</span>}
+          {isSuccess && !isDirty && <span className="text-sm font-medium text-green-700">{EDIT_TIME_BANDS_TEXT.saved}</span>}
           {isDirty && (
             <Button variant="ghost" onClick={() => reset()} disabled={isPending}>
               {EDIT_TIME_BANDS_TEXT.reset}
