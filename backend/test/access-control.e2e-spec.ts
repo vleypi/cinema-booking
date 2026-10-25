@@ -7,25 +7,10 @@ import { StaffRole } from '@/modules/staff/staff-role.enum.js';
 import { ACCESS_PROBE_CONTROLLERS, CINEMA_PROBE_PATH, PERMISSION_PROBE_PATH } from '@test/support/access-probe.controllers.js';
 import { loginAs, type StaffAgent } from '@test/support/auth.helpers.js';
 import { createTestApp } from '@test/support/create-test-app.js';
+import { PERMISSION_MATRIX } from '@test/support/permission-matrix.js';
 import { createCinema, createStaff } from '@test/support/staff.fixture.js';
 
-const { SuperAdmin, Admin, Manager, Cashier, Controller } = StaffRole;
-
-const PERMISSION_MATRIX: Record<Permission, StaffRole[]> = {
-  [Permission.ManageCinemas]: [SuperAdmin],
-  [Permission.ManageAdmins]: [SuperAdmin],
-  [Permission.ManageStaff]: [SuperAdmin, Admin],
-  [Permission.ManageHalls]: [SuperAdmin, Admin],
-  [Permission.ManageFilms]: [SuperAdmin, Admin, Manager],
-  [Permission.ManageSchedule]: [SuperAdmin, Admin, Manager],
-  [Permission.CancelSessions]: [SuperAdmin, Admin, Manager],
-  [Permission.SellTickets]: [SuperAdmin, Admin, Manager, Cashier],
-  [Permission.RefundTickets]: [SuperAdmin, Admin, Manager, Cashier],
-  [Permission.SearchOrders]: [SuperAdmin, Admin, Manager, Cashier, Controller],
-  [Permission.ScanTickets]: [SuperAdmin, Admin, Manager, Cashier, Controller],
-  [Permission.ViewReports]: [SuperAdmin, Admin, Manager],
-  [Permission.ViewAuditLog]: [SuperAdmin, Admin],
-};
+const { SuperAdmin, Cashier } = StaffRole;
 
 const MATRIX_CASES = Object.values(StaffRole).flatMap((role) =>
   Object.values(Permission).map((permission) => ({ role, permission, allowed: PERMISSION_MATRIX[permission].includes(role) })),

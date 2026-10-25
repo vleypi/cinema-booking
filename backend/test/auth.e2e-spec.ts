@@ -1,3 +1,4 @@
+import { createHmac } from 'node:crypto';
 import type { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { DataSource } from 'typeorm';
@@ -15,6 +16,9 @@ import { createCinema, createStaff, STAFF_PASSWORD } from '@test/support/staff.f
 
 const PROBE_URL = `/${API_PREFIX}/${PERMISSION_PROBE_PATH}/${Permission.SearchOrders}`;
 const NEW_PASSWORD = 'New-Password-1';
+const FOREIGN_SECRET = 'a-secret-the-server-does-not-know';
+
+const encodeTokenPart = (value: object) => Buffer.from(JSON.stringify(value)).toString('base64url');
 
 describe('Authentication', () => {
   let app: INestApplication;
@@ -101,6 +105,24 @@ describe('Authentication', () => {
       await request(server).get(`${AUTH_URL}/me`).expect(401);
     });
 
+    it('rejects a damaged, re-signed, unsigned or rewritten access token', async () => {
+      const victim = await createStaff(app, { role: StaffRole.SuperAdmin });
+      const { [AUTH_COOKIE_NAMES.access]: token } = readSetCookies(await login(await createStaff(app, { role: StaffRole.Cashier })).expect(200));
+      const [header, payload, signature] = token.split('.');
+      const claims = JSON.parse(Buffer.from(payload, 'base64url').toString()) as Record<string, unknown>;
+      const resign = (body: string) => createHmac('sha256', FOREIGN_SECRET).update(`${header}.${body}`).digest('base64url');
+      const forgedTokens = [
+        `${header}.${payload}.${signature.slice(0, -4)}AAAA`,
+        `${header}.${payload}.${resign(payload)}`,
+        `${encodeTokenPart({ alg: 'none', typ: 'JWT' })}.${payload}.`,
+        `${header}.${encodeTokenPart({ ...claims, sub: victim.id })}.${signature}`,
+      ];
+
+      for (const forgedToken of forgedTokens) {
+        await request(server).get(`${AUTH_URL}/me`).set('Cookie', `${AUTH_COOKIE_NAMES.access}=${forgedToken}`).expect(401);
+      }
+    });
+
     it('lets a super admin see every cinema and every permission', async () => {
       const [first, second] = [await createCinema(app), await createCinema(app)];
       const agent = await loginAs(app, await createStaff(app, { role: StaffRole.SuperAdmin }));
@@ -135,6 +157,10 @@ describe('Authentication', () => {
 
     it('rejects refresh without a cookie', async () => {
       await request(server).post(`${AUTH_URL}/refresh`).expect(401);
+    });
+
+    it('rejects a refresh token the server never issued', async () => {
+      await refresh('a-made-up-refresh-token').expect(401);
     });
 
     it('revokes the refresh token on logout', async () => {
