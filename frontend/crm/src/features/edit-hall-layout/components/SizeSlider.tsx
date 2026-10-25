@@ -1,3 +1,5 @@
+import { joinClassNames } from "@luch/shared/lib";
+import { LABEL_CLASS_NAME } from "@luch/shared/ui";
 import { useId } from "react";
 
 interface ISizeSliderProps {
@@ -14,7 +16,7 @@ export const SizeSlider = ({ label, value, max, onChange }: ISizeSliderProps) =>
 
   return (
     <div className="flex min-w-40 flex-1 flex-col gap-1.5">
-      <label htmlFor={id} className="flex justify-between text-xs font-semibold tracking-wide text-gray-700 uppercase">
+      <label htmlFor={id} className={joinClassNames("flex justify-between", LABEL_CLASS_NAME)}>
         {label}
         <span className="text-ink tabular-nums">{value}</span>
       </label>

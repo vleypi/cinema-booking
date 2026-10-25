@@ -17,7 +17,7 @@ const SIZE_CLASSES: Record<ViewerAvatarSize, string> = {
 export const ViewerAvatar = ({ viewer, size = "md" }: IViewerAvatarProps) => (
   <span
     className={joinClassNames(
-      "grid shrink-0 place-items-center rounded-xl bg-linear-to-br from-brand to-ink font-semibold text-white",
+      "grid shrink-0 place-items-center rounded-full bg-brand-soft font-semibold text-brand",
       SIZE_CLASSES[size],
     )}
   >

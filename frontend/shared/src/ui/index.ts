@@ -1,5 +1,6 @@
 export { Button } from "./Button";
 export { CheckboxField } from "./CheckboxField";
+export { LABEL_CLASS_NAME } from "./field.constant";
 export { FormError } from "./FormError";
 export { Icon } from "./Icon";
 export type { IconName } from "./icons.constant";

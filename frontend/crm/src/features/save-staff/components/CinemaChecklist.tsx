@@ -1,6 +1,7 @@
 "use client";
 
-import { CheckboxField } from "@luch/shared/ui";
+import { joinClassNames } from "@luch/shared/lib";
+import { CheckboxField, LABEL_CLASS_NAME } from "@luch/shared/ui";
 import type { ICinemaSummary } from "@/shared/api";
 import { SAVE_STAFF_TEXT } from "@/features/save-staff/constants/save-staff.constant";
 
@@ -17,7 +18,7 @@ export const CinemaChecklist = ({ cinemas, value, onChange, error }: ICinemaChec
 
   return (
     <fieldset className="flex flex-col gap-1.5">
-      <legend className="mb-1.5 text-xs font-semibold tracking-wide text-gray-700 uppercase">{SAVE_STAFF_TEXT.cinemas}</legend>
+      <legend className={joinClassNames("mb-1.5", LABEL_CLASS_NAME)}>{SAVE_STAFF_TEXT.cinemas}</legend>
       <div className="max-h-40 overflow-y-auto rounded-lg border border-gray-200 px-2 py-1">
         {cinemas.map(({ id, name }) => (
           <CheckboxField key={id} label={name} checked={value.includes(id)} onChange={(event) => toggle(id, event.target.checked)} />
