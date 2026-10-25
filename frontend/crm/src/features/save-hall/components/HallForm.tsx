@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { applyServerErrors } from "@luch/shared/lib";
-import { Button, CheckboxField, FormError, TextField } from "@luch/shared/ui";
+import { Button, CheckboxField, FormError, ModalFooter, TextField } from "@luch/shared/ui";
 import { useForm } from "react-hook-form";
 import type { IHall } from "@/entities/hall";
 import { NEW_HALL_VALUES, SAVE_HALL_TEXT } from "@/features/save-hall/constants/save-hall.constant";
@@ -43,14 +43,14 @@ export const HallForm = ({ cinemaId, hall, onDone }: IHallFormProps) => {
       <CheckboxField label={SAVE_HALL_TEXT.useTimeBands} description={SAVE_HALL_TEXT.useTimeBandsHint} {...register("useTimeBands")} />
       {hall && <CheckboxField label={SAVE_HALL_TEXT.isActive} description={SAVE_HALL_TEXT.isActiveHint} {...register("isActive")} />}
       <FormError message={errors.root?.server?.message} />
-      <div className="mt-2 flex justify-end gap-2">
+      <ModalFooter>
         <Button variant="secondary" onClick={onDone} disabled={isPending}>
           {SAVE_HALL_TEXT.cancel}
         </Button>
         <Button type="submit" isLoading={isPending}>
           {hall ? SAVE_HALL_TEXT.save : SAVE_HALL_TEXT.create}
         </Button>
-      </div>
+      </ModalFooter>
     </form>
   );
 };

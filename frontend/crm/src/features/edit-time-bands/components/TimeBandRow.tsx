@@ -1,8 +1,10 @@
 "use client";
 
+import { joinClassNames } from "@luch/shared/lib";
 import { Icon, LABEL_CLASS_NAME, TextField } from "@luch/shared/ui";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { MULTIPLIER_LIMITS } from "@/shared/config";
+import { CARD_CLASS_NAME } from "@/shared/ui";
 import { EDIT_TIME_BANDS_TEXT } from "@/features/edit-time-bands/constants/edit-time-bands.constant";
 import type { TimeBandsFormValues } from "@/features/edit-time-bands/schemas/time-bands-form.schema";
 
@@ -18,7 +20,7 @@ interface ITimeBandRowProps {
 }
 
 export const TimeBandRow = ({ index, register, errors, endsAt, canRemove, onRemove }: ITimeBandRowProps) => (
-  <div className="grid items-start gap-3 rounded-xl border border-gray-200 p-4 sm:grid-cols-[1fr_8rem_6rem_8rem_auto]">
+  <div className={joinClassNames(CARD_CLASS_NAME, "grid items-start gap-3 p-4 sm:grid-cols-[1fr_8rem_6rem_8rem_auto]")}>
     <TextField label={EDIT_TIME_BANDS_TEXT.name} error={errors?.name?.message} {...register(`bands.${index}.name`)} />
     <TextField label={EDIT_TIME_BANDS_TEXT.startsAt} type="time" error={errors?.startsAt?.message} {...register(`bands.${index}.startsAt`)} />
     <div className="flex flex-col gap-1.5">

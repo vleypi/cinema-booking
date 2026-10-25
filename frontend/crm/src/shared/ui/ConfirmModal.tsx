@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, FormError, Modal } from "@luch/shared/ui";
+import { Button, FormError, Modal, ModalFooter } from "@luch/shared/ui";
 import { UI_TEXT } from "@/shared/ui/ui.constant";
 
 interface IConfirmModalProps {
@@ -20,13 +20,13 @@ export const ConfirmModal = ({ isOpen, title, description, confirmText, isPendin
       <p className="text-sm text-gray-600">{description}</p>
       <FormError message={error} />
     </div>
-    <div className="mt-6 flex justify-end gap-2">
+    <ModalFooter>
       <Button variant="secondary" onClick={onClose} disabled={isPending}>
         {UI_TEXT.cancel}
       </Button>
       <Button variant="danger" isLoading={isPending} onClick={onConfirm}>
         {confirmText}
       </Button>
-    </div>
+    </ModalFooter>
   </Modal>
 );

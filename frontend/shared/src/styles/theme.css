@@ -3,10 +3,14 @@
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
-  --color-brand: #3b5bfa;
-  --color-brand-soft: #f1f3ff;
+  --color-brand: #2f4b3c;
+  --color-brand-soft: #edf2ef;
   --color-ink: #050038;
   --color-ray: #ffd233;
+  --color-canvas: #fbf9f4;
+  --color-lime: #c8dc6c;
+  --color-mint: #7fb89a;
+  --color-forest: #1f3329;
 
   --spacing-sidebar: 17.5rem;
   --spacing-sidebar-collapsed: 4.75rem;

@@ -1,6 +1,8 @@
 "use client";
 
+import { joinClassNames } from "@luch/shared/lib";
 import { formatRubles } from "@/shared/lib";
+import { CARD_CLASS_NAME } from "@/shared/ui";
 import type { IHall } from "@/entities/hall";
 import { type ISession, SessionRow } from "@/entities/session";
 import { RemoveSessionButton } from "@/features/remove-session";
@@ -13,7 +15,7 @@ interface IHallScheduleProps {
 }
 
 export const HallSchedule = ({ hall, sessions, timeZone }: IHallScheduleProps) => (
-  <section className="min-w-0 rounded-xl border border-gray-200">
+  <section className={joinClassNames(CARD_CLASS_NAME, "min-w-0")}>
     <header className="flex items-baseline justify-between gap-3 border-b border-gray-100 px-4 py-3">
       <h2 className="font-semibold text-ink">{hall.name}</h2>
       <span className="text-xs text-gray-500">{hall.format}</span>

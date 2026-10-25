@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { applyServerErrors } from "@luch/shared/lib";
-import { Button, CheckboxField, FormError, SelectField, TextField } from "@luch/shared/ui";
+import { Button, CheckboxField, FormError, ModalFooter, SelectField, TextField } from "@luch/shared/ui";
 import { useForm } from "react-hook-form";
 import type { ICinema } from "@/entities/cinema";
 import { NEW_CINEMA_VALUES, SAVE_CINEMA_TEXT, TIMEZONE_OPTIONS } from "@/features/save-cinema/constants/save-cinema.constant";
@@ -61,14 +61,14 @@ export const CinemaForm = ({ cinema, onDone }: ICinemaFormProps) => {
       />
       <CheckboxField label={SAVE_CINEMA_TEXT.isPublished} description={SAVE_CINEMA_TEXT.isPublishedHint} {...register("isPublished")} />
       <FormError message={errors.root?.server?.message} />
-      <div className="mt-2 flex justify-end gap-2">
+      <ModalFooter>
         <Button variant="secondary" onClick={onDone} disabled={isPending}>
           {SAVE_CINEMA_TEXT.cancel}
         </Button>
         <Button type="submit" isLoading={isPending}>
           {cinema ? SAVE_CINEMA_TEXT.save : SAVE_CINEMA_TEXT.create}
         </Button>
-      </div>
+      </ModalFooter>
     </form>
   );
 };

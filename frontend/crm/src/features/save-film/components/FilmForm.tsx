@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toApiError } from "@luch/shared/api";
 import { applyServerErrors } from "@luch/shared/lib";
-import { Button, CheckboxField, FormError, Icon, SelectField, TextAreaField, TextField } from "@luch/shared/ui";
+import { Button, CheckboxField, FormError, Icon, ModalFooter, SelectField, TextAreaField, TextField } from "@luch/shared/ui";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ConfirmModal } from "@/shared/ui";
@@ -88,7 +88,7 @@ export const FilmForm = ({ film, onDone }: IFilmFormProps) => {
       />
       <CheckboxField label={SAVE_FILM_TEXT.isPremiere} description={SAVE_FILM_TEXT.isPremiereHint} {...register("isPremiere")} />
       <FormError message={errors.root?.server?.message} />
-      <div className="mt-2 flex flex-wrap items-center gap-2">
+      <ModalFooter>
         {film && (
           <Button variant="danger" className="px-3" onClick={() => setIsConfirmingRemoval(true)} disabled={isPending}>
             <Icon name="trash" className="size-4" />
@@ -103,7 +103,7 @@ export const FilmForm = ({ film, onDone }: IFilmFormProps) => {
             {film ? SAVE_FILM_TEXT.save : SAVE_FILM_TEXT.create}
           </Button>
         </div>
-      </div>
+      </ModalFooter>
       {film && (
         <ConfirmModal
           isOpen={isConfirmingRemoval}

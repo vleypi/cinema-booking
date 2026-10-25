@@ -2,6 +2,7 @@
 
 import { joinClassNames } from "@luch/shared/lib";
 import { Button } from "@luch/shared/ui";
+import { CARD_CLASS_NAME } from "@/shared/ui";
 import { getPriceZoneColor, type IPriceZone } from "@/entities/hall";
 import { SizeSlider } from "@/features/edit-hall-layout/components/SizeSlider";
 import { ToolButton } from "@/features/edit-hall-layout/components/ToolButton";
@@ -32,7 +33,7 @@ export const LayoutToolbar = ({
   onFillEmpty,
   onClear,
 }: ILayoutToolbarProps) => (
-  <div className="flex flex-col gap-5 rounded-xl border border-gray-200 p-4">
+  <div className={joinClassNames(CARD_CLASS_NAME, "flex flex-col gap-5 p-4")}>
     <div className="flex flex-wrap gap-6">
       <SizeSlider label={EDIT_LAYOUT_TEXT.rows} value={draft.rows} max={LAYOUT_LIMITS.maxRows} onChange={(rows) => onResize(draft.columns, rows)} />
       <SizeSlider

@@ -26,7 +26,7 @@ export const SidebarShell = ({ children }: ISidebarShellProps) => {
       <aside
         data-expanded={isExpanded}
         className={joinClassNames(
-          "group fixed inset-y-0 left-0 z-50 flex w-sidebar shrink-0 flex-col overflow-hidden border-r border-gray-200 bg-white transition-[translate,width] duration-300 ease-out-expo",
+          "group fixed inset-y-0 left-0 z-50 flex w-sidebar shrink-0 flex-col overflow-hidden bg-white transition-[translate,width] duration-300 ease-out-expo",
           "md:static md:z-auto md:translate-x-0",
           isMobileOpen ? "translate-x-0 shadow-xl" : "-translate-x-full",
           isExpanded ? "md:w-sidebar" : "md:w-sidebar-collapsed",

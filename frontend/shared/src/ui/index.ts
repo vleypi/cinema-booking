@@ -5,6 +5,7 @@ export { FormError } from "./FormError";
 export { Icon } from "./Icon";
 export type { IconName } from "./icons.constant";
 export { Modal } from "./Modal";
+export { ModalFooter } from "./ModalFooter";
 export { type ISelectOption, SelectField } from "./SelectField";
 export { TextAreaField } from "./TextAreaField";
 export { TextField } from "./TextField";
