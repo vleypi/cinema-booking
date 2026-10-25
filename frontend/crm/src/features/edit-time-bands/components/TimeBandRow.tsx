@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon, TextField } from "@luch/shared/ui";
+import { Icon, LABEL_CLASS_NAME, TextField } from "@luch/shared/ui";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { MULTIPLIER_LIMITS } from "@/shared/config";
 import { EDIT_TIME_BANDS_TEXT } from "@/features/edit-time-bands/constants/edit-time-bands.constant";
@@ -22,7 +22,7 @@ export const TimeBandRow = ({ index, register, errors, endsAt, canRemove, onRemo
     <TextField label={EDIT_TIME_BANDS_TEXT.name} error={errors?.name?.message} {...register(`bands.${index}.name`)} />
     <TextField label={EDIT_TIME_BANDS_TEXT.startsAt} type="time" error={errors?.startsAt?.message} {...register(`bands.${index}.startsAt`)} />
     <div className="flex flex-col gap-1.5">
-      <span className="text-xs font-semibold tracking-wide text-gray-700 uppercase">{EDIT_TIME_BANDS_TEXT.endsAt}</span>
+      <span className={LABEL_CLASS_NAME}>{EDIT_TIME_BANDS_TEXT.endsAt}</span>
       <span className="py-2 text-sm text-gray-500 tabular-nums">{endsAt}</span>
     </div>
     <TextField

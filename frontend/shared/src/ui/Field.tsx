@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { LABEL_CLASS_NAME } from "./field.constant";
 
 interface IFieldProps {
   id: string;
@@ -10,7 +11,7 @@ interface IFieldProps {
 
 export const Field = ({ id, label, error, hint, children }: IFieldProps) => (
   <div className="flex flex-col gap-1.5">
-    <label htmlFor={id} className="text-xs font-semibold tracking-wide text-gray-700 uppercase">
+    <label htmlFor={id} className={LABEL_CLASS_NAME}>
       {label}
     </label>
     {children}

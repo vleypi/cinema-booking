@@ -18,12 +18,15 @@ export const CinemaPricesSection = ({ cinema }: ICinemaPricesSectionProps) => {
   return (
     <>
       <PageHeader title={PRICES_PAGE_TEXT.title} description={`${PRICES_PAGE_TEXT.description}: ${cinema.name}`} />
-      <div className="mb-8 rounded-xl bg-brand-soft px-5 py-4 text-sm">
+      <div className="mb-8 rounded-xl border border-gray-200 px-5 py-4 text-sm">
         <p className="font-semibold text-ink">{PRICES_PAGE_TEXT.formulaTitle}</p>
         <p className="mt-1 text-ink">{PRICES_PAGE_TEXT.formula}</p>
-        <Link href={ROUTES.halls} className="mt-1 block text-brand hover:underline">
-          {PRICES_PAGE_TEXT.formulaHint}
-        </Link>
+        <p className="mt-1 text-gray-600">
+          {PRICES_PAGE_TEXT.formulaHint}{" "}
+          <Link href={ROUTES.halls} className="text-brand hover:underline">
+            {PRICES_PAGE_TEXT.hallsLink}
+          </Link>
+        </p>
       </div>
       <SectionHeader title={PRICES_PAGE_TEXT.timeBandsTitle} description={PRICES_PAGE_TEXT.timeBandsDescription} />
       {isPending || !timeBands ? (

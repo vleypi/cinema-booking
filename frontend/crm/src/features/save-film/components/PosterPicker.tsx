@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@luch/shared/ui";
+import { Icon, LABEL_CLASS_NAME } from "@luch/shared/ui";
 import { useId } from "react";
 import { FilmPoster } from "@/entities/film";
 import { POSTER_MIME_TYPES, SAVE_FILM_TEXT } from "@/features/save-film/constants/save-film.constant";
@@ -21,7 +21,7 @@ export const PosterPicker = ({ title, currentUrl, value, error, onChange }: IPos
 
   return (
     <div className="flex flex-col gap-1.5">
-      <span className="text-xs font-semibold tracking-wide text-gray-700 uppercase">{SAVE_FILM_TEXT.poster}</span>
+      <span className={LABEL_CLASS_NAME}>{SAVE_FILM_TEXT.poster}</span>
       <FilmPoster src={shownUrl} title={title} className="w-full" />
       <label
         htmlFor={id}

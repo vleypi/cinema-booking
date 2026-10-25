@@ -2,7 +2,6 @@
 
 import { SidebarShell } from "@/shared/ui";
 import { getAvailableNavItems, useViewer } from "@/entities/viewer";
-import { SidebarFooter } from "@/widgets/sidebar/components/SidebarFooter";
 import { SidebarLink } from "@/widgets/sidebar/components/SidebarLink";
 import { SIDEBAR_NAV_TEXT } from "@/widgets/sidebar/constants/sidebar.constant";
 
@@ -16,7 +15,6 @@ export const Sidebar = () => {
           <SidebarLink key={item.href} item={item} />
         ))}
       </nav>
-      <SidebarFooter />
     </SidebarShell>
   );
 };

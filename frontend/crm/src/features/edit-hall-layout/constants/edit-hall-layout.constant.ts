@@ -24,7 +24,7 @@ export const BRUSH_OPTIONS: readonly { value: Brush; label: string }[] = [
 export const EDIT_LAYOUT_TEXT = {
   title: "Схема зала",
   description: "Выберите кисть и проведите по сетке. Пустые клетки становятся проходами, ряды и места нумеруются сами",
-  columns: "Мест в ряду",
+  columns: "Ширина ряда с проходами",
   rows: "Рядов",
   brush: "Кисть",
   priceZone: "Ценовая зона",
