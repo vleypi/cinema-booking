@@ -1,0 +1,17 @@
+export const HALL_PAGE_TEXT = {
+  backToHalls: "Все залы",
+  edit: "Изменить зал",
+  editTitle: "Параметры зала",
+  basePrice: "базовая цена",
+  timeBandsOn: "цена зависит от времени сеанса",
+  timeBandsOff: "фиксированная цена",
+  inactive: "зал не работает",
+  priceZonesTitle: "Ценовые зоны",
+  priceZonesDescription: "Коэффициент зоны умножает базовую цену. Зону, занятую на схеме, удалить нельзя",
+  addPriceZone: "Добавить зону",
+  createPriceZoneTitle: "Новая ценовая зона",
+  editPriceZoneTitle: "Ценовая зона",
+  editPriceZone: "Изменить зону",
+  notFoundTitle: "Зал не найден",
+  notFoundDescription: "В выбранном кинотеатре нет такого зала. Возможно, вы переключили кинотеатр",
+} as const;
