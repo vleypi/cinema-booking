@@ -1,4 +1,4 @@
-import { Badge } from "@/shared/ui";
+import { Badge, Highlight } from "@/shared/ui";
 import { FilmPoster } from "@/entities/film/components/FilmPoster";
 import { FILM_STATUS_LABELS, FILM_STATUS_TONES, FILM_TEXT } from "@/entities/film/constants/film.constant";
 import type { IFilm } from "@/entities/film/interfaces/film.interface";
@@ -6,10 +6,11 @@ import { describeFilm, getPosterUrl } from "@/entities/film/utils/film.util";
 
 interface IFilmCardProps {
   film: IFilm;
+  search: string;
   onSelect: (film: IFilm) => void;
 }
 
-export const FilmCard = ({ film, onSelect }: IFilmCardProps) => (
+export const FilmCard = ({ film, search, onSelect }: IFilmCardProps) => (
   <button
     type="button"
     onClick={() => onSelect(film)}
@@ -22,7 +23,9 @@ export const FilmCard = ({ film, onSelect }: IFilmCardProps) => (
       )}
     </div>
     <div className="flex flex-col items-start gap-1.5">
-      <p className="line-clamp-2 font-semibold text-ink">{film.title}</p>
+      <p className="line-clamp-2 font-semibold text-ink">
+        <Highlight text={film.title} query={search} />
+      </p>
       <p className="text-xs text-gray-500">{describeFilm(film)}</p>
       <Badge tone={FILM_STATUS_TONES[film.status]}>{FILM_STATUS_LABELS[film.status]}</Badge>
     </div>

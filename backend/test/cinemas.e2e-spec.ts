@@ -43,7 +43,7 @@ describe('Cinemas', () => {
     const { body: cinemas } = await superAdmin.get(CINEMAS_URL).expect(200);
 
     expect(created).toMatchObject({ ...body, id: expect.any(String) });
-    expect(cinemas).toContainEqual(expect.objectContaining({ id: created.id, slug: body.slug }));
+    expect(cinemas.items).toContainEqual(expect.objectContaining({ id: created.id, slug: body.slug }));
   });
 
   it('hides a cinema from the site without deleting it', async () => {
@@ -96,5 +96,47 @@ describe('Cinemas', () => {
     await admin.get(CINEMAS_URL).expect(403);
     await admin.post(CINEMAS_URL).send(cinemaBody()).expect(403);
     await admin.patch(`${CINEMAS_URL}/${cinemaId}`).send({ isPublished: false }).expect(403);
+  });
+  describe('list', () => {
+    const createNamed = async (name: string, timezone = 'Europe/Moscow') =>
+      (await superAdmin.post(CINEMAS_URL).send({ ...cinemaBody(), name, timezone }).expect(201)).body;
+
+    it('finds cinemas by part of the name, address or code ignoring case', async () => {
+      const token = `poisk${Date.now()}`;
+      const byName = await createNamed(`Луч ${token}`);
+      const byAddress = (await superAdmin.post(CINEMAS_URL).send({ ...cinemaBody(), address: `Казань, ${token}` }).expect(201)).body;
+      const bySlug = (await superAdmin.post(CINEMAS_URL).send({ ...cinemaBody(), slug: `${token}-slug` }).expect(201)).body;
+
+      const { body } = await superAdmin.get(CINEMAS_URL).query({ search: token.toUpperCase() }).expect(200);
+
+      expect(body.total).toBe(3);
+      expect(new Set(body.items.map(({ id }: { id: string }) => id))).toEqual(new Set([byName.id, byAddress.id, bySlug.id]));
+    });
+
+    it('treats percent and underscore in the search as plain text', async () => {
+      const { body } = await superAdmin.get(CINEMAS_URL).query({ search: '%_' }).expect(200);
+
+      expect(body).toEqual({ items: [], total: 0 });
+    });
+
+    it('sorts by the requested field and pages through the result', async () => {
+      const token = `sort${Date.now()}`;
+      await createNamed(`${token} Б`, 'Europe/Moscow');
+      await createNamed(`${token} А`, 'Asia/Yekaterinburg');
+      await createNamed(`${token} В`, 'Europe/Kaliningrad');
+
+      const { body: firstPage } = await superAdmin.get(CINEMAS_URL).query({ search: token, sort: 'timezone', order: 'desc', pageSize: 2 }).expect(200);
+      const { body: secondPage } = await superAdmin.get(CINEMAS_URL).query({ search: token, sort: 'timezone', order: 'desc', pageSize: 2, page: 2 }).expect(200);
+
+      expect(firstPage.total).toBe(3);
+      expect(firstPage.items.map(({ timezone }: { timezone: string }) => timezone)).toEqual(['Europe/Moscow', 'Europe/Kaliningrad']);
+      expect(secondPage.items.map(({ timezone }: { timezone: string }) => timezone)).toEqual(['Asia/Yekaterinburg']);
+    });
+
+    it('rejects an unknown sort field and a too large page size', async () => {
+      const { body } = await superAdmin.get(CINEMAS_URL).query({ sort: 'address', pageSize: 1000 }).expect(400);
+
+      expect(Object.keys(body.errors).sort()).toEqual(['pageSize', 'sort']);
+    });
   });
 });

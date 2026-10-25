@@ -13,7 +13,12 @@ interface IRetriableRequest extends InternalAxiosRequestConfig {
 }
 
 export const createApiClient = ({ refreshPath, loginRoute, ownAuthErrorPaths }: IApiClientConfig): AxiosInstance => {
-  const client = axios.create({ baseURL: API_BASE_PATH, withCredentials: true, timeout: API_REQUEST_TIMEOUT_MS });
+  const client = axios.create({
+    baseURL: API_BASE_PATH,
+    withCredentials: true,
+    timeout: API_REQUEST_TIMEOUT_MS,
+    paramsSerializer: { indexes: null },
+  });
   let pendingRefresh: Promise<void> | null = null;
 
   const refreshSession = () => {

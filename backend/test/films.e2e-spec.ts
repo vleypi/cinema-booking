@@ -46,7 +46,7 @@ describe('Films', () => {
       const { body: films } = await manager.get(FILMS_URL).expect(200);
 
       expect(created).toMatchObject({ ...body, id: expect.any(String), posterFileId: null });
-      expect(films).toContainEqual(expect.objectContaining({ id: created.id }));
+      expect(films.items).toContainEqual(expect.objectContaining({ id: created.id }));
     });
 
     it('takes a film out of release and clears its trailer', async () => {
@@ -128,6 +128,51 @@ describe('Films', () => {
       const response = await manager.delete(`${FILMS_URL}/${filmId}`).expect(409);
 
       expect(response.body.message).toBe(FILM_MESSAGES.hasSessions);
+    });
+  });
+  describe('list', () => {
+    const createTitled = async (title: string, changes: Partial<ReturnType<typeof filmBody>> = {}) =>
+      (await manager.post(FILMS_URL).send({ ...filmBody(), title, ...changes }).expect(201)).body;
+
+    it('finds films by part of the title ignoring case', async () => {
+      const token = `poisk${Date.now()}`;
+      const film = await createTitled(`Фильм ${token}`);
+
+      const { body } = await manager.get(FILMS_URL).query({ search: token.toUpperCase() }).expect(200);
+
+      expect(body).toEqual({ items: [expect.objectContaining({ id: film.id })], total: 1 });
+    });
+
+    it('filters by one or several statuses', async () => {
+      const token = `status${Date.now()}`;
+      const announced = await createTitled(`${token} 1`, { status: FilmStatus.Announced });
+      const inRelease = await createTitled(`${token} 2`, { status: FilmStatus.InRelease });
+      await createTitled(`${token} 3`, { status: FilmStatus.Archived });
+
+      const { body: single } = await manager.get(FILMS_URL).query({ search: token, status: FilmStatus.Announced }).expect(200);
+      const { body: several } = await manager.get(`${FILMS_URL}?search=${token}&status=${FilmStatus.Announced}&status=${FilmStatus.InRelease}`).expect(200);
+
+      expect(single.items.map(({ id }: { id: string }) => id)).toEqual([announced.id]);
+      expect(new Set(several.items.map(({ id }: { id: string }) => id))).toEqual(new Set([announced.id, inRelease.id]));
+    });
+
+    it('shows the newest films first by default and sorts by title on request', async () => {
+      const token = `order${Date.now()}`;
+      await createTitled(`${token} Б`, { releaseDate: '2026-01-01' });
+      await createTitled(`${token} А`, { releaseDate: '2026-03-01' });
+      await createTitled(`${token} В`, { releaseDate: '2026-02-01' });
+
+      const { body: newest } = await manager.get(FILMS_URL).query({ search: token }).expect(200);
+      const { body: byTitle } = await manager.get(FILMS_URL).query({ search: token, sort: 'title', pageSize: 2, page: 2 }).expect(200);
+
+      expect(newest.items.map(({ title }: { title: string }) => title)).toEqual([`${token} А`, `${token} В`, `${token} Б`]);
+      expect(byTitle).toEqual({ items: [expect.objectContaining({ title: `${token} В` })], total: 3 });
+    });
+
+    it('rejects an unknown status', async () => {
+      const { body } = await manager.get(FILMS_URL).query({ status: 'DELETED' }).expect(400);
+
+      expect(body.errors).toHaveProperty('status');
     });
   });
 });

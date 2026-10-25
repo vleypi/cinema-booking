@@ -1,4 +1,5 @@
-import type { AgeRating, FilmStatus } from "@/entities/film/constants/film.constant";
+import type { IListRequest } from "@/shared/api";
+import type { AgeRating, FilmSortField, FilmStatus } from "@/entities/film/constants/film.constant";
 
 export interface IFilmPayload {
   title: string;
@@ -15,4 +16,8 @@ export interface IFilmPayload {
 export interface IFilm extends IFilmPayload {
   id: string;
   posterFileId: string | null;
+}
+
+export interface IFilmListRequest extends IListRequest<FilmSortField> {
+  status?: readonly FilmStatus[];
 }

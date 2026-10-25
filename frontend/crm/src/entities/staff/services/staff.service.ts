@@ -1,11 +1,12 @@
-import { apiClient } from "@/shared/api";
+import { apiClient, type IListRequest, type IPage } from "@/shared/api";
+import type { StaffSortField } from "@/entities/staff/constants/staff.constant";
 import type { ICreateStaffPayload, IStaffMember, IUpdateStaffPayload } from "@/entities/staff/interfaces/staff.interface";
 
 const STAFF_PATH = "/staff";
 
 class StaffService {
-  async getByCinema(cinemaId: string): Promise<IStaffMember[]> {
-    const { data } = await apiClient.get<IStaffMember[]>(`/cinemas/${cinemaId}${STAFF_PATH}`);
+  async getPageByCinema(cinemaId: string, request: IListRequest<StaffSortField>): Promise<IPage<IStaffMember>> {
+    const { data } = await apiClient.get<IPage<IStaffMember>>(`/cinemas/${cinemaId}${STAFF_PATH}`, { params: request });
     return data;
   }
 

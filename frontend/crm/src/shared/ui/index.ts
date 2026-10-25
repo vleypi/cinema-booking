@@ -1,10 +1,13 @@
 export { Badge, type BadgeTone } from "@/shared/ui/Badge";
 export { ConfirmModal } from "@/shared/ui/ConfirmModal";
-export { DataTable, type IDataTableColumn } from "@/shared/ui/DataTable";
+export { DataTable, type IDataTableColumn, type IDataTableSorting } from "@/shared/ui/DataTable";
 export { EmptyState } from "@/shared/ui/EmptyState";
+export { Highlight } from "@/shared/ui/Highlight";
 export { HeaderPopover } from "@/shared/ui/HeaderPopover";
+export { ListToolbar } from "@/shared/ui/ListToolbar";
 export { Logo } from "@/shared/ui/Logo";
 export { PageHeader } from "@/shared/ui/PageHeader";
+export { Pagination } from "@/shared/ui/Pagination";
 export { SectionHeader } from "@/shared/ui/SectionHeader";
 export { CARD_CLASS_NAME } from "@/shared/ui/ui.constant";
 export { SidebarProvider } from "@/shared/ui/sidebar/SidebarProvider";
