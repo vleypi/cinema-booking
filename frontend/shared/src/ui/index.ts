@@ -1,11 +1,12 @@
 export { Button } from "./Button";
 export { CheckboxField } from "./CheckboxField";
-export { LABEL_CLASS_NAME } from "./field.constant";
+export { CONTROL_CLASS_NAME, LABEL_CLASS_NAME } from "./field.constant";
 export { FormError } from "./FormError";
 export { Icon } from "./Icon";
 export type { IconName } from "./icons.constant";
 export { Modal } from "./Modal";
 export { ModalFooter } from "./ModalFooter";
-export { type ISelectOption, SelectField } from "./SelectField";
+export { type ISelectOption, SelectControl } from "./SelectControl";
+export { SelectField } from "./SelectField";
 export { TextAreaField } from "./TextAreaField";
 export { TextField } from "./TextField";

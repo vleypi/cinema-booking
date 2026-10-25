@@ -4,7 +4,7 @@ import { Button, Icon, Modal } from "@luch/shared/ui";
 import { useState } from "react";
 import type { ICinemaSummary } from "@/shared/api";
 import { EmptyState, PageHeader } from "@/shared/ui";
-import { isSchedulable, useFilms } from "@/entities/film";
+import { useSchedulableFilms } from "@/entities/film";
 import { useCinemaHalls } from "@/entities/hall";
 import { useCinemaSessions } from "@/entities/session";
 import { SessionForm } from "@/features/create-session";
@@ -22,7 +22,7 @@ export const CinemaScheduleSection = ({ cinema }: ICinemaScheduleSectionProps) =
   const [isCreating, setIsCreating] = useState(false);
   const { data: halls, isPending: areHallsPending } = useCinemaHalls(cinema.id);
   const { data: sessions, isPending: areSessionsPending } = useCinemaSessions(cinema.id, day.date);
-  const { data: films } = useFilms();
+  const films = useSchedulableFilms();
   const shownHalls = halls?.filter((hall) => hall.isActive || sessions?.some(({ hallId }) => hallId === hall.id)) ?? [];
 
   return (
@@ -60,7 +60,7 @@ export const CinemaScheduleSection = ({ cinema }: ICinemaScheduleSectionProps) =
         <SessionForm
           cinemaId={cinema.id}
           date={day.date}
-          films={films?.filter(isSchedulable) ?? []}
+          films={films}
           halls={halls?.filter(({ isActive }) => isActive) ?? []}
           onDone={(date) => {
             day.setDate(date);

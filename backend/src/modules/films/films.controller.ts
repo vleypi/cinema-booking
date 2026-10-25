@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpStatus, Param, ParseFilePipe, Patch, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpStatus, Param, ParseFilePipe, Patch, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBody,
@@ -11,12 +11,14 @@ import {
   ApiPayloadTooLargeResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { type IPage, PageDto } from '@/common/pagination/page.js';
 import { ParseIdPipe } from '@/common/validation/parse-id.pipe.js';
 import { invalidField } from '@/common/validation/validation-errors.js';
 import { Auth } from '@/modules/auth/auth.decorator.js';
 import { Permission } from '@/modules/auth/permissions.js';
 import { CreateFilmDto } from '@/modules/films/dto/create-film.dto.js';
 import { FilmDto } from '@/modules/films/dto/film.dto.js';
+import { ListFilmsQueryDto } from '@/modules/films/dto/list-films-query.dto.js';
 import { UpdateFilmDto } from '@/modules/films/dto/update-film.dto.js';
 import { FILM_MESSAGES, POSTER_FIELD, POSTER_MAX_BYTES, POSTER_MIME_TYPES } from '@/modules/films/films.constant.js';
 import { FilmsService } from '@/modules/films/films.service.js';
@@ -34,9 +36,9 @@ export class FilmsController {
 
   @Get()
   @Auth(Permission.ManageFilms)
-  @ApiOkResponse({ type: [FilmDto] })
-  findAll(): Promise<FilmDto[]> {
-    return this.films.findAll();
+  @ApiOkResponse({ type: PageDto(FilmDto) })
+  findPage(@Query() query: ListFilmsQueryDto): Promise<IPage<FilmDto>> {
+    return this.films.findPage(query);
   }
 
   @Post()

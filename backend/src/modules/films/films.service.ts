@@ -1,12 +1,23 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import type { Repository } from 'typeorm';
+import { type FindOptionsOrder, In, type Repository } from 'typeorm';
+import { SortOrder } from '@/common/pagination/list-query.dto.js';
+import { containsIgnoringCase, type IPage, toPageWindow, toSqlDirection } from '@/common/pagination/page.js';
 import type { CreateFilmDto } from '@/modules/films/dto/create-film.dto.js';
+import { FilmSortField, type ListFilmsQueryDto } from '@/modules/films/dto/list-films-query.dto.js';
 import type { UpdateFilmDto } from '@/modules/films/dto/update-film.dto.js';
 import { Film } from '@/modules/films/entities/film.entity.js';
 import { FILM_MESSAGES } from '@/modules/films/films.constant.js';
 import { type IUploadedFile, MediaService } from '@/modules/media/media.service.js';
 import { Session } from '@/modules/sessions/entities/session.entity.js';
+
+const NEWEST_FIRST: FindOptionsOrder<Film> = { releaseDate: 'DESC', title: 'ASC', id: 'ASC' };
+
+const FILM_ORDER: Record<FilmSortField, (direction: 'ASC' | 'DESC') => FindOptionsOrder<Film>> = {
+  [FilmSortField.Title]: (direction) => ({ title: direction, id: 'ASC' }),
+  [FilmSortField.ReleaseDate]: (direction) => ({ releaseDate: direction, title: 'ASC', id: 'ASC' }),
+  [FilmSortField.Status]: (direction) => ({ status: direction, title: 'ASC', id: 'ASC' }),
+};
 
 @Injectable()
 export class FilmsService {
@@ -16,8 +27,15 @@ export class FilmsService {
     @InjectRepository(Session) private readonly sessions: Repository<Session>,
   ) {}
 
-  findAll(): Promise<Film[]> {
-    return this.films.find({ order: { releaseDate: 'DESC', title: 'ASC' } });
+  async findPage(query: ListFilmsQueryDto): Promise<IPage<Film>> {
+    const { search, status, sort, order = SortOrder.Asc } = query;
+    const [items, total] = await this.films.findAndCount({
+      where: { ...(search && { title: containsIgnoringCase(search) }), ...(status && { status: In(status) }) },
+      order: sort ? FILM_ORDER[sort](toSqlDirection(order)) : NEWEST_FIRST,
+      ...toPageWindow(query),
+    });
+
+    return { items, total };
   }
 
   async create(dto: CreateFilmDto): Promise<Film> {

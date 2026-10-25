@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { type IPage, PageDto } from '@/common/pagination/page.js';
 import { Auth } from '@/modules/auth/auth.decorator.js';
 import { Permission } from '@/modules/auth/permissions.js';
 import { CinemasService } from '@/modules/cinemas/cinemas.service.js';
 import { CinemaDto } from '@/modules/cinemas/dto/cinema.dto.js';
 import { CreateCinemaDto } from '@/modules/cinemas/dto/create-cinema.dto.js';
+import { ListCinemasQueryDto } from '@/modules/cinemas/dto/list-cinemas-query.dto.js';
 import { UpdateCinemaDto } from '@/modules/cinemas/dto/update-cinema.dto.js';
 
 @ApiTags('cinemas')
@@ -14,9 +16,9 @@ export class CinemasController {
 
   @Get()
   @Auth(Permission.ManageCinemas)
-  @ApiOkResponse({ type: [CinemaDto] })
-  findAll(): Promise<CinemaDto[]> {
-    return this.cinemas.findAll();
+  @ApiOkResponse({ type: PageDto(CinemaDto) })
+  findPage(@Query() query: ListCinemasQueryDto): Promise<IPage<CinemaDto>> {
+    return this.cinemas.findPage(query);
   }
 
   @Post()

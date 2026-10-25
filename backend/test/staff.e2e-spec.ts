@@ -111,15 +111,53 @@ describe('Staff', () => {
       const shared = await createAs(superAdmin, StaffRole.Manager, [cinemaId, otherCinemaId]);
       const foreign = await createAs(superAdmin, StaffRole.Manager, [otherCinemaId]);
 
-      const { body } = await admin.get(cinemaStaffUrl(cinemaId)).expect(200);
-      const listed = body.find(({ id }: { id: string }) => id === shared.id);
+      const { body } = await admin.get(cinemaStaffUrl(cinemaId)).query({ pageSize: 100 }).expect(200);
+      const listed = body.items.find(({ id }: { id: string }) => id === shared.id);
 
       expect(listed.cinemas.map(({ id }: { id: string }) => id).sort()).toEqual([cinemaId, otherCinemaId].sort());
-      expect(body.map(({ id }: { id: string }) => id)).not.toContain(foreign.id);
+      expect(body.items.map(({ id }: { id: string }) => id)).not.toContain(foreign.id);
     });
 
     it('forbids an admin to list another cinema', async () => {
       await admin.get(cinemaStaffUrl(otherCinemaId)).expect(403);
+    });
+
+    it('finds staff by part of the name or login ignoring case and counts only matches', async () => {
+      const listCinemaId = await createCinema(app);
+      const create = (changes: Partial<ReturnType<typeof staffBody>>) =>
+        superAdmin.post(STAFF_URL).send({ ...staffBody(StaffRole.Cashier, [listCinemaId]), ...changes }).expect(201);
+      const { body: byName } = await create({ fullName: 'Сидоров Пётр' });
+      const { body: byLogin } = await create({ login: `sidorova-${Date.now()}` });
+      await create({ fullName: 'Петров Иван' });
+
+      const { body: foundByName } = await superAdmin.get(cinemaStaffUrl(listCinemaId)).query({ search: 'СИДОР' }).expect(200);
+      const { body: foundByLogin } = await superAdmin.get(cinemaStaffUrl(listCinemaId)).query({ search: 'SIDOROVA' }).expect(200);
+
+      expect(foundByName).toEqual({ items: [expect.objectContaining({ id: byName.id })], total: 1 });
+      expect(foundByLogin).toEqual({ items: [expect.objectContaining({ id: byLogin.id })], total: 1 });
+    });
+
+    it('sorts staff by role and pages through them', async () => {
+      const listCinemaId = await createCinema(app);
+      for (const role of [StaffRole.Cashier, StaffRole.Admin, StaffRole.Manager]) {
+        await superAdmin.post(STAFF_URL).send(staffBody(role, [listCinemaId])).expect(201);
+      }
+
+      const { body: firstPage } = await superAdmin.get(cinemaStaffUrl(listCinemaId)).query({ sort: 'role', pageSize: 2 }).expect(200);
+      const { body: secondPage } = await superAdmin.get(cinemaStaffUrl(listCinemaId)).query({ sort: 'role', pageSize: 2, page: 2 }).expect(200);
+
+      expect(firstPage.total).toBe(3);
+      expect([...firstPage.items, ...secondPage.items].map(({ role }: { role: StaffRole }) => role)).toEqual([
+        StaffRole.Admin,
+        StaffRole.Manager,
+        StaffRole.Cashier,
+      ]);
+    });
+
+    it('keeps all cinemas of a member when searching', async () => {
+      const { body } = await admin.get(cinemaStaffUrl(cinemaId)).query({ search: 'Иванова', pageSize: 100 }).expect(200);
+
+      expect(body.items.every(({ cinemas }: { cinemas: unknown[] }) => cinemas.length > 0)).toBe(true);
     });
   });
 

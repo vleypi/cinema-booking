@@ -1,12 +1,12 @@
-import { apiClient } from "@/shared/api";
-import type { IFilm, IFilmPayload } from "@/entities/film/interfaces/film.interface";
+import { apiClient, type IPage } from "@/shared/api";
+import type { IFilm, IFilmListRequest, IFilmPayload } from "@/entities/film/interfaces/film.interface";
 
 const FILMS_PATH = "/films";
 const POSTER_FIELD = "file";
 
 class FilmService {
-  async getAll(): Promise<IFilm[]> {
-    const { data } = await apiClient.get<IFilm[]>(FILMS_PATH);
+  async getPage(request: IFilmListRequest): Promise<IPage<IFilm>> {
+    const { data } = await apiClient.get<IPage<IFilm>>(FILMS_PATH, { params: request });
     return data;
   }
 
