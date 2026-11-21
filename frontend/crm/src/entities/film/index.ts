@@ -3,7 +3,9 @@ export { FilmPoster } from "@/entities/film/components/FilmPoster";
 export {
   AGE_RATINGS,
   type AgeRating,
+  FILM_FILTERS,
   FILM_SORT_FIELDS,
+  FILM_SORT_OPTIONS,
   FILM_STATUS_LABELS,
   FILM_STATUSES,
   FILM_TEXT,

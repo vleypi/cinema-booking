@@ -7,6 +7,7 @@ export const QUERY_KEYS = {
   staff: ["staff"],
   cinemaStaff: (cinemaId: string, request: IListRequest<string>) => ["staff", cinemaId, request],
   cinemaHalls: (cinemaId: string) => ["halls", cinemaId],
+  cinemaHallList: (cinemaId: string, request: IListRequest<string>) => ["halls", cinemaId, request],
   hallLayout: (hallId: string) => ["hall-layout", hallId],
   cinemaTimeBands: (cinemaId: string) => ["time-bands", cinemaId],
   films: ["films"],

@@ -1,4 +1,5 @@
 import type { IListRequest } from "@/shared/api";
+import type { BooleanFilterValue } from "@/shared/config";
 import type { AgeRating, FilmSortField, FilmStatus } from "@/entities/film/constants/film.constant";
 
 export interface IFilmPayload {
@@ -20,4 +21,5 @@ export interface IFilm extends IFilmPayload {
 
 export interface IFilmListRequest extends IListRequest<FilmSortField> {
   status?: readonly FilmStatus[];
+  isPremiere?: BooleanFilterValue;
 }

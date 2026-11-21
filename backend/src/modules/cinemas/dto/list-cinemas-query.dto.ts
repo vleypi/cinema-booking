@@ -1,6 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsOptional } from 'class-validator';
 import { ListQueryDto } from '@/common/pagination/list-query.dto.js';
+import { IsQueryBoolean } from '@/common/validation/is-query-boolean.decorator.js';
 
 export enum CinemaSortField {
   Name = 'name',
@@ -12,4 +13,9 @@ export class ListCinemasQueryDto extends ListQueryDto {
   @IsOptional()
   @IsEnum(CinemaSortField)
   sort?: CinemaSortField;
+
+  @ApiPropertyOptional({ description: 'Только опубликованные или только скрытые' })
+  @IsOptional()
+  @IsQueryBoolean()
+  isPublished?: boolean;
 }

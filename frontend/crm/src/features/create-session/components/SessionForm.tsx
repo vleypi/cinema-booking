@@ -18,13 +18,15 @@ interface ISessionFormProps {
   date: string;
   films: readonly IFilm[];
   halls: readonly IHall[];
+  initialHallId?: string;
+  initialTime?: string;
   onDone: (date: string) => void;
   onCancel: () => void;
 }
 
 const DEFAULT_TIME = "18:00";
 
-export const SessionForm = ({ cinemaId, date, films, halls, onDone, onCancel }: ISessionFormProps) => {
+export const SessionForm = ({ cinemaId, date, films, halls, initialHallId, initialTime = DEFAULT_TIME, onDone, onCancel }: ISessionFormProps) => {
   const { mutate: create, isPending } = useCreateSession(cinemaId);
   const {
     register,
@@ -34,7 +36,7 @@ export const SessionForm = ({ cinemaId, date, films, halls, onDone, onCancel }: 
     formState: { errors },
   } = useForm<SessionFormValues>({
     resolver: zodResolver(sessionFormSchema),
-    defaultValues: { filmId: films[0]?.id ?? "", hallId: halls[0]?.id ?? "", date, time: DEFAULT_TIME, format: SESSION_FORMATS[0], basePrice: "" },
+    defaultValues: { filmId: films[0]?.id ?? "", hallId: initialHallId ?? halls[0]?.id ?? "", date, time: initialTime, format: SESSION_FORMATS[0], basePrice: "" },
   });
   const hallId = useWatch({ control, name: "hallId" });
   const hall = halls.find(({ id }) => id === hallId);

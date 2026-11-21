@@ -2,6 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsArray, IsEnum, IsOptional } from 'class-validator';
 import { ListQueryDto } from '@/common/pagination/list-query.dto.js';
+import { IsQueryBoolean } from '@/common/validation/is-query-boolean.decorator.js';
 import { FilmStatus } from '@/modules/films/film-status.enum.js';
 
 export enum FilmSortField {
@@ -22,4 +23,9 @@ export class ListFilmsQueryDto extends ListQueryDto {
   @IsArray()
   @IsEnum(FilmStatus, { each: true })
   status?: FilmStatus[];
+
+  @ApiPropertyOptional({ description: 'Только премьеры или только не премьеры' })
+  @IsOptional()
+  @IsQueryBoolean()
+  isPremiere?: boolean;
 }

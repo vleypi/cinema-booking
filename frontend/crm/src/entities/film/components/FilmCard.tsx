@@ -23,7 +23,7 @@ export const FilmCard = ({ film, search, onSelect }: IFilmCardProps) => (
       )}
     </div>
     <div className="flex flex-col items-start gap-1.5">
-      <p className="line-clamp-2 font-semibold text-ink">
+      <p className="line-clamp-2 font-display text-base font-medium text-ink">
         <Highlight text={film.title} query={search} />
       </p>
       <p className="text-xs text-gray-500">{describeFilm(film)}</p>

@@ -1,9 +1,9 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { type FindOptionsOrder, In, type Repository } from 'typeorm';
+import { type FindOptionsOrder, type FindOptionsWhere, In, type Repository } from 'typeorm';
 import { rethrowUniqueViolation } from '@/common/database/unique-violation.js';
 import { SortOrder } from '@/common/pagination/list-query.dto.js';
-import { containsIgnoringCase, type IPage, toPageWindow, toSqlDirection } from '@/common/pagination/page.js';
+import { type IPage, toPageWindow, toSqlDirection, whereWithSearch } from '@/common/pagination/page.js';
 import { hashPassword } from '@/common/security/password.js';
 import { invalidField } from '@/common/validation/validation-errors.js';
 import { AUTH_MESSAGES } from '@/modules/auth/auth.constant.js';
@@ -11,7 +11,7 @@ import { canAccessCinema, canAccessStaff, canManageRole } from '@/modules/auth/p
 import { CINEMA_MESSAGES } from '@/modules/cinemas/cinemas.constant.js';
 import { Cinema } from '@/modules/cinemas/entities/cinema.entity.js';
 import type { CreateStaffDto } from '@/modules/staff/dto/create-staff.dto.js';
-import { type ListStaffQueryDto, StaffSortField } from '@/modules/staff/dto/list-staff-query.dto.js';
+import { type ListStaffQueryDto, StaffSortField, StaffStatusFilter } from '@/modules/staff/dto/list-staff-query.dto.js';
 import { type StaffDto, toStaffDto } from '@/modules/staff/dto/staff.dto.js';
 import type { UpdateStaffDto } from '@/modules/staff/dto/update-staff.dto.js';
 import { StaffUser } from '@/modules/staff/entities/staff-user.entity.js';
@@ -24,6 +24,12 @@ const STAFF_ORDER: Record<StaffSortField, (direction: 'ASC' | 'DESC') => FindOpt
   [StaffSortField.Status]: (direction) => ({ isBlocked: direction, mustChangePassword: direction, fullName: 'ASC', id: 'ASC' }),
 };
 
+const STAFF_STATUS_WHERE: Record<StaffStatusFilter, FindOptionsWhere<StaffUser>> = {
+  [StaffStatusFilter.Active]: { isBlocked: false, mustChangePassword: false },
+  [StaffStatusFilter.TemporaryPassword]: { isBlocked: false, mustChangePassword: true },
+  [StaffStatusFilter.Blocked]: { isBlocked: true },
+};
+
 @Injectable()
 export class StaffService {
   constructor(
@@ -32,12 +38,11 @@ export class StaffService {
   ) {}
 
   async findPageByCinema(cinemaId: string, query: ListStaffQueryDto): Promise<IPage<StaffDto>> {
-    const { search, sort = StaffSortField.FullName, order = SortOrder.Asc } = query;
-    const inCinema = { cinemas: { id: cinemaId } };
-    const pattern = search ? containsIgnoringCase(search) : undefined;
+    const { search, role, status, sort = StaffSortField.FullName, order = SortOrder.Asc } = query;
+    const filters: FindOptionsWhere<StaffUser> = { cinemas: { id: cinemaId }, ...(role && { role }), ...(status && STAFF_STATUS_WHERE[status]) };
     const staffOrder = STAFF_ORDER[sort](toSqlDirection(order));
     const [members, total] = await this.staffUsers.findAndCount({
-      where: pattern ? [{ ...inCinema, fullName: pattern }, { ...inCinema, login: pattern }] : inCinema,
+      where: whereWithSearch<StaffUser>(filters, search, ['fullName', 'login']),
       order: staffOrder,
       ...toPageWindow(query),
     });

@@ -5,6 +5,7 @@ export const ICON_PATHS = {
   chevronRight: "M9 5l7 7-7 7",
   chevronLeft: "M15 19l-7-7 7-7",
   plus: "M12 4v16m8-8H4",
+  minus: "M20 12H4",
   check: "M5 13l4 4L19 7",
   search: "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z",
   arrowUp: "M5 10l7-7m0 0l7 7m-7-7v18",

@@ -9,9 +9,10 @@ import { useRemoveSession } from "@/features/remove-session/hooks/useRemoveSessi
 
 interface IRemoveSessionButtonProps {
   sessionId: string;
+  onRemoved?: () => void;
 }
 
-export const RemoveSessionButton = ({ sessionId }: IRemoveSessionButtonProps) => {
+export const RemoveSessionButton = ({ sessionId, onRemoved }: IRemoveSessionButtonProps) => {
   const removal = useRemoveSession();
   const [isConfirming, setIsConfirming] = useState(false);
 
@@ -38,7 +39,14 @@ export const RemoveSessionButton = ({ sessionId }: IRemoveSessionButtonProps) =>
         confirmText={REMOVE_SESSION_TEXT.confirm}
         isPending={removal.isPending}
         error={removal.error ? toApiError(removal.error).message : undefined}
-        onConfirm={() => removal.mutate(sessionId, { onSuccess: close })}
+        onConfirm={() =>
+          removal.mutate(sessionId, {
+            onSuccess: () => {
+              close();
+              onRemoved?.();
+            },
+          })
+        }
         onClose={close}
       />
     </>

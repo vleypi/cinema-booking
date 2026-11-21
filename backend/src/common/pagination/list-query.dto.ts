@@ -12,7 +12,7 @@ export const DEFAULT_PAGE_SIZE = 20;
 export const MAX_PAGE_SIZE = 100;
 export const SEARCH_MAX_LENGTH = 100;
 
-export class ListQueryDto {
+export class SearchQueryDto {
   @ApiPropertyOptional({ description: 'Часть текста без учета регистра' })
   @IsOptional()
   @Transform(({ value }: { value: unknown }) => (typeof value === 'string' ? value.trim() || undefined : value))
@@ -20,6 +20,13 @@ export class ListQueryDto {
   @MaxLength(SEARCH_MAX_LENGTH)
   search?: string;
 
+  @ApiPropertyOptional({ enum: SortOrder, enumName: 'SortOrder' })
+  @IsOptional()
+  @IsEnum(SortOrder)
+  order?: SortOrder;
+}
+
+export class ListQueryDto extends SearchQueryDto {
   @ApiPropertyOptional({ default: FIRST_PAGE, minimum: FIRST_PAGE })
   @Type(() => Number)
   @IsInt()
@@ -32,9 +39,4 @@ export class ListQueryDto {
   @Min(1)
   @Max(MAX_PAGE_SIZE)
   pageSize: number = DEFAULT_PAGE_SIZE;
-
-  @ApiPropertyOptional({ enum: SortOrder, enumName: 'SortOrder' })
-  @IsOptional()
-  @IsEnum(SortOrder)
-  order?: SortOrder;
 }

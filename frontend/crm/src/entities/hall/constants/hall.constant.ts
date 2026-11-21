@@ -1,3 +1,13 @@
+import { BOOLEAN_FILTER_VALUES, type BooleanFilterValue, SORT_ORDERS } from "@/shared/config";
+import { type IListFilter, toSortValue } from "@/shared/lib";
+
+export const HALL_SORT_FIELDS = {
+  name: "name",
+  basePrice: "basePrice",
+} as const;
+
+export type HallSortField = (typeof HALL_SORT_FIELDS)[keyof typeof HALL_SORT_FIELDS];
+
 export const SEAT_TYPES = {
   standard: "STANDARD",
   sofa: "SOFA",
@@ -43,4 +53,31 @@ export const HALL_TEXT = {
   inactive: "Не работает",
   noZones: "Не заданы",
   empty: "В этом кинотеатре пока нет залов",
+  searchPlaceholder: "Название или формат",
 } as const;
+
+export const HALL_FILTERS = {
+  isActive: {
+    param: "isActive",
+    allLabel: "Любой статус",
+    options: [
+      { value: BOOLEAN_FILTER_VALUES.yes, label: HALL_TEXT.active },
+      { value: BOOLEAN_FILTER_VALUES.no, label: HALL_TEXT.inactive },
+    ],
+  } satisfies IListFilter<BooleanFilterValue>,
+  useTimeBands: {
+    param: "useTimeBands",
+    allLabel: "Любая цена",
+    options: [
+      { value: BOOLEAN_FILTER_VALUES.yes, label: "По интервалам" },
+      { value: BOOLEAN_FILTER_VALUES.no, label: HALL_TEXT.timeBandsOff },
+    ],
+  } satisfies IListFilter<BooleanFilterValue>,
+};
+
+export const HALL_SORT_OPTIONS = [
+  { value: "", label: "По названию, А–Я" },
+  { value: toSortValue(HALL_SORT_FIELDS.name, SORT_ORDERS.desc), label: "По названию, Я–А" },
+  { value: toSortValue(HALL_SORT_FIELDS.basePrice, SORT_ORDERS.asc), label: "Сначала дешевле" },
+  { value: toSortValue(HALL_SORT_FIELDS.basePrice, SORT_ORDERS.desc), label: "Сначала дороже" },
+];

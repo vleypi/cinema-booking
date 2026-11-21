@@ -47,6 +47,36 @@ describe('Halls', () => {
       expect(body).toContainEqual(expect.objectContaining({ id: hall.id, priceZones: [expect.objectContaining({ id: zone.id, multiplier: 1.25 })] }));
     });
 
+    it('finds halls by part of the name or format and sorts them by base price', async () => {
+      const listCinemaId = await createCinema(app);
+      const listAdmin = await loginAs(app, await createStaff(app, { role: StaffRole.Admin, cinemaIds: [listCinemaId] }));
+      const create = (name: string, format: string, basePrice: number) =>
+        listAdmin.post(cinemaHallsUrl(listCinemaId)).send({ ...HALL_BODY, name, format, basePrice }).expect(201);
+      await create('Большой', 'IMAX', 60000);
+      await create('Малый', '2D', 30000);
+      await create('Детский', 'imax light', 20000);
+
+      const { body: found } = await listAdmin.get(cinemaHallsUrl(listCinemaId)).query({ search: 'Imax' }).expect(200);
+      const { body: byPrice } = await listAdmin.get(cinemaHallsUrl(listCinemaId)).query({ sort: 'basePrice', order: 'desc' }).expect(200);
+
+      expect(found.map(({ name }: { name: string }) => name)).toEqual(['Большой', 'Детский']);
+      expect(byPrice.map(({ basePrice }: { basePrice: number }) => basePrice)).toEqual([60000, 30000, 20000]);
+    });
+
+    it('filters halls by activity and by pricing mode', async () => {
+      const listCinemaId = await createCinema(app);
+      const listAdmin = await loginAs(app, await createStaff(app, { role: StaffRole.Admin, cinemaIds: [listCinemaId] }));
+      const { body: closed } = await listAdmin.post(cinemaHallsUrl(listCinemaId)).send({ ...HALL_BODY, name: 'Закрытый' }).expect(201);
+      await listAdmin.patch(`${HALLS_URL}/${closed.id}`).send({ isActive: false }).expect(200);
+      const { body: fixed } = await listAdmin.post(cinemaHallsUrl(listCinemaId)).send({ ...HALL_BODY, name: 'Фиксированный', useTimeBands: false }).expect(201);
+
+      const { body: inactive } = await listAdmin.get(cinemaHallsUrl(listCinemaId)).query({ isActive: 'false' }).expect(200);
+      const { body: fixedPrice } = await listAdmin.get(cinemaHallsUrl(listCinemaId)).query({ useTimeBands: 'false' }).expect(200);
+
+      expect(inactive.map(({ id }: { id: string }) => id)).toEqual([closed.id]);
+      expect(fixedPrice.map(({ id }: { id: string }) => id)).toEqual([fixed.id]);
+    });
+
     it('turns off time bands and deactivates a hall', async () => {
       const hall = await createHall();
 

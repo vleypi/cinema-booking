@@ -13,8 +13,8 @@ export const ToolButton = ({ isActive, onClick, children }: IToolButtonProps) =>
     aria-pressed={isActive}
     onClick={onClick}
     className={joinClassNames(
-      "inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium whitespace-nowrap transition",
-      isActive ? "border-brand bg-brand-soft text-brand" : "border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50",
+      "inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium whitespace-nowrap transition",
+      isActive ? "bg-white text-ink shadow-sm" : "text-gray-600 hover:text-ink",
     )}
   >
     {children}

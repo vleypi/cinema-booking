@@ -1,37 +1,41 @@
 "use client";
 
-import { formatRubles } from "@/shared/lib";
-import { Badge, DataTable, type IDataTableColumn } from "@/shared/ui";
-import { PriceZoneLabel } from "@/entities/hall/components/PriceZoneLabel";
-import { HALL_TEXT } from "@/entities/hall/constants/hall.constant";
+import { formatMultiplier, formatRubles } from "@/shared/lib";
+import { Badge, DataTable, Highlight, type IDataTableColumn, type IDataTableSorting, TableTitleCell } from "@/shared/ui";
+import { PriceZoneDot } from "@/entities/hall/components/PriceZoneDot";
+import { HALL_SORT_FIELDS, HALL_TEXT, type HallSortField } from "@/entities/hall/constants/hall.constant";
 import type { IHall } from "@/entities/hall/interfaces/hall.interface";
 
 interface IHallTableProps {
   halls: IHall[] | undefined;
   isLoading: boolean;
+  search: string;
+  emptyText: string;
+  sorting: IDataTableSorting<HallSortField>;
   onSelect: (hall: IHall) => void;
 }
 
-const COLUMNS: readonly IDataTableColumn<IHall>[] = [
+const getColumns = (search: string): IDataTableColumn<IHall, HallSortField>[] => [
   {
     key: "name",
     header: HALL_TEXT.hall,
-    render: ({ name, format }) => (
-      <div>
-        <p className="font-medium text-ink">{name}</p>
-        <p className="text-xs text-gray-500">{format}</p>
-      </div>
-    ),
+    sortField: HALL_SORT_FIELDS.name,
+    render: ({ name, format }) => <TableTitleCell title={<Highlight text={name} query={search} />} subtitle={<Highlight text={format} query={search} />} />,
   },
-  { key: "basePrice", header: HALL_TEXT.basePrice, render: ({ basePrice }) => formatRubles(basePrice) },
+  { key: "basePrice", header: HALL_TEXT.basePrice, sortField: HALL_SORT_FIELDS.basePrice, render: ({ basePrice }) => formatRubles(basePrice) },
   {
     key: "priceZones",
     header: HALL_TEXT.priceZones,
     render: ({ priceZones }) =>
       priceZones.length > 0 ? (
-        <div className="flex flex-wrap gap-x-3 gap-y-1">
+        <div className="flex flex-wrap items-center gap-1.5">
           {priceZones.map((priceZone) => (
-            <PriceZoneLabel key={priceZone.id} priceZone={priceZone} priceZones={priceZones} />
+            <PriceZoneDot
+              key={priceZone.id}
+              priceZone={priceZone}
+              priceZones={priceZones}
+              label={`${priceZone.name} ${formatMultiplier(priceZone.multiplier)}`}
+            />
           ))}
         </div>
       ) : (
@@ -46,6 +50,14 @@ const COLUMNS: readonly IDataTableColumn<IHall>[] = [
   },
 ];
 
-export const HallTable = ({ halls, isLoading, onSelect }: IHallTableProps) => (
-  <DataTable columns={COLUMNS} rows={halls} getRowKey={({ id }) => id} isLoading={isLoading} emptyText={HALL_TEXT.empty} onRowClick={onSelect} />
+export const HallTable = ({ halls, isLoading, search, emptyText, sorting, onSelect }: IHallTableProps) => (
+  <DataTable
+    columns={getColumns(search)}
+    sorting={sorting}
+    rows={halls}
+    getRowKey={({ id }) => id}
+    isLoading={isLoading}
+    emptyText={emptyText}
+    onRowClick={onSelect}
+  />
 );

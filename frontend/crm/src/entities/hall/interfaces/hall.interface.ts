@@ -1,3 +1,7 @@
+import type { IListRequest } from "@/shared/api";
+import type { BooleanFilterValue } from "@/shared/config";
+import type { HallSortField } from "@/entities/hall/constants/hall.constant";
+
 import type { SeatType } from "@/entities/hall/constants/hall.constant";
 
 export interface IPriceZone {
@@ -56,4 +60,9 @@ export interface IHallLayout {
   isCurrent: boolean;
   rows: number;
   seats: ISeat[];
+}
+
+export interface IHallListRequest extends IListRequest<HallSortField> {
+  isActive?: BooleanFilterValue;
+  useTimeBands?: BooleanFilterValue;
 }
