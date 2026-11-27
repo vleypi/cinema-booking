@@ -13,6 +13,7 @@
     "./query": "./src/query/index.ts",
     "./proxy": "./src/proxy/index.ts",
     "./lib": "./src/lib/index.ts",
+    "./film": "./src/film/index.ts",
     "./ui": "./src/ui/index.ts",
     "./theme.css": "./src/styles/theme.css"
   },

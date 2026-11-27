@@ -8,6 +8,7 @@ import { createValidationException } from '@/common/validation/validation-errors
 import { EnvironmentVariables, validateEnvironment } from '@/config/environment.js';
 import { createDatabaseOptions } from '@/database/database.options.js';
 import { AuthModule } from '@/modules/auth/auth.module.js';
+import { CatalogModule } from '@/modules/catalog/catalog.module.js';
 import { CinemasModule } from '@/modules/cinemas/cinemas.module.js';
 import { FilmsModule } from '@/modules/films/films.module.js';
 import { HallsModule } from '@/modules/halls/halls.module.js';
@@ -39,6 +40,7 @@ import { TimeBandsModule } from '@/modules/time-bands/time-bands.module.js';
     MediaModule,
     FilmsModule,
     SessionsModule,
+    CatalogModule,
     HealthModule,
   ],
   providers: [

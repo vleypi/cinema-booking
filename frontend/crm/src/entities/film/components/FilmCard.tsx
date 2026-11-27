@@ -1,8 +1,8 @@
+import { getPosterUrl, type IFilm } from "@luch/shared/film";
 import { Badge, Highlight } from "@/shared/ui";
 import { FilmPoster } from "@/entities/film/components/FilmPoster";
 import { FILM_STATUS_LABELS, FILM_STATUS_TONES, FILM_TEXT } from "@/entities/film/constants/film.constant";
-import type { IFilm } from "@/entities/film/interfaces/film.interface";
-import { describeFilm, getPosterUrl } from "@/entities/film/utils/film.util";
+import { describeFilm } from "@/entities/film/utils/film.util";
 
 interface IFilmCardProps {
   film: IFilm;
