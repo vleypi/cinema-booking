@@ -1,4 +1,6 @@
 import { formatRubles, formatTimeInZone, joinClassNames } from "@luch/shared/lib";
+import Link from "next/link";
+import { ROUTES } from "@/shared/config";
 import { PANEL_CLASS_NAME } from "@/shared/ui";
 import { SESSION_TEXT } from "@/entities/session/constants/session.constant";
 import type { ISession } from "@/entities/session/interfaces/session.interface";
@@ -13,13 +15,17 @@ export const SessionSlot = ({ session, timeZone }: ISessionSlotProps) => {
   const price = formatRubles(session.minPrice);
 
   return (
-    <div
+    <Link
+      href={ROUTES.session(session.id)}
       aria-label={SESSION_TEXT.slotLabel(time, session.hall.name, price)}
-      className={joinClassNames(PANEL_CLASS_NAME, "grid min-w-[calc(50%-0.3rem)] gap-0.5 bg-ink-2 px-3.5 pt-3 pb-3.5 sm:min-w-34")}
+      className={joinClassNames(
+        PANEL_CLASS_NAME,
+        "grid min-w-[calc(50%-0.3rem)] gap-0.5 bg-ink-2 px-3.5 pt-3 pb-3.5 transition-colors duration-200 hover:border-warm hover:bg-ink-3 sm:min-w-34",
+      )}
     >
       <span className="font-display text-[1.65rem] leading-none font-medium">{time}</span>
       <span className="text-[0.82rem] text-paper/64">{session.hall.name}</span>
       <span className="font-mono text-[0.78rem]">{SESSION_TEXT.priceFrom(price)}</span>
-    </div>
+    </Link>
   );
 };

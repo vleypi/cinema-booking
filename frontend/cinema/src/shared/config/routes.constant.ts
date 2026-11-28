@@ -9,5 +9,8 @@ export const SECTION_IDS = {
 export const ROUTES = {
   home: "/",
   login: "/login",
+  cabinet: "/cabinet",
   film: (filmId: string) => `/films/${filmId}`,
+  session: (sessionId: string) => `/sessions/${sessionId}`,
+  order: (orderNumber: string) => `/orders/${orderNumber}`,
 } as const;
