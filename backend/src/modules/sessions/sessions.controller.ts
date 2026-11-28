@@ -3,6 +3,7 @@ import { ApiCreatedResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOkRes
 import { ParseIdPipe } from '@/common/validation/parse-id.pipe.js';
 import { Auth, CurrentStaff } from '@/modules/auth/auth.decorator.js';
 import { Permission } from '@/modules/auth/permissions.js';
+import { CancelSessionDto, CancelSessionPreviewDto, CancelSessionResultDto } from '@/modules/sessions/dto/cancel-session.dto.js';
 import { CreateSessionDto } from '@/modules/sessions/dto/create-session.dto.js';
 import { ListSessionsQueryDto } from '@/modules/sessions/dto/list-sessions-query.dto.js';
 import { SessionDto } from '@/modules/sessions/dto/session.dto.js';
@@ -26,6 +27,27 @@ export class SessionsController {
   @ApiCreatedResponse({ type: SessionDto, description: 'Дата и время задаются в часовом поясе кинотеатра' })
   create(@Param('cinemaId') cinemaId: string, @Body() dto: CreateSessionDto): Promise<SessionDto> {
     return this.sessions.create(cinemaId, dto);
+  }
+
+  @Get('sessions/:id/cancel-preview')
+  @Auth(Permission.CancelSessions)
+  @ApiOkResponse({ type: CancelSessionPreviewDto })
+  @ApiNotFoundResponse()
+  getCancelPreview(@CurrentStaff() actor: StaffUser, @Param('id', ParseIdPipe) id: string): Promise<CancelSessionPreviewDto> {
+    return this.sessions.getCancelPreview(actor, id);
+  }
+
+  @Post('sessions/:id/cancel')
+  @HttpCode(HttpStatus.OK)
+  @Auth(Permission.CancelSessions)
+  @ApiOkResponse({ type: CancelSessionResultDto })
+  @ApiNotFoundResponse()
+  cancel(
+    @CurrentStaff() actor: StaffUser,
+    @Param('id', ParseIdPipe) id: string,
+    @Body() dto: CancelSessionDto,
+  ): Promise<CancelSessionResultDto> {
+    return this.sessions.cancel(actor, id, dto);
   }
 
   @Delete('sessions/:id')
