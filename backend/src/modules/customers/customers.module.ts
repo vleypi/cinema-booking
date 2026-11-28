@@ -6,9 +6,10 @@ import { CustomersController } from '@/modules/customers/customers.controller.js
 import { CustomersService } from '@/modules/customers/customers.service.js';
 import { Customer } from '@/modules/customers/entities/customer.entity.js';
 import { Order } from '@/modules/orders/entities/order.entity.js';
+import { TicketsModule } from '@/modules/tickets/tickets.module.js';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Customer, RefreshToken, Order])],
+  imports: [TypeOrmModule.forFeature([Customer, RefreshToken, Order]), TicketsModule],
   controllers: [CustomersController],
   providers: [CustomersService, CustomerAuthGuard],
   exports: [TypeOrmModule, CustomersService, CustomerAuthGuard],

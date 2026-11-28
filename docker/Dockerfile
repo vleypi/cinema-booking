@@ -23,6 +23,7 @@ COPY --from=pruner /app/out/json/ .
 RUN pnpm install --frozen-lockfile --prod
 
 FROM node:24-alpine AS backend
+RUN apk add --no-cache ttf-dejavu
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=prod-deps /app ./

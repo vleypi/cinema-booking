@@ -16,6 +16,7 @@ import { RequestOtpDto } from '@/modules/customers/dto/request-otp.dto.js';
 import { UpdateCustomerProfileDto } from '@/modules/customers/dto/update-customer-profile.dto.js';
 import { VerifyOtpDto } from '@/modules/customers/dto/verify-otp.dto.js';
 import type { Customer } from '@/modules/customers/entities/customer.entity.js';
+import { TicketsService } from '@/modules/tickets/tickets.service.js';
 
 @ApiTags('customer')
 @Controller('customer')
@@ -24,6 +25,7 @@ export class CustomersController {
 
   constructor(
     private readonly customers: CustomersService,
+    private readonly tickets: TicketsService,
     config: ConfigService<EnvironmentVariables, true>,
   ) {
     this.#cookieOptions = { httpOnly: true, secure: config.get('COOKIE_SECURE', { infer: true }), sameSite: 'lax', path: '/' };
@@ -102,6 +104,20 @@ export class CustomersController {
   @ApiNotFoundResponse()
   getOrder(@CurrentCustomer() customer: Customer, @Param('id', ParseIdPipe) id: string): Promise<CustomerOrderDto> {
     return this.customers.getOrder(customer.id, id);
+  }
+
+  @Get('orders/:id/pdf')
+  @CustomerAuth()
+  @ApiNotFoundResponse()
+  async downloadOrderPdf(
+    @CurrentCustomer() customer: Customer,
+    @Param('id', ParseIdPipe) id: string,
+    @Res() response: Response,
+  ): Promise<void> {
+    const { filename, buffer } = await this.tickets.generateOrderPdfForCustomer(customer.id, id);
+    response.setHeader('Content-Type', 'application/pdf');
+    response.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    response.send(buffer);
   }
 
   #setCookies(response: Response, { accessToken, refreshToken }: IAuthTokens): void {
