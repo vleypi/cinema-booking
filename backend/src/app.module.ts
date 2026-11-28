@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AllExceptionsFilter } from '@/common/filters/all-exceptions.filter.js';
+import { MailModule } from '@/common/mail/mail.module.js';
 import { RedisModule } from '@/common/redis/redis.module.js';
 import { createValidationException } from '@/common/validation/validation-errors.js';
 import { EnvironmentVariables, validateEnvironment } from '@/config/environment.js';
@@ -34,6 +35,7 @@ import { TimeBandsModule } from '@/modules/time-bands/time-bands.module.js';
       }),
     }),
     RedisModule,
+    MailModule,
     AuthModule,
     CinemasModule,
     StaffModule,
