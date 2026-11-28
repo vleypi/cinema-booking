@@ -1,13 +1,13 @@
 import { HTTP_STATUS, toApiError } from "@luch/shared/api";
 import { apiClient } from "@/shared/api";
-import type { IHall, IHallLayout, IHallLayoutPayload, IHallPayload, IPriceZone, IPriceZonePayload } from "@/entities/hall/interfaces/hall.interface";
+import type { IHall, IHallLayout, IHallListRequest, IHallLayoutPayload, IHallPayload, IPriceZone, IPriceZonePayload } from "@/entities/hall/interfaces/hall.interface";
 
 const HALLS_PATH = "/halls";
 const PRICE_ZONES_PATH = "/price-zones";
 
 class HallService {
-  async getByCinema(cinemaId: string): Promise<IHall[]> {
-    const { data } = await apiClient.get<IHall[]>(`/cinemas/${cinemaId}/halls`);
+  async getByCinema(cinemaId: string, request: IHallListRequest): Promise<IHall[]> {
+    const { data } = await apiClient.get<IHall[]>(`/cinemas/${cinemaId}/halls`, { params: request });
     return data;
   }
 

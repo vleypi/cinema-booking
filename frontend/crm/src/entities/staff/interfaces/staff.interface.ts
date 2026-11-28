@@ -1,5 +1,6 @@
-import type { ICinemaSummary } from "@/shared/api";
+import type { ICinemaSummary, IListRequest } from "@/shared/api";
 import type { StaffRole } from "@/shared/config";
+import type { StaffSortField, StaffStatusFilter } from "@/entities/staff/constants/staff.constant";
 
 export interface IStaffMember {
   id: string;
@@ -25,4 +26,9 @@ export interface IUpdateStaffPayload {
   cinemaIds: string[];
   isBlocked: boolean;
   password?: string;
+}
+
+export interface IStaffListRequest extends IListRequest<StaffSortField> {
+  role?: StaffRole;
+  status?: StaffStatusFilter;
 }

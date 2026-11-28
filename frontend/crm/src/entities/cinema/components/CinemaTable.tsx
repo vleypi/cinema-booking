@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, DataTable, Highlight, type IDataTableColumn, type IDataTableSorting } from "@/shared/ui";
+import { Badge, DataTable, Highlight, type IDataTableColumn, type IDataTableSorting, TableTitleCell } from "@/shared/ui";
 import { CINEMA_SORT_FIELDS, CINEMA_TEXT, type CinemaSortField } from "@/entities/cinema/constants/cinema.constant";
 import type { ICinema } from "@/entities/cinema/interfaces/cinema.interface";
 
@@ -19,14 +19,14 @@ const getColumns = (search: string): IDataTableColumn<ICinema, CinemaSortField>[
     header: CINEMA_TEXT.name,
     sortField: CINEMA_SORT_FIELDS.name,
     render: ({ name, slug }) => (
-      <div>
-        <p className="font-medium text-ink">
-          <Highlight text={name} query={search} />
-        </p>
-        <p className="text-xs text-gray-500">
-          /<Highlight text={slug} query={search} />
-        </p>
-      </div>
+      <TableTitleCell
+        title={<Highlight text={name} query={search} />}
+        subtitle={
+          <>
+            /<Highlight text={slug} query={search} />
+          </>
+        }
+      />
     ),
   },
   { key: "address", header: CINEMA_TEXT.address, render: ({ address }) => <Highlight text={address} query={search} /> },

@@ -40,24 +40,26 @@ export const StaffForm = ({ member, roles, cinemas, currentCinemaId, onDone }: I
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
-      <TextField label={SAVE_STAFF_TEXT.fullName} error={errors.fullName?.message} {...register("fullName")} />
-      <TextField
-        label={SAVE_STAFF_TEXT.login}
-        readOnly={!isNew}
-        hint={isNew ? undefined : SAVE_STAFF_TEXT.loginHint}
-        autoComplete="off"
-        error={errors.login?.message}
-        {...register("login")}
-      />
-      <SelectField label={SAVE_STAFF_TEXT.role} options={roleOptions} error={errors.role?.message} {...register("role")} />
-      <TextField
-        label={isNew ? SAVE_STAFF_TEXT.password : SAVE_STAFF_TEXT.newPassword}
-        hint={isNew ? SAVE_STAFF_TEXT.passwordHint : SAVE_STAFF_TEXT.newPasswordHint}
-        type="password"
-        autoComplete="new-password"
-        error={errors.password?.message}
-        {...register("password")}
-      />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <TextField label={SAVE_STAFF_TEXT.fullName} error={errors.fullName?.message} {...register("fullName")} />
+        <TextField
+          label={SAVE_STAFF_TEXT.login}
+          readOnly={!isNew}
+          hint={isNew ? undefined : SAVE_STAFF_TEXT.loginHint}
+          autoComplete="off"
+          error={errors.login?.message}
+          {...register("login")}
+        />
+        <SelectField label={SAVE_STAFF_TEXT.role} options={roleOptions} error={errors.role?.message} {...register("role")} />
+        <TextField
+          label={isNew ? SAVE_STAFF_TEXT.password : SAVE_STAFF_TEXT.newPassword}
+          hint={isNew ? SAVE_STAFF_TEXT.passwordHint : SAVE_STAFF_TEXT.newPasswordHint}
+          type="password"
+          autoComplete="new-password"
+          error={errors.password?.message}
+          {...register("password")}
+        />
+      </div>
       <Controller
         control={control}
         name="cinemaIds"

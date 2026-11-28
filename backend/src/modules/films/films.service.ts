@@ -2,7 +2,7 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { InjectRepository } from '@nestjs/typeorm';
 import { type FindOptionsOrder, In, type Repository } from 'typeorm';
 import { SortOrder } from '@/common/pagination/list-query.dto.js';
-import { containsIgnoringCase, type IPage, toPageWindow, toSqlDirection } from '@/common/pagination/page.js';
+import { type IPage, toPageWindow, toSqlDirection, whereWithSearch } from '@/common/pagination/page.js';
 import type { CreateFilmDto } from '@/modules/films/dto/create-film.dto.js';
 import { FilmSortField, type ListFilmsQueryDto } from '@/modules/films/dto/list-films-query.dto.js';
 import type { UpdateFilmDto } from '@/modules/films/dto/update-film.dto.js';
@@ -28,9 +28,9 @@ export class FilmsService {
   ) {}
 
   async findPage(query: ListFilmsQueryDto): Promise<IPage<Film>> {
-    const { search, status, sort, order = SortOrder.Asc } = query;
+    const { search, status, isPremiere, sort, order = SortOrder.Asc } = query;
     const [items, total] = await this.films.findAndCount({
-      where: { ...(search && { title: containsIgnoringCase(search) }), ...(status && { status: In(status) }) },
+      where: whereWithSearch<Film>({ ...(status && { status: In(status) }), ...(isPremiere !== undefined && { isPremiere }) }, search, ['title']),
       order: sort ? FILM_ORDER[sort](toSqlDirection(order)) : NEWEST_FIRST,
       ...toPageWindow(query),
     });

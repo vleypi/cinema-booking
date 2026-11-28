@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiConflictResponse, ApiCreatedResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ParseIdPipe } from '@/common/validation/parse-id.pipe.js';
 import { Auth, CurrentStaff } from '@/modules/auth/auth.decorator.js';
@@ -8,6 +8,7 @@ import { CreateHallDto } from '@/modules/halls/dto/create-hall.dto.js';
 import { CreatePriceZoneDto } from '@/modules/halls/dto/create-price-zone.dto.js';
 import { HallLayoutDto } from '@/modules/halls/dto/hall-layout.dto.js';
 import { HallDto } from '@/modules/halls/dto/hall.dto.js';
+import { ListHallsQueryDto } from '@/modules/halls/dto/list-halls-query.dto.js';
 import { PriceZoneDto } from '@/modules/halls/dto/price-zone.dto.js';
 import { UpdateHallDto } from '@/modules/halls/dto/update-hall.dto.js';
 import { UpdatePriceZoneDto } from '@/modules/halls/dto/update-price-zone.dto.js';
@@ -22,8 +23,8 @@ export class HallsController {
   @Get('cinemas/:cinemaId/halls')
   @Auth(Permission.ManageSchedule)
   @ApiOkResponse({ type: [HallDto] })
-  findByCinema(@Param('cinemaId') cinemaId: string): Promise<HallDto[]> {
-    return this.halls.findByCinema(cinemaId);
+  findByCinema(@Param('cinemaId') cinemaId: string, @Query() query: ListHallsQueryDto): Promise<HallDto[]> {
+    return this.halls.findByCinema(cinemaId, query);
   }
 
   @Post('cinemas/:cinemaId/halls')

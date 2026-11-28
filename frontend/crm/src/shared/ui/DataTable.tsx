@@ -2,7 +2,6 @@ import { joinClassNames } from "@luch/shared/lib";
 import { Icon } from "@luch/shared/ui";
 import type { KeyboardEvent, ReactNode } from "react";
 import { SORT_ORDERS, type SortOrder } from "@/shared/config";
-import { CARD_CLASS_NAME } from "@/shared/ui/ui.constant";
 
 export interface IDataTableColumn<TRow, TSort extends string = string> {
   key: string;
@@ -31,6 +30,18 @@ interface IDataTableProps<TRow, TSort extends string> {
 
 const SKELETON_ROW_KEYS = ["first", "second", "third", "fourth"] as const;
 
+const CELL_CLASS_NAME = "px-4 py-4 text-gray-600";
+const ROW_DIVIDER_CLASS_NAME = "border-y border-t-transparent border-b-gray-200 first:border-l first:border-l-transparent last:border-r last:border-r-transparent";
+const ROW_CARD_CLASS_NAME = [
+  "group-hover/row:border-t-gray-200 group-hover/row:bg-white",
+  "group-hover/row:first:rounded-l-xl group-hover/row:first:border-l-gray-200",
+  "group-hover/row:last:rounded-r-xl group-hover/row:last:border-r-gray-200",
+  "group-focus-visible/row:border-t-gray-200 group-focus-visible/row:bg-white",
+  "group-focus-visible/row:first:rounded-l-xl group-focus-visible/row:first:border-l-gray-200",
+  "group-focus-visible/row:last:rounded-r-xl group-focus-visible/row:last:border-r-gray-200",
+].join(" ");
+const ABOVE_CARD_ROW_CLASS_NAME = "[&:has(+tr[tabindex]:hover)>td]:border-b-transparent [&:has(+tr[tabindex]:focus-visible)>td]:border-b-transparent";
+
 const ARIA_SORT: Record<SortOrder, "ascending" | "descending"> = {
   [SORT_ORDERS.asc]: "ascending",
   [SORT_ORDERS.desc]: "descending",
@@ -55,9 +66,9 @@ export const DataTable = <TRow, TSort extends string = string>({
   };
 
   return (
-    <div className={joinClassNames(CARD_CLASS_NAME, "overflow-x-auto")}>
-      <table className="w-full min-w-xl text-left text-sm">
-        <thead className="bg-gray-50 text-xs font-medium tracking-wider text-gray-500 uppercase">
+    <div className="-mx-4 overflow-x-auto">
+      <table className="w-full min-w-xl border-separate border-spacing-0 text-left text-[15px]">
+        <thead className="text-sm text-gray-600">
           <tr>
             {columns.map(({ key, header, className, sortField }) => {
               const isSorted = Boolean(sortField) && sorting?.field === sortField;
@@ -67,13 +78,13 @@ export const DataTable = <TRow, TSort extends string = string>({
                   key={key}
                   scope="col"
                   aria-sort={isSorted && sorting ? ARIA_SORT[sorting.order] : undefined}
-                  className={joinClassNames("px-4 py-3 font-medium", className)}
+                  className={joinClassNames("px-4 pb-3 font-normal", className)}
                 >
                   {sortField && sorting ? (
                     <button
                       type="button"
                       onClick={() => sorting.onToggle(sortField)}
-                      className={joinClassNames("inline-flex items-center gap-1 uppercase transition hover:text-ink", isSorted && "text-brand")}
+                      className={joinClassNames("inline-flex items-center gap-1 transition hover:text-ink", isSorted && "font-medium text-ink")}
                     >
                       {header}
                       <Icon name={isSorted ? (sorting.order === SORT_ORDERS.desc ? "arrowDown" : "arrowUp") : "arrowsUpDown"} className="size-3.5" />
@@ -86,13 +97,13 @@ export const DataTable = <TRow, TSort extends string = string>({
             })}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody>
           {isLoading &&
             SKELETON_ROW_KEYS.map((key) => (
               <tr key={key} className="animate-pulse">
                 {columns.map((column) => (
-                  <td key={column.key} className="px-4 py-4">
-                    <div className="h-4 w-3/4 rounded bg-gray-100" />
+                  <td key={column.key} className={joinClassNames(CELL_CLASS_NAME, ROW_DIVIDER_CLASS_NAME)}>
+                    <div className="h-4 w-3/4 rounded bg-gray-200/70" />
                   </td>
                 ))}
               </tr>
@@ -114,10 +125,10 @@ export const DataTable = <TRow, TSort extends string = string>({
                   tabIndex={isClickable ? 0 : undefined}
                   onClick={() => activate(row)}
                   onKeyDown={(event) => handleKeyDown(event, row)}
-                  className={joinClassNames("transition", isClickable && "cursor-pointer hover:bg-gray-50 focus-visible:bg-gray-50 focus-visible:outline-none")}
+                  className={joinClassNames("group/row", ABOVE_CARD_ROW_CLASS_NAME, isClickable && "cursor-pointer focus-visible:outline-none")}
                 >
                   {columns.map(({ key, className, render }) => (
-                    <td key={key} className={joinClassNames("px-4 py-3.5 text-gray-700", className)}>
+                    <td key={key} className={joinClassNames(CELL_CLASS_NAME, ROW_DIVIDER_CLASS_NAME, isClickable && ROW_CARD_CLASS_NAME, className)}>
                       {render(row)}
                     </td>
                   ))}

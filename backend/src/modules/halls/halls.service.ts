@@ -1,12 +1,15 @@
 import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import type { FindOneOptions, Repository } from 'typeorm';
+import type { FindOneOptions, FindOptionsOrder, Repository } from 'typeorm';
+import { SortOrder } from '@/common/pagination/list-query.dto.js';
+import { toSqlDirection, whereWithSearch } from '@/common/pagination/page.js';
 import { VALIDATION_FAILED_MESSAGE } from '@/common/validation/validation-errors.js';
 import { AUTH_MESSAGES } from '@/modules/auth/auth.constant.js';
 import { canAccessCinema } from '@/modules/auth/permissions.js';
 import type { CreateHallLayoutDto } from '@/modules/halls/dto/create-hall-layout.dto.js';
 import type { CreateHallDto } from '@/modules/halls/dto/create-hall.dto.js';
 import type { CreatePriceZoneDto } from '@/modules/halls/dto/create-price-zone.dto.js';
+import { HallSortField, type ListHallsQueryDto } from '@/modules/halls/dto/list-halls-query.dto.js';
 import type { UpdateHallDto } from '@/modules/halls/dto/update-hall.dto.js';
 import type { UpdatePriceZoneDto } from '@/modules/halls/dto/update-price-zone.dto.js';
 import { HallLayout } from '@/modules/halls/entities/hall-layout.entity.js';
@@ -19,6 +22,11 @@ import type { StaffUser } from '@/modules/staff/entities/staff-user.entity.js';
 
 const WITH_SEATS = { relations: { seats: true }, order: { seats: { row: 'ASC', number: 'ASC' } } } satisfies FindOneOptions<HallLayout>;
 
+const HALL_ORDER: Record<HallSortField, (direction: 'ASC' | 'DESC') => FindOptionsOrder<Hall>> = {
+  [HallSortField.Name]: (direction) => ({ name: direction, id: 'ASC', priceZones: { id: 'ASC' } }),
+  [HallSortField.BasePrice]: (direction) => ({ basePrice: direction, name: 'ASC', id: 'ASC', priceZones: { id: 'ASC' } }),
+};
+
 @Injectable()
 export class HallsService {
   constructor(
@@ -28,8 +36,13 @@ export class HallsService {
     @InjectRepository(Seat) private readonly seats: Repository<Seat>,
   ) {}
 
-  findByCinema(cinemaId: string): Promise<Hall[]> {
-    return this.halls.find({ where: { cinemaId }, relations: { priceZones: true }, order: { name: 'ASC', priceZones: { id: 'ASC' } } });
+  findByCinema(cinemaId: string, { search, isActive, useTimeBands, sort = HallSortField.Name, order = SortOrder.Asc }: ListHallsQueryDto): Promise<Hall[]> {
+    const filters = { cinemaId, ...(isActive !== undefined && { isActive }), ...(useTimeBands !== undefined && { useTimeBands }) };
+    return this.halls.find({
+      where: whereWithSearch<Hall>(filters, search, ['name', 'format']),
+      relations: { priceZones: true },
+      order: HALL_ORDER[sort](toSqlDirection(order)),
+    });
   }
 
   async create(cinemaId: string, dto: CreateHallDto): Promise<Hall> {

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import type { FindOptionsOrder, Repository } from 'typeorm';
 import { rethrowUniqueViolation } from '@/common/database/unique-violation.js';
 import { SortOrder } from '@/common/pagination/list-query.dto.js';
-import { containsIgnoringCase, type IPage, toPageWindow, toSqlDirection } from '@/common/pagination/page.js';
+import { type IPage, toPageWindow, toSqlDirection, whereWithSearch } from '@/common/pagination/page.js';
 import { CINEMA_MESSAGES } from '@/modules/cinemas/cinemas.constant.js';
 import type { CreateCinemaDto } from '@/modules/cinemas/dto/create-cinema.dto.js';
 import { CinemaSortField, type ListCinemasQueryDto } from '@/modules/cinemas/dto/list-cinemas-query.dto.js';
@@ -23,10 +23,9 @@ export class CinemasService {
   constructor(@InjectRepository(Cinema) private readonly cinemas: Repository<Cinema>) {}
 
   async findPage(query: ListCinemasQueryDto): Promise<IPage<Cinema>> {
-    const { search, sort = CinemaSortField.Name, order = SortOrder.Asc } = query;
-    const pattern = search ? containsIgnoringCase(search) : undefined;
+    const { search, isPublished, sort = CinemaSortField.Name, order = SortOrder.Asc } = query;
     const [items, total] = await this.cinemas.findAndCount({
-      where: pattern ? [{ name: pattern }, { address: pattern }, { slug: pattern }] : {},
+      where: whereWithSearch<Cinema>({ ...(isPublished !== undefined && { isPublished }) }, search, ['name', 'address', 'slug']),
       order: CINEMA_ORDER[sort](toSqlDirection(order)),
       ...toPageWindow(query),
     });

@@ -39,7 +39,7 @@ export const FilmForm = ({ film, onDone }: IFilmFormProps) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
-      <div className="grid gap-4 sm:grid-cols-[10rem_1fr]">
+      <div className="grid gap-5 sm:grid-cols-[13rem_1fr]">
         <Controller
           control={control}
           name="poster"
@@ -65,27 +65,25 @@ export const FilmForm = ({ film, onDone }: IFilmFormProps) => {
               error={errors.durationMinutes?.message}
               {...register("durationMinutes", { valueAsNumber: true })}
             />
+            <TextField label={SAVE_FILM_TEXT.releaseDate} type="date" error={errors.releaseDate?.message} {...register("releaseDate")} />
+            <SelectField
+              label={SAVE_FILM_TEXT.status}
+              options={FILM_STATUS_OPTIONS}
+              hint={SAVE_FILM_TEXT.statusHint}
+              error={errors.status?.message}
+              {...register("status")}
+            />
           </div>
+          <TextField
+            label={SAVE_FILM_TEXT.trailerUrl}
+            type="url"
+            hint={SAVE_FILM_TEXT.trailerUrlHint}
+            error={errors.trailerUrl?.message}
+            {...register("trailerUrl")}
+          />
         </div>
       </div>
       <TextAreaField label={SAVE_FILM_TEXT.description} error={errors.description?.message} {...register("description")} />
-      <div className="grid gap-4 sm:grid-cols-2">
-        <TextField label={SAVE_FILM_TEXT.releaseDate} type="date" error={errors.releaseDate?.message} {...register("releaseDate")} />
-        <SelectField
-          label={SAVE_FILM_TEXT.status}
-          options={FILM_STATUS_OPTIONS}
-          hint={SAVE_FILM_TEXT.statusHint}
-          error={errors.status?.message}
-          {...register("status")}
-        />
-      </div>
-      <TextField
-        label={SAVE_FILM_TEXT.trailerUrl}
-        type="url"
-        hint={SAVE_FILM_TEXT.trailerUrlHint}
-        error={errors.trailerUrl?.message}
-        {...register("trailerUrl")}
-      />
       <CheckboxField label={SAVE_FILM_TEXT.isPremiere} description={SAVE_FILM_TEXT.isPremiereHint} {...register("isPremiere")} />
       <FormError message={errors.root?.server?.message} />
       <ModalFooter>

@@ -1,9 +1,10 @@
 import { QueryProvider } from "@luch/shared/query";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Onest, Open_Sans } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ variable: "--font-inter", subsets: ["latin", "cyrillic"] });
+const openSans = Open_Sans({ variable: "--font-open-sans", subsets: ["latin", "cyrillic"] });
+const onest = Onest({ variable: "--font-onest", subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
   title: { default: "Луч · Персонал", template: "%s · Луч" },
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ru" className={inter.variable}>
+    <html lang="ru" className={`${openSans.variable} ${onest.variable}`}>
       <body>
         <QueryProvider>{children}</QueryProvider>
       </body>

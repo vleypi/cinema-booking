@@ -133,6 +133,20 @@ describe('Cinemas', () => {
       expect(secondPage.items.map(({ timezone }: { timezone: string }) => timezone)).toEqual(['Asia/Yekaterinburg']);
     });
 
+    it('shows only published or only hidden cinemas', async () => {
+      const token = `published${Date.now()}`;
+      const shown = (await superAdmin.post(CINEMAS_URL).send({ ...cinemaBody(), name: `${token} 1`, isPublished: true }).expect(201)).body;
+      const hidden = (await superAdmin.post(CINEMAS_URL).send({ ...cinemaBody(), name: `${token} 2`, isPublished: false }).expect(201)).body;
+
+      const { body: published } = await superAdmin.get(CINEMAS_URL).query({ search: token, isPublished: 'true' }).expect(200);
+      const { body: notPublished } = await superAdmin.get(CINEMAS_URL).query({ search: token, isPublished: 'false' }).expect(200);
+      const { body: invalid } = await superAdmin.get(CINEMAS_URL).query({ isPublished: 'yes' }).expect(400);
+
+      expect(published.items.map(({ id }: { id: string }) => id)).toEqual([shown.id]);
+      expect(notPublished.items.map(({ id }: { id: string }) => id)).toEqual([hidden.id]);
+      expect(invalid.errors).toHaveProperty('isPublished');
+    });
+
     it('rejects an unknown sort field and a too large page size', async () => {
       const { body } = await superAdmin.get(CINEMAS_URL).query({ sort: 'address', pageSize: 1000 }).expect(400);
 

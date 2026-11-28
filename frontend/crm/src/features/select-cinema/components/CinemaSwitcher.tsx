@@ -1,17 +1,14 @@
 "use client";
 
-import { joinClassNames } from "@luch/shared/lib";
 import { Icon } from "@luch/shared/ui";
 import Link from "next/link";
 import { useId, useRef } from "react";
 import { PERMISSIONS, ROUTES } from "@/shared/config";
-import { HeaderPopover } from "@/shared/ui";
+import { HeaderPopover, MENU_ITEM_CLASS_NAME, MenuOptionList } from "@/shared/ui";
 import { hasPermission, useCurrentCinema, useViewer } from "@/entities/viewer";
 import { SELECT_CINEMA_TEXT } from "@/features/select-cinema/constants/select-cinema.constant";
 
 const SINGLE_CINEMA_COUNT = 1;
-
-const MENU_ITEM_CLASS_NAME = "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm text-ink transition hover:bg-gray-100";
 
 export const CinemaSwitcher = () => {
   const { data: viewer } = useViewer();
@@ -39,27 +36,7 @@ export const CinemaSwitcher = () => {
         {cinemas.length > 0 && (
           <>
             <p className="px-3 pt-2 pb-1 text-xs text-gray-500">{SELECT_CINEMA_TEXT.choose}</p>
-            <ul>
-              {cinemas.map(({ id, name }) => {
-                const isCurrent = id === cinema?.id;
-
-                return (
-                  <li key={id}>
-                    <button
-                      type="button"
-                      popoverTarget={menuId}
-                      popoverTargetAction="hide"
-                      aria-current={isCurrent}
-                      onClick={() => select(id)}
-                      className={joinClassNames(MENU_ITEM_CLASS_NAME, "justify-between aria-[current=true]:font-semibold aria-[current=true]:text-brand")}
-                    >
-                      <span className="truncate">{name}</span>
-                      {isCurrent && <Icon name="check" className="size-4" />}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
+            <MenuOptionList menuId={menuId} options={cinemas.map(({ id, name }) => ({ value: id, label: name }))} value={cinema?.id} onSelect={select} />
             {canManageCinemas && <div className="mx-1.5 my-1.5 h-px bg-gray-100" />}
           </>
         )}

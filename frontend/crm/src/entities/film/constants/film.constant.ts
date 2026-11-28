@@ -1,16 +1,7 @@
+import { FILM_STATUSES, type FilmStatus } from "@luch/shared/film";
+import { BOOLEAN_FILTER_VALUES, type BooleanFilterValue, SORT_ORDERS } from "@/shared/config";
+import { type IListFilter, toSortValue } from "@/shared/lib";
 import type { BadgeTone } from "@/shared/ui";
-
-export const AGE_RATINGS = ["0+", "6+", "12+", "16+", "18+"] as const;
-
-export type AgeRating = (typeof AGE_RATINGS)[number];
-
-export const FILM_STATUSES = {
-  announced: "ANNOUNCED",
-  inRelease: "IN_RELEASE",
-  archived: "ARCHIVED",
-} as const;
-
-export type FilmStatus = (typeof FILM_STATUSES)[keyof typeof FILM_STATUSES];
 
 export const SCHEDULABLE_FILM_STATUSES: readonly FilmStatus[] = [FILM_STATUSES.announced, FILM_STATUSES.inRelease];
 
@@ -42,4 +33,27 @@ export const FILM_TEXT = {
   searchPlaceholder: "Название фильма",
 } as const;
 
-export const MEDIA_PATH = "/api/media";
+
+export const FILM_FILTERS = {
+  status: {
+    param: "status",
+    allLabel: "Любой статус",
+    options: Object.values(FILM_STATUSES).map((status) => ({ value: status, label: FILM_STATUS_LABELS[status] })),
+  } satisfies IListFilter<FilmStatus>,
+  isPremiere: {
+    param: "isPremiere",
+    allLabel: "Все фильмы",
+    options: [
+      { value: BOOLEAN_FILTER_VALUES.yes, label: "Только премьеры" },
+      { value: BOOLEAN_FILTER_VALUES.no, label: "Без премьер" },
+    ],
+  } satisfies IListFilter<BooleanFilterValue>,
+};
+
+export const FILM_SORT_OPTIONS = [
+  { value: "", label: "Сначала новые" },
+  { value: toSortValue(FILM_SORT_FIELDS.releaseDate, SORT_ORDERS.asc), label: "Сначала старые" },
+  { value: toSortValue(FILM_SORT_FIELDS.title, SORT_ORDERS.asc), label: "По названию, А–Я" },
+  { value: toSortValue(FILM_SORT_FIELDS.title, SORT_ORDERS.desc), label: "По названию, Я–А" },
+  { value: toSortValue(FILM_SORT_FIELDS.status, SORT_ORDERS.asc), label: "По статусу" },
+];

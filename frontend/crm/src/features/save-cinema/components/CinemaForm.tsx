@@ -38,10 +38,21 @@ export const CinemaForm = ({ cinema, onDone }: ICinemaFormProps) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
-      <TextField label={SAVE_CINEMA_TEXT.name} error={errors.name?.message} {...register("name")} />
-      <TextField label={SAVE_CINEMA_TEXT.slug} hint={SAVE_CINEMA_TEXT.slugHint} error={errors.slug?.message} {...register("slug")} />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <TextField label={SAVE_CINEMA_TEXT.name} error={errors.name?.message} {...register("name")} />
+        <TextField label={SAVE_CINEMA_TEXT.slug} hint={SAVE_CINEMA_TEXT.slugHint} error={errors.slug?.message} {...register("slug")} />
+      </div>
       <TextField label={SAVE_CINEMA_TEXT.address} error={errors.address?.message} {...register("address")} />
-      <SelectField label={SAVE_CINEMA_TEXT.timezone} options={TIMEZONE_OPTIONS} error={errors.timezone?.message} {...register("timezone")} />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <SelectField label={SAVE_CINEMA_TEXT.timezone} options={TIMEZONE_OPTIONS} error={errors.timezone?.message} {...register("timezone")} />
+        <TextField
+          label={SAVE_CINEMA_TEXT.cleaningBreak}
+          type="number"
+          min={0}
+          error={errors.cleaningBreakMinutes?.message}
+          {...register("cleaningBreakMinutes", { valueAsNumber: true })}
+        />
+      </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <TextField label={SAVE_CINEMA_TEXT.opensAt} type="time" error={errors.opensAt?.message} {...register("opensAt")} />
         <TextField
@@ -52,13 +63,6 @@ export const CinemaForm = ({ cinema, onDone }: ICinemaFormProps) => {
           {...register("closesAt")}
         />
       </div>
-      <TextField
-        label={SAVE_CINEMA_TEXT.cleaningBreak}
-        type="number"
-        min={0}
-        error={errors.cleaningBreakMinutes?.message}
-        {...register("cleaningBreakMinutes", { valueAsNumber: true })}
-      />
       <CheckboxField label={SAVE_CINEMA_TEXT.isPublished} description={SAVE_CINEMA_TEXT.isPublishedHint} {...register("isPublished")} />
       <FormError message={errors.root?.server?.message} />
       <ModalFooter>

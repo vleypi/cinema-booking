@@ -154,6 +154,21 @@ describe('Staff', () => {
       ]);
     });
 
+    it('filters staff by role and by status', async () => {
+      const listCinemaId = await createCinema(app);
+      const cashier = await createStaff(app, { role: StaffRole.Cashier, cinemaIds: [listCinemaId] });
+      const blocked = await createStaff(app, { role: StaffRole.Cashier, cinemaIds: [listCinemaId], isBlocked: true });
+      const newcomer = await createStaff(app, { role: StaffRole.Manager, cinemaIds: [listCinemaId], mustChangePassword: true });
+      const list = (query: Record<string, string>) => superAdmin.get(cinemaStaffUrl(listCinemaId)).query(query).expect(200);
+      const ids = ({ body }: { body: { items: { id: string }[] } }) => new Set(body.items.map(({ id }) => id));
+
+      expect(ids(await list({ role: StaffRole.Cashier }))).toEqual(new Set([cashier.id, blocked.id]));
+      expect(ids(await list({ status: 'active' }))).toEqual(new Set([cashier.id]));
+      expect(ids(await list({ status: 'temporaryPassword' }))).toEqual(new Set([newcomer.id]));
+      expect(ids(await list({ role: StaffRole.Cashier, status: 'blocked' }))).toEqual(new Set([blocked.id]));
+      await superAdmin.get(cinemaStaffUrl(listCinemaId)).query({ status: 'fired' }).expect(400);
+    });
+
     it('keeps all cinemas of a member when searching', async () => {
       const { body } = await admin.get(cinemaStaffUrl(cinemaId)).query({ search: 'Иванова', pageSize: 100 }).expect(200);
 

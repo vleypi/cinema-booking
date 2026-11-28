@@ -1,8 +1,8 @@
+import { getPosterUrl, type IFilm } from "@luch/shared/film";
 import { Badge, Highlight } from "@/shared/ui";
 import { FilmPoster } from "@/entities/film/components/FilmPoster";
 import { FILM_STATUS_LABELS, FILM_STATUS_TONES, FILM_TEXT } from "@/entities/film/constants/film.constant";
-import type { IFilm } from "@/entities/film/interfaces/film.interface";
-import { describeFilm, getPosterUrl } from "@/entities/film/utils/film.util";
+import { describeFilm } from "@/entities/film/utils/film.util";
 
 interface IFilmCardProps {
   film: IFilm;
@@ -23,7 +23,7 @@ export const FilmCard = ({ film, search, onSelect }: IFilmCardProps) => (
       )}
     </div>
     <div className="flex flex-col items-start gap-1.5">
-      <p className="line-clamp-2 font-semibold text-ink">
+      <p className="line-clamp-2 font-display text-base font-medium text-ink">
         <Highlight text={film.title} query={search} />
       </p>
       <p className="text-xs text-gray-500">{describeFilm(film)}</p>

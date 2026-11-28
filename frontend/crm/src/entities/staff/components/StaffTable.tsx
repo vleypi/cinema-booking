@@ -1,7 +1,7 @@
 "use client";
 
 import { STAFF_ROLE_LABELS } from "@/shared/config";
-import { Badge, DataTable, Highlight, type IDataTableColumn, type IDataTableSorting } from "@/shared/ui";
+import { Badge, DataTable, Highlight, type IDataTableColumn, type IDataTableSorting, TableTitleCell } from "@/shared/ui";
 import { StaffStatus } from "@/entities/staff/components/StaffStatus";
 import { STAFF_ROLE_TONES, STAFF_SORT_FIELDS, STAFF_TEXT, type StaffSortField } from "@/entities/staff/constants/staff.constant";
 import type { IStaffMember } from "@/entities/staff/interfaces/staff.interface";
@@ -22,14 +22,7 @@ const getColumns = (search: string): IDataTableColumn<IStaffMember, StaffSortFie
     header: STAFF_TEXT.member,
     sortField: STAFF_SORT_FIELDS.fullName,
     render: ({ fullName, login }) => (
-      <div>
-        <p className="font-medium text-ink">
-          <Highlight text={fullName} query={search} />
-        </p>
-        <p className="text-xs text-gray-500">
-          <Highlight text={login} query={search} />
-        </p>
-      </div>
+      <TableTitleCell title={<Highlight text={fullName} query={search} />} subtitle={<Highlight text={login} query={search} />} />
     ),
   },
   { key: "role", header: STAFF_TEXT.role, sortField: STAFF_SORT_FIELDS.role, render: ({ role }) => <Badge tone={STAFF_ROLE_TONES[role]}>{STAFF_ROLE_LABELS[role]}</Badge> },

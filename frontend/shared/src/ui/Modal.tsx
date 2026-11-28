@@ -1,18 +1,28 @@
 "use client";
 
 import { type MouseEvent, type ReactNode, useId } from "react";
+import { joinClassNames } from "../lib/join-class-names";
 import { Icon } from "./Icon";
 import { UI_TEXT } from "./ui.constant";
 import { useDialogVisibility } from "./useDialogVisibility";
 
+type ModalSize = "md" | "lg" | "xl";
+
 interface IModalProps {
   isOpen: boolean;
   title: string;
+  size?: ModalSize;
   onClose: () => void;
   children: ReactNode;
 }
 
-export const Modal = ({ isOpen, title, onClose, children }: IModalProps) => {
+const SIZE_CLASSES: Record<ModalSize, string> = {
+  md: "max-w-lg",
+  lg: "max-w-2xl",
+  xl: "max-w-6xl",
+};
+
+export const Modal = ({ isOpen, title, size = "md", onClose, children }: IModalProps) => {
   const dialogRef = useDialogVisibility(isOpen);
   const titleId = useId();
 
@@ -26,7 +36,10 @@ export const Modal = ({ isOpen, title, onClose, children }: IModalProps) => {
       onClose={onClose}
       onClick={handleBackdropClick}
       aria-labelledby={titleId}
-      className="m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-lg scale-95 overflow-hidden rounded-2xl bg-white p-0 opacity-0 shadow-2xl transition-all transition-discrete duration-200 ease-out-expo backdrop:bg-black/40 backdrop:opacity-0 backdrop:transition-all backdrop:transition-discrete backdrop:duration-200 open:scale-100 open:opacity-100 open:backdrop:opacity-100 starting:open:scale-95 starting:open:opacity-0 starting:open:backdrop:opacity-0"
+      className={joinClassNames(
+        "m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] scale-95 overflow-hidden rounded-2xl bg-white p-0 opacity-0 shadow-2xl transition-all transition-discrete duration-200 ease-out-expo backdrop:bg-black/40 backdrop:opacity-0 backdrop:transition-all backdrop:transition-discrete backdrop:duration-200 open:scale-100 open:opacity-100 open:backdrop:opacity-100 starting:open:scale-95 starting:open:opacity-0 starting:open:backdrop:opacity-0",
+        SIZE_CLASSES[size],
+      )}
     >
       <div className="flex max-h-[calc(100dvh-2rem)] flex-col">
         <div className="flex shrink-0 items-center justify-between border-b border-gray-100 px-6 py-4">

@@ -8,6 +8,7 @@ interface ILayoutCellProps {
   cellKey: string;
   seat: INumberedSeat | undefined;
   priceZones: readonly IPriceZone[];
+  sizeClassName: string;
   onPaint: (key: string) => void;
 }
 
@@ -18,7 +19,7 @@ const describeSeat = (seat: INumberedSeat | undefined, priceZones: readonly IPri
   return `${EDIT_LAYOUT_TEXT.row} ${seat.row}, ${EDIT_LAYOUT_TEXT.seat} ${seat.number}. ${SEAT_TYPE_LABELS[seat.type]}, ${zoneName}`;
 };
 
-export const LayoutCell = ({ cellKey, seat, priceZones, onPaint }: ILayoutCellProps) => {
+export const LayoutCell = ({ cellKey, seat, priceZones, sizeClassName, onPaint }: ILayoutCellProps) => {
   const description = describeSeat(seat, priceZones);
 
   return (
@@ -29,10 +30,11 @@ export const LayoutCell = ({ cellKey, seat, priceZones, onPaint }: ILayoutCellPr
       title={description}
       onClick={() => onPaint(cellKey)}
       className={joinClassNames(
-        "grid size-7 shrink-0 place-items-center text-xs font-semibold tabular-nums transition-colors focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none",
+        "grid shrink-0 place-items-center font-semibold tabular-nums transition-colors focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none",
+        sizeClassName,
         seat
-          ? joinClassNames(getPriceZoneColor(priceZones, seat.priceZoneId), SEAT_SHAPE_CLASSES[seat.type])
-          : "rounded-md border border-dashed border-gray-300 bg-white hover:border-gray-400",
+          ? joinClassNames(getPriceZoneColor(priceZones, seat.priceZoneId), SEAT_SHAPE_CLASSES[seat.type], "hover:brightness-110")
+          : "rounded-md border border-dashed border-gray-200 hover:border-gray-400",
       )}
     >
       {seat?.number}

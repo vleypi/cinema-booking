@@ -1,9 +1,10 @@
 "use client";
 
-import { CONTROL_CLASS_NAME, Icon } from "@luch/shared/ui";
+import { Icon } from "@luch/shared/ui";
 import { joinClassNames } from "@luch/shared/lib";
 import { useEffect, useEffectEvent, useState } from "react";
 import { LIST_TEXT, SEARCH_DEBOUNCE_MS } from "@/shared/config";
+import { TOOLBAR_CONTROL_CLASS_NAME } from "@/shared/ui/ui.constant";
 
 interface ISearchFieldProps {
   value: string;
@@ -41,24 +42,24 @@ export const SearchField = ({ value, placeholder, onSearch }: ISearchFieldProps)
   };
 
   return (
-    <div className="relative w-full sm:max-w-xs">
-      <Icon name="search" className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-gray-400" />
+    <div className="relative w-full sm:w-80">
+      <Icon name="search" className="pointer-events-none absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-ink" />
       <input
         type="search"
         value={draft}
         placeholder={placeholder}
         aria-label={placeholder}
         onChange={(event) => setDraft(event.target.value)}
-        className={joinClassNames(CONTROL_CLASS_NAME, "border-gray-200 pr-9 pl-9 [&::-webkit-search-cancel-button]:hidden")}
+        className={joinClassNames(TOOLBAR_CONTROL_CLASS_NAME, "w-full pr-8 pl-8.5 [&::-webkit-search-cancel-button]:hidden")}
       />
       {draft && (
         <button
           type="button"
           onClick={clear}
           aria-label={LIST_TEXT.clearSearch}
-          className="absolute top-1/2 right-2 grid size-6 -translate-y-1/2 place-items-center rounded-md text-gray-400 transition hover:bg-gray-100 hover:text-ink"
+          className="absolute top-1/2 right-1.5 grid size-5 -translate-y-1/2 place-items-center rounded-md text-gray-400 transition hover:bg-gray-100 hover:text-ink"
         >
-          <Icon name="close" className="size-3.5" />
+          <Icon name="close" className="size-3" />
         </button>
       )}
     </div>

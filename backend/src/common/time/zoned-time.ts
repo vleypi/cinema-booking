@@ -3,6 +3,7 @@ export const MIDNIGHT = '00:00';
 
 const DAY_MS = 24 * 60 * MINUTE_MS;
 const DATE_LENGTH = 10;
+const ISO_DATE_LOCALE = 'en-CA';
 
 const offsetMinutes = (instant: Date, timeZone: string): number => {
   const parts = new Intl.DateTimeFormat('en-US', { timeZone, hourCycle: 'h23', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })
@@ -24,3 +25,5 @@ export const formatTime = (instant: Date, timeZone: string): string =>
   new Intl.DateTimeFormat('ru-RU', { timeZone, hourCycle: 'h23', hour: '2-digit', minute: '2-digit' }).format(instant);
 
 export const addDays = (date: string, days: number): string => new Date(Date.parse(date) + days * DAY_MS).toISOString().slice(0, DATE_LENGTH);
+
+export const todayIn = (timeZone: string, now = new Date()): string => new Intl.DateTimeFormat(ISO_DATE_LOCALE, { timeZone }).format(now);

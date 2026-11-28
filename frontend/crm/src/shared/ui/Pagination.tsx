@@ -27,43 +27,33 @@ export const Pagination = ({ page, pageSize, total, onChange }: IPaginationProps
     if (isOutOfRange) showLastPage();
   }, [isOutOfRange]);
 
-  if (total === 0 || isOutOfRange) return null;
-
-  const first = (page - 1) * pageSize + 1;
-  const last = Math.min(page * pageSize, total);
+  if (pageCount <= 1 || isOutOfRange) return null;
 
   return (
-    <nav aria-label={LIST_TEXT.pagination} className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-gray-500">
-      <p className="tabular-nums">
-        {LIST_TEXT.shown} {first}–{last} {LIST_TEXT.of} {total}
-      </p>
-      {pageCount > 1 && (
-        <div className="flex items-center gap-1">
-          <button type="button" onClick={() => onChange(page - 1)} disabled={page === 1} aria-label={LIST_TEXT.previousPage} className={joinClassNames(PAGE_BUTTON_CLASS_NAME, IDLE_PAGE_CLASS_NAME)}>
-            <Icon name="chevronLeft" className="size-4" />
+    <nav aria-label={LIST_TEXT.pagination} className="mt-4 flex items-center justify-end gap-1 text-sm">
+      <button type="button" onClick={() => onChange(page - 1)} disabled={page === 1} aria-label={LIST_TEXT.previousPage} className={joinClassNames(PAGE_BUTTON_CLASS_NAME, IDLE_PAGE_CLASS_NAME)}>
+        <Icon name="chevronLeft" className="size-4" />
+      </button>
+      {getPageItems(page, pageCount).map((item, index) =>
+        item === PAGE_GAP ? (
+          <span key={`${PAGE_GAP}-${index}`} className="grid h-8 min-w-6 place-items-center text-gray-400">
+            …
+          </span>
+        ) : (
+          <button
+            key={item}
+            type="button"
+            onClick={() => onChange(item)}
+            aria-current={item === page ? "page" : undefined}
+            className={joinClassNames(PAGE_BUTTON_CLASS_NAME, item === page ? CURRENT_PAGE_CLASS_NAME : IDLE_PAGE_CLASS_NAME)}
+          >
+            {item}
           </button>
-          {getPageItems(page, pageCount).map((item, index) =>
-            item === PAGE_GAP ? (
-              <span key={`${PAGE_GAP}-${index}`} className="grid h-8 min-w-6 place-items-center text-gray-400">
-                …
-              </span>
-            ) : (
-              <button
-                key={item}
-                type="button"
-                onClick={() => onChange(item)}
-                aria-current={item === page ? "page" : undefined}
-                className={joinClassNames(PAGE_BUTTON_CLASS_NAME, item === page ? CURRENT_PAGE_CLASS_NAME : IDLE_PAGE_CLASS_NAME)}
-              >
-                {item}
-              </button>
-            ),
-          )}
-          <button type="button" onClick={() => onChange(page + 1)} disabled={page === pageCount} aria-label={LIST_TEXT.nextPage} className={joinClassNames(PAGE_BUTTON_CLASS_NAME, IDLE_PAGE_CLASS_NAME)}>
-            <Icon name="chevronRight" className="size-4" />
-          </button>
-        </div>
+        ),
       )}
+      <button type="button" onClick={() => onChange(page + 1)} disabled={page === pageCount} aria-label={LIST_TEXT.nextPage} className={joinClassNames(PAGE_BUTTON_CLASS_NAME, IDLE_PAGE_CLASS_NAME)}>
+        <Icon name="chevronRight" className="size-4" />
+      </button>
     </nav>
   );
 };

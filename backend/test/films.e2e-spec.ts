@@ -169,6 +169,18 @@ describe('Films', () => {
       expect(byTitle).toEqual({ items: [expect.objectContaining({ title: `${token} В` })], total: 3 });
     });
 
+    it('shows only premieres or only regular films', async () => {
+      const token = `premiere${Date.now()}`;
+      const premiere = await createTitled(`${token} 1`, { isPremiere: true });
+      const regular = await createTitled(`${token} 2`, { isPremiere: false });
+
+      const { body: premieres } = await manager.get(FILMS_URL).query({ search: token, isPremiere: 'true' }).expect(200);
+      const { body: regulars } = await manager.get(FILMS_URL).query({ search: token, isPremiere: 'false' }).expect(200);
+
+      expect(premieres.items.map(({ id }: { id: string }) => id)).toEqual([premiere.id]);
+      expect(regulars.items.map(({ id }: { id: string }) => id)).toEqual([regular.id]);
+    });
+
     it('rejects an unknown status', async () => {
       const { body } = await manager.get(FILMS_URL).query({ status: 'DELETED' }).expect(400);
 

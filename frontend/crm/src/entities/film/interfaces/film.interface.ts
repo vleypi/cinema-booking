@@ -1,23 +1,9 @@
+import type { FilmStatus } from "@luch/shared/film";
 import type { IListRequest } from "@/shared/api";
-import type { AgeRating, FilmSortField, FilmStatus } from "@/entities/film/constants/film.constant";
-
-export interface IFilmPayload {
-  title: string;
-  description: string;
-  genre: string;
-  ageRating: AgeRating;
-  durationMinutes: number;
-  releaseDate: string;
-  isPremiere: boolean;
-  trailerUrl: string | null;
-  status: FilmStatus;
-}
-
-export interface IFilm extends IFilmPayload {
-  id: string;
-  posterFileId: string | null;
-}
+import type { BooleanFilterValue } from "@/shared/config";
+import type { FilmSortField } from "@/entities/film/constants/film.constant";
 
 export interface IFilmListRequest extends IListRequest<FilmSortField> {
   status?: readonly FilmStatus[];
+  isPremiere?: BooleanFilterValue;
 }

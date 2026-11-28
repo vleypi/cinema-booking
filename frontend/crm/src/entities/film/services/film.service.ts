@@ -1,5 +1,6 @@
+import type { IFilm, IFilmPayload } from "@luch/shared/film";
 import { apiClient, type IPage } from "@/shared/api";
-import type { IFilm, IFilmListRequest, IFilmPayload } from "@/entities/film/interfaces/film.interface";
+import type { IFilmListRequest } from "@/entities/film/interfaces/film.interface";
 
 const FILMS_PATH = "/films";
 const POSTER_FIELD = "file";
