@@ -39,6 +39,19 @@ export class EnvironmentVariables extends DatabaseEnvironment {
   @IsString()
   @IsNotEmpty()
   MEDIA_DIR: string = 'storage/media';
+
+  @IsString()
+  @IsNotEmpty()
+  SMTP_HOST: string = 'localhost';
+
+  @IsInt()
+  @Min(1)
+  @Max(65535)
+  SMTP_PORT: number = 1025;
+
+  @IsString()
+  @IsNotEmpty()
+  SMTP_FROM: string = 'Кинотеатр «Луч» <noreply@luch-cinema.local>';
 }
 
 export const validateEnvironment = <T extends object>(config: Record<string, unknown>, environmentClass: ClassConstructor<T>): T => {

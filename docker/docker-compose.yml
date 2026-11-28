@@ -59,6 +59,13 @@ services:
     ports:
       - "6380:6379"
 
+  mailhog:
+    image: mailhog/mailhog:latest
+    restart: unless-stopped
+    ports:
+      - "${SMTP_PORT:-1025}:1025"
+      - "${MAILHOG_UI_PORT:-8025}:8025"
+
   backend:
     build:
       <<: *app-build
@@ -75,6 +82,9 @@ services:
       COOKIE_SECURE: ${COOKIE_SECURE:-true}
       SEED_SUPER_ADMIN_PASSWORD: ${SEED_SUPER_ADMIN_PASSWORD:-}
       MEDIA_DIR: /app/backend/storage/media
+      SMTP_HOST: ${SMTP_HOST:-mailhog}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+      SMTP_FROM: ${SMTP_FROM:-noreply@luch-cinema.local}
     volumes:
       - media-data:/app/backend/storage/media
     ports:
