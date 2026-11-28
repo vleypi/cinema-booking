@@ -17,4 +17,6 @@ export const NAV_ITEMS: readonly INavItem[] = [
   { href: ROUTES.prices, label: "Цены", icon: "tag", permission: PERMISSIONS.manageHalls },
   { href: ROUTES.schedule, label: "Расписание", icon: "calendar", permission: PERMISSIONS.manageSchedule },
   { href: ROUTES.films, label: "Фильмы", icon: "film", permission: PERMISSIONS.manageFilms },
+  { href: ROUTES.reports, label: "Отчёты", icon: "chart", permission: PERMISSIONS.viewReports },
+  { href: ROUTES.audit, label: "Журнал аудита", icon: "clipboard", permission: PERMISSIONS.viewAuditLog },
 ];

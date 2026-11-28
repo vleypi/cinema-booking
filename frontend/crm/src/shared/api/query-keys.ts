@@ -18,4 +18,8 @@ export const QUERY_KEYS = {
   boxOfficeSessionSeats: (cinemaId: string, sessionId: string) => ["box-office", "seats", cinemaId, sessionId],
   boxOfficeOrders: (cinemaId: string, query: string) => ["box-office", "orders", cinemaId, query],
   scannerHalls: (cinemaId: string) => ["scanner", "halls", cinemaId],
+  sessionCancelPreview: (sessionId: string) => ["sessions", "cancel-preview", sessionId],
+  revenueReport: (cinemaId: string, from: string, to: string) => ["reports", "revenue", cinemaId, from, to],
+  occupancyReport: (cinemaId: string, from: string, to: string) => ["reports", "occupancy", cinemaId, from, to],
+  auditLogs: (cinemaId: string, entityType: string, from: string, to: string) => ["audit-logs", cinemaId, entityType, from, to],
 } as const;

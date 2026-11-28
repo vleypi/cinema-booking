@@ -1,10 +1,11 @@
 "use client";
 
+import { ApiError } from "@luch/shared/api";
 import { formatRubles, formatTimeInZone, joinClassNames } from "@luch/shared/lib";
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button, MONO_LABEL_CLASS_NAME, PANEL_CLASS_NAME } from "@/shared/ui";
-import { customerService, type ICustomerOrder } from "@/entities/customer";
+import { customerService, type ICustomerOrder, useCustomerRefundOrder } from "@/entities/customer";
 import { CABINET_TEXT, ORDER_STATUS_LABELS, TICKET_STATUS_LABELS } from "@/views/cabinet/constants/cabinet.constant";
 
 interface IOrderCardProps {
@@ -16,7 +17,57 @@ const formatOrderDate = (iso: string, timeZone: string): string =>
 
 export const OrderCard = ({ order }: IOrderCardProps) => {
   const [openQrId, setOpenQrId] = useState<string | null>(null);
+  const [isRefundOpen, setIsRefundOpen] = useState(false);
+  const [selectedRefundIds, setSelectedRefundIds] = useState<string[]>([]);
+  const [refundError, setRefundError] = useState<string | null>(null);
+  const [refundSuccess, setRefundSuccess] = useState<string | null>(null);
+  const [renderedAtMs] = useState(() => Date.now());
+  const refundMutation = useCustomerRefundOrder();
+
+  const activeTickets = useMemo(() => order.tickets.filter((ticket) => ticket.status === "ACTIVE"), [order.tickets]);
   const canDownloadPdf = order.tickets.some((ticket) => ticket.status === "ACTIVE" || ticket.status === "USED");
+  const canRefund = activeTickets.length > 0 && new Date(order.session.startsAt).getTime() > renderedAtMs;
+
+  const selectedRefundTickets = useMemo(() => {
+    const selectedSet = new Set(selectedRefundIds);
+    return activeTickets.filter((ticket) => selectedSet.has(ticket.id));
+  }, [activeTickets, selectedRefundIds]);
+
+  const refundTotal = useMemo(
+    () => selectedRefundTickets.reduce((sum, ticket) => sum + ticket.price, 0),
+    [selectedRefundTickets],
+  );
+
+  const handleToggleRefundPanel = () => {
+    if (!isRefundOpen) {
+      setSelectedRefundIds(activeTickets.map((ticket) => ticket.id));
+      setRefundError(null);
+      setRefundSuccess(null);
+    }
+    setIsRefundOpen((prev) => !prev);
+  };
+
+  const handleToggleRefundTicket = (ticketId: string) => {
+    setSelectedRefundIds((prev) => (prev.includes(ticketId) ? prev.filter((id) => id !== ticketId) : [...prev, ticketId]));
+    setRefundError(null);
+  };
+
+  const handleConfirmRefund = async () => {
+    if (selectedRefundTickets.length === 0) return;
+    setRefundError(null);
+    try {
+      const result = await refundMutation.mutateAsync({
+        orderId: order.id,
+        ticketIds: selectedRefundTickets.map((ticket) => ticket.id),
+      });
+      setIsRefundOpen(false);
+      setRefundSuccess(CABINET_TEXT.refundSuccess(formatRubles(result.amount)));
+    } catch (error) {
+      if (error instanceof ApiError) {
+        setRefundError(error.message);
+      }
+    }
+  };
 
   return (
     <article className={joinClassNames(PANEL_CLASS_NAME, "grid gap-5 bg-ink-2 p-5 sm:p-7")}>
@@ -38,7 +89,7 @@ export const OrderCard = ({ order }: IOrderCardProps) => {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap items-center gap-3">
           <span className="font-mono text-xl font-medium tabular-nums">{formatRubles(order.totalAmount)}</span>
           {canDownloadPdf && (
             <a
@@ -49,8 +100,62 @@ export const OrderCard = ({ order }: IOrderCardProps) => {
               {CABINET_TEXT.downloadPdf}
             </a>
           )}
+          {canRefund && (
+            <Button variant="ghost" size="small" onClick={handleToggleRefundPanel}>
+              {isRefundOpen ? CABINET_TEXT.refundClose : CABINET_TEXT.refundButton}
+            </Button>
+          )}
         </div>
       </div>
+
+      {refundSuccess && (
+        <p className="rounded-frame border border-warm/40 bg-warm/10 px-4 py-3 text-sm text-paper">{refundSuccess}</p>
+      )}
+
+      {isRefundOpen && canRefund && (
+        <div className="grid gap-4 rounded-frame border border-paper/20 bg-ink-3 p-4">
+          <p className="text-sm text-paper/76">{CABINET_TEXT.refundHint}</p>
+          <ul className="grid gap-2">
+            {activeTickets.map((ticket) => {
+              const isChecked = selectedRefundIds.includes(ticket.id);
+              return (
+                <li key={ticket.id}>
+                  <label className="flex cursor-pointer items-center justify-between gap-3 rounded-frame border border-paper/15 bg-ink-2 px-3.5 py-2.5 text-sm">
+                    <span className="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() => handleToggleRefundTicket(ticket.id)}
+                        className="size-4 accent-warm"
+                      />
+                      <span>{CABINET_TEXT.seatLabel(ticket.row, ticket.number)}</span>
+                      <span className="font-mono text-xs text-paper/56">{ticket.code}</span>
+                    </span>
+                    <span className="font-mono text-sm tabular-nums">{formatRubles(ticket.price)}</span>
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+          {refundError && (
+            <p role="alert" className="text-sm text-signal">
+              {refundError}
+            </p>
+          )}
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-paper/10 pt-3">
+            <span className="font-mono text-sm text-paper/80">
+              {CABINET_TEXT.refundTotal}: <strong className="text-paper">{formatRubles(refundTotal)}</strong>
+            </span>
+            <Button
+              size="small"
+              disabled={selectedRefundTickets.length === 0 || refundMutation.isPending}
+              onClick={() => void handleConfirmRefund()}
+            >
+              {refundMutation.isPending ? CABINET_TEXT.refundSubmitting : CABINET_TEXT.refundConfirm}
+            </Button>
+          </div>
+        </div>
+      )}
 
       <ul className="grid gap-2.5 border-t border-paper/13 pt-4">
         {order.tickets.map((ticket) => {
