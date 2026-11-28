@@ -28,6 +28,22 @@ export interface ICreateYooKassaPaymentParams {
   metadata: Record<string, string>;
 }
 
+export interface ICreateYooKassaRefundParams {
+  paymentExternalId: string;
+  amountKopecks: number;
+  description: string;
+  idempotenceKey: string;
+}
+
+export interface IYooKassaRefundResponse {
+  id: string;
+  status: 'pending' | 'succeeded' | 'canceled';
+  amount: {
+    value: string;
+    currency: string;
+  };
+}
+
 @Injectable()
 export class YooKassaClient {
   readonly #apiUrl: string;
@@ -71,6 +87,26 @@ export class YooKassaClient {
     });
 
     return (await response.json()) as IYooKassaPaymentResponse;
+  }
+
+  async createRefund(params: ICreateYooKassaRefundParams): Promise<IYooKassaRefundResponse> {
+    const response = await this.#request('/refunds', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Idempotence-Key': params.idempotenceKey,
+      },
+      body: JSON.stringify({
+        payment_id: params.paymentExternalId,
+        amount: {
+          value: formatKopecksToRubles(params.amountKopecks),
+          currency: PAYMENT_CURRENCY,
+        },
+        description: params.description,
+      }),
+    });
+
+    return (await response.json()) as IYooKassaRefundResponse;
   }
 
   async #request(path: string, init: { method: string; headers?: Record<string, string>; body?: string }): Promise<Response> {
