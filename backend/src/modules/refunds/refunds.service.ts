@@ -6,6 +6,7 @@ import { DataSource, In, type Repository } from 'typeorm';
 import { MailService } from '@/common/mail/mail.service.js';
 import { RedisClient } from '@/common/redis/redis.client.js';
 import type { EnvironmentVariables } from '@/config/environment.js';
+import { AuditService } from '@/modules/audit/audit.service.js';
 import { Order } from '@/modules/orders/entities/order.entity.js';
 import { Ticket } from '@/modules/orders/entities/ticket.entity.js';
 import { OrderStatus } from '@/modules/orders/order-status.enum.js';
@@ -44,6 +45,7 @@ export class RefundsService {
     private readonly redis: RedisClient,
     private readonly mail: MailService,
     private readonly yooKassa: YooKassaClient,
+    private readonly audit: AuditService,
     config: ConfigService<EnvironmentVariables, true>,
     @InjectRepository(Order) private readonly orders: Repository<Order>,
     @InjectRepository(Payment) private readonly payments: Repository<Payment>,
@@ -280,6 +282,18 @@ export class RefundsService {
 </div>`,
         })
         .catch(() => undefined);
+    }
+
+    if (initiatorStaffId) {
+      await this.audit.record({
+        staffUserId: initiatorStaffId,
+        cinemaId: order.cinemaId,
+        action: 'REFUND_CREATED',
+        entityType: 'Refund',
+        entityId: result.refund.id,
+        before: { orderStatus: order.status },
+        after: { orderStatus: result.orderStatus, amount: result.refund.amount, reason, ticketIds: [...ticketIds] },
+      });
     }
 
     return {

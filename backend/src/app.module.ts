@@ -8,6 +8,7 @@ import { RedisModule } from '@/common/redis/redis.module.js';
 import { createValidationException } from '@/common/validation/validation-errors.js';
 import { EnvironmentVariables, validateEnvironment } from '@/config/environment.js';
 import { createDatabaseOptions } from '@/database/database.options.js';
+import { AuditModule } from '@/modules/audit/audit.module.js';
 import { AuthModule } from '@/modules/auth/auth.module.js';
 import { BoxOfficeModule } from '@/modules/box-office/box-office.module.js';
 import { CatalogModule } from '@/modules/catalog/catalog.module.js';
@@ -20,6 +21,7 @@ import { MediaModule } from '@/modules/media/media.module.js';
 import { OrdersModule } from '@/modules/orders/orders.module.js';
 import { PaymentsModule } from '@/modules/payments/payments.module.js';
 import { RefundsModule } from '@/modules/refunds/refunds.module.js';
+import { ReportsModule } from '@/modules/reports/reports.module.js';
 import { SessionsModule } from '@/modules/sessions/sessions.module.js';
 import { StaffModule } from '@/modules/staff/staff.module.js';
 import { TicketsModule } from '@/modules/tickets/tickets.module.js';
@@ -40,6 +42,7 @@ import { TimeBandsModule } from '@/modules/time-bands/time-bands.module.js';
     }),
     RedisModule,
     MailModule,
+    AuditModule,
     AuthModule,
     CinemasModule,
     StaffModule,
@@ -55,6 +58,7 @@ import { TimeBandsModule } from '@/modules/time-bands/time-bands.module.js';
     TicketsModule,
     BoxOfficeModule,
     RefundsModule,
+    ReportsModule,
     HealthModule,
   ],
   providers: [
