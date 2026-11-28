@@ -90,7 +90,7 @@ export const BoxOfficeOrdersTab = ({ cinema, canSell, canRefund }: IBoxOfficeOrd
       {!isPending && orders && orders.length > 0 && (
         <div className="space-y-4">
           {orders.map((order) => {
-            const statusMeta = ORDER_STATUS_META[order.status];
+            const statusMeta = ORDER_STATUS_META[order.status] ?? { label: order.status, tone: "neutral" as const };
             const hasActiveTickets = order.tickets.some((ticket) => ticket.status === "ACTIVE");
             const canRefundOrder =
               canRefund && hasActiveTickets && new Date(order.session.startsAt).getTime() > renderedAtMs;
@@ -153,7 +153,7 @@ export const BoxOfficeOrdersTab = ({ cinema, canSell, canRefund }: IBoxOfficeOrd
                   <p className="text-xs font-medium text-gray-500">{BOX_OFFICE_ORDERS_TEXT.ticketsHeading}</p>
                   <div className="flex flex-wrap gap-2">
                     {order.tickets.map((ticket) => {
-                      const ticketMeta = TICKET_STATUS_META[ticket.status];
+                      const ticketMeta = TICKET_STATUS_META[ticket.status] ?? { label: ticket.status, tone: "neutral" as const };
                       return (
                         <div
                           key={ticket.id}
