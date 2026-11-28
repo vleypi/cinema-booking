@@ -8,7 +8,7 @@ import { type EnvironmentVariables, NodeEnvironment } from '@/config/environment
 import { Order } from '@/modules/orders/entities/order.entity.js';
 import { OrderStatus } from '@/modules/orders/order-status.enum.js';
 import { TicketStatus } from '@/modules/orders/ticket-status.enum.js';
-import { buildOrderTicketsPdf, type IOrderTicketsPdfData } from '@/modules/tickets/ticket-pdf.util.js';
+import { buildOrderTicketsPdf, type IOrderTicketsPdfData, type TicketPdfFormat } from '@/modules/tickets/ticket-pdf.util.js';
 import { generateTicketQrPng, signTicketQrPayload } from '@/modules/tickets/ticket-qr.util.js';
 import { SEND_ORDER_TICKETS_JOB, TICKET_EMAILS_QUEUE, TICKET_MESSAGES } from '@/modules/tickets/tickets.constant.js';
 
@@ -173,6 +173,26 @@ export class TicketsService implements OnModuleInit, OnModuleDestroy {
     const buffer = await buildOrderTicketsPdf(pdfData, this.#qrSecret);
 
     return { filename: `tickets-${order.number}.pdf`, buffer };
+  }
+
+  async generateOrderPdfForCinema(
+    cinemaId: string,
+    orderId: string,
+    format: TicketPdfFormat = 'a4',
+  ): Promise<{ filename: string; buffer: Buffer }> {
+    const order = await this.#loadOrderForTickets(orderId);
+    if (!order || order.cinemaId !== cinemaId) {
+      throw new NotFoundException(TICKET_MESSAGES.orderNotFound);
+    }
+
+    const pdfData = toPdfData(order);
+    if (pdfData.tickets.length === 0) {
+      throw new ConflictException(TICKET_MESSAGES.ticketsNotReady);
+    }
+
+    const buffer = await buildOrderTicketsPdf(pdfData, this.#qrSecret, format);
+
+    return { filename: `tickets-${order.number}-${format}.pdf`, buffer };
   }
 
   async generateTicketQrPngForCustomer(customerId: string, orderId: string, ticketId: string): Promise<Buffer> {

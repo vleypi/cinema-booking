@@ -9,6 +9,7 @@ import { createValidationException } from '@/common/validation/validation-errors
 import { EnvironmentVariables, validateEnvironment } from '@/config/environment.js';
 import { createDatabaseOptions } from '@/database/database.options.js';
 import { AuthModule } from '@/modules/auth/auth.module.js';
+import { BoxOfficeModule } from '@/modules/box-office/box-office.module.js';
 import { CatalogModule } from '@/modules/catalog/catalog.module.js';
 import { CinemasModule } from '@/modules/cinemas/cinemas.module.js';
 import { CustomersModule } from '@/modules/customers/customers.module.js';
@@ -51,6 +52,7 @@ import { TimeBandsModule } from '@/modules/time-bands/time-bands.module.js';
     OrdersModule,
     PaymentsModule,
     TicketsModule,
+    BoxOfficeModule,
     HealthModule,
   ],
   providers: [
