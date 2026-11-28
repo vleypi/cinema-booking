@@ -6,4 +6,6 @@ export const QUERY_KEYS = {
   film: (filmId: string) => ["film", filmId],
   comingSoonFilms: ["films", "coming-soon"],
   sessionSeats: (sessionId: string) => ["session-seats", sessionId],
+  customerMe: ["customer", "me"],
+  customerOrders: ["customer", "orders"],
 } as const;

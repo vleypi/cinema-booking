@@ -151,8 +151,14 @@ describe('Tickets PDF, QR & Email Dispatch', () => {
     expect(pdfRes.headers['content-disposition']).toContain(`tickets-${order.number}.pdf`);
     expect((pdfRes.body as Buffer).subarray(0, 5).toString('latin1')).toBe('%PDF-');
 
+    const firstTicketId = (cabinetOrder.tickets as Array<{ id: string }>)[0].id;
+    const qrRes = await buyerAgent.get(`${CUSTOMER_URL}/orders/${order.id}/tickets/${firstTicketId}/qr`).expect(200);
+    expect(qrRes.headers['content-type']).toContain('image/png');
+    expect((qrRes.body as Buffer).subarray(0, 4).toString('hex')).toBe('89504e47');
+
     const otherAgent = await loginCustomer('other-buyer@example.com');
     await otherAgent.get(`${CUSTOMER_URL}/orders/${order.id}/pdf`).expect(404);
+    await otherAgent.get(`${CUSTOMER_URL}/orders/${order.id}/tickets/${firstTicketId}/qr`).expect(404);
 
     const { body: unpaidOrder } = await request(server)
       .post(ORDERS_URL)

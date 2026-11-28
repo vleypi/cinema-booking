@@ -1,0 +1,44 @@
+export const ORDER_STATUS_LABELS: Record<string, string> = {
+  PENDING_PAYMENT: "Ожидает оплаты",
+  PAID: "Оплачен",
+  PARTIALLY_REFUNDED: "Частичный возврат",
+  REFUNDED: "Возвращен",
+  EXPIRED: "Просрочен",
+} as const;
+
+export const TICKET_STATUS_LABELS: Record<string, string> = {
+  RESERVED: "Забронирован",
+  ACTIVE: "Активен",
+  USED: "Использован",
+  REFUNDED: "Возвращен",
+  RELEASED: "Отменен",
+} as const;
+
+export const CABINET_TEXT = {
+  eyebrow: "Личный кабинет",
+  title: "Мои билеты",
+  logout: "Выйти",
+  upcomingTab: "Предстоящие",
+  pastTab: "Прошедшие",
+  profileTab: "Профиль",
+  loading: "Загружаем данные…",
+  emptyUpcoming: "У вас пока нет предстоящих сеансов.",
+  emptyPast: "История посещений пока пуста.",
+  goToSchedule: "Выбрать фильм",
+  downloadPdf: "Скачать PDF",
+  showQr: "Показать QR",
+  hideQr: "Скрыть QR",
+  ticketCodeLabel: "Код билета",
+  seatLabel: (row: number, number: number) => `Ряд ${row}, место ${number}`,
+  orderNumber: (number: string) => `Заказ ${number}`,
+  profileTitle: "Контактные данные",
+  emailLabel: "Электронная почта",
+  nameLabel: "Имя",
+  namePlaceholder: "Как к вам обращаться",
+  phoneLabel: "Телефон",
+  phonePlaceholder: "+7 999 123-45-67",
+  saveProfile: "Сохранить",
+  savingProfile: "Сохраняем…",
+  profileSaved: "Данные сохранены",
+  profileError: "Не удалось сохранить профиль",
+} as const;

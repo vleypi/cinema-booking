@@ -4,6 +4,7 @@ import { ApiError } from "@luch/shared/api";
 import { formatRubles, joinClassNames } from "@luch/shared/lib";
 import { useState } from "react";
 import { Button, MONO_LABEL_CLASS_NAME, PANEL_CLASS_NAME } from "@/shared/ui";
+import type { ICustomerProfile } from "@/entities/customer";
 import { type IOrder, type ISessionSeat, useCreateOnlinePayment, useCreateOrder } from "@/entities/order";
 import { ADULT_AGE_RATING, BOOK_SEATS_TEXT, SEAT_TYPE_LABELS } from "@/features/book-seats/constants/book-seats.constant";
 import { useHoldTimer } from "@/features/book-seats/hooks/useHoldTimer";
@@ -14,6 +15,7 @@ interface ICheckoutFormProps {
   ageRating: string;
   selectedSeats: readonly ISessionSeat[];
   totalAmount: number;
+  customer?: ICustomerProfile | null;
   onBackToSeats: () => void;
   onOrderCreated: (order: IOrder | null) => void;
   activeOrder: IOrder | null;
@@ -37,6 +39,7 @@ export const CheckoutForm = ({
   ageRating,
   selectedSeats,
   totalAmount,
+  customer,
   onBackToSeats,
   onOrderCreated,
   activeOrder,
@@ -73,11 +76,16 @@ export const CheckoutForm = ({
     event.preventDefault();
     setSubmitError(null);
 
+    const effectiveEmail = customer?.email ?? email;
+    const effectiveName = customer ? (customer.name ?? undefined) : name || undefined;
+    const effectivePhone = customer ? (customer.phone ?? undefined) : phone || undefined;
+    const effectivePrivacy = customer ? true : privacyAccepted;
+
     const parsed = createCheckoutSchema(requiresAge).safeParse({
-      email,
-      name: name || undefined,
-      phone: phone || undefined,
-      privacyAccepted,
+      email: effectiveEmail,
+      name: effectiveName,
+      phone: effectivePhone,
+      privacyAccepted: effectivePrivacy,
       ageConfirmed,
     });
 
@@ -181,54 +189,66 @@ export const CheckoutForm = ({
       </div>
 
       <div className="grid gap-3.5">
-        <label className="grid gap-1.5 text-sm">
-          <span className="text-paper/72">{BOOK_SEATS_TEXT.emailLabel}</span>
-          <input
-            type="email"
-            required
-            autoComplete="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder={BOOK_SEATS_TEXT.emailPlaceholder}
-            className={INPUT_CLASS_NAME}
-          />
-          {fieldErrors.email && <span className="text-xs text-signal">{fieldErrors.email}</span>}
-        </label>
+        {customer ? (
+          <div className="grid gap-1 rounded-frame bg-ink-3 px-4 py-3 text-sm">
+            <span className="text-xs text-paper/56">{BOOK_SEATS_TEXT.signedInEmailLabel}</span>
+            <span className="font-mono text-base text-paper">{customer.email}</span>
+            {(customer.name || customer.phone) && (
+              <span className="text-xs text-paper/64">{[customer.name, customer.phone].filter(Boolean).join(", ")}</span>
+            )}
+          </div>
+        ) : (
+          <>
+            <label className="grid gap-1.5 text-sm">
+              <span className="text-paper/72">{BOOK_SEATS_TEXT.emailLabel}</span>
+              <input
+                type="email"
+                required
+                autoComplete="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder={BOOK_SEATS_TEXT.emailPlaceholder}
+                className={INPUT_CLASS_NAME}
+              />
+              {fieldErrors.email && <span className="text-xs text-signal">{fieldErrors.email}</span>}
+            </label>
 
-        <label className="grid gap-1.5 text-sm">
-          <span className="text-paper/72">{BOOK_SEATS_TEXT.nameLabel}</span>
-          <input
-            type="text"
-            autoComplete="name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            placeholder={BOOK_SEATS_TEXT.namePlaceholder}
-            className={INPUT_CLASS_NAME}
-          />
-        </label>
+            <label className="grid gap-1.5 text-sm">
+              <span className="text-paper/72">{BOOK_SEATS_TEXT.nameLabel}</span>
+              <input
+                type="text"
+                autoComplete="name"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                placeholder={BOOK_SEATS_TEXT.namePlaceholder}
+                className={INPUT_CLASS_NAME}
+              />
+            </label>
 
-        <label className="grid gap-1.5 text-sm">
-          <span className="text-paper/72">{BOOK_SEATS_TEXT.phoneLabel}</span>
-          <input
-            type="tel"
-            autoComplete="tel"
-            value={phone}
-            onChange={(event) => setPhone(event.target.value)}
-            placeholder={BOOK_SEATS_TEXT.phonePlaceholder}
-            className={INPUT_CLASS_NAME}
-          />
-        </label>
+            <label className="grid gap-1.5 text-sm">
+              <span className="text-paper/72">{BOOK_SEATS_TEXT.phoneLabel}</span>
+              <input
+                type="tel"
+                autoComplete="tel"
+                value={phone}
+                onChange={(event) => setPhone(event.target.value)}
+                placeholder={BOOK_SEATS_TEXT.phonePlaceholder}
+                className={INPUT_CLASS_NAME}
+              />
+            </label>
 
-        <label className="flex items-start gap-2.5 text-xs text-paper/72">
-          <input
-            type="checkbox"
-            checked={privacyAccepted}
-            onChange={(event) => setPrivacyAccepted(event.target.checked)}
-            className="mt-0.5 h-4 w-4 accent-warm"
-          />
-          <span>{BOOK_SEATS_TEXT.privacyLabel}</span>
-        </label>
-        {fieldErrors.privacyAccepted && <span className="text-xs text-signal">{fieldErrors.privacyAccepted}</span>}
+            <label className="flex items-start gap-2.5 text-xs text-paper/72">
+              <input
+                type="checkbox"
+                checked={privacyAccepted}
+                onChange={(event) => setPrivacyAccepted(event.target.checked)}
+                className="mt-0.5 h-4 w-4 accent-warm"
+              />
+              <span>{BOOK_SEATS_TEXT.privacyLabel}</span>
+            </label>
+            {fieldErrors.privacyAccepted && <span className="text-xs text-signal">{fieldErrors.privacyAccepted}</span>}
+          </>
+        )}
 
         {requiresAge && (
           <>

@@ -26,6 +26,7 @@ export const BOOK_SEATS_TEXT = {
   changeSeatsButton: "Изменить места",
   checkoutTitle: "Оформление заказа",
   checkoutNote: "Места будут забронированы на 10 минут при переходе к оплате",
+  signedInEmailLabel: "Билеты придут на почту",
   emailLabel: "Электронная почта",
   emailPlaceholder: "viewer@example.com",
   nameLabel: "Имя (необязательно)",

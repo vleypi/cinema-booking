@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { ROUTES } from "@/shared/config";
 import { Button, ButtonLink, CONTAINER_CLASS_NAME, MONO_LABEL_CLASS_NAME, PANEL_CLASS_NAME } from "@/shared/ui";
+import { useCustomerMe } from "@/entities/customer";
 import { type IOrder, useSessionSeats } from "@/entities/order";
 import { BOOK_SEATS_TEXT, CheckoutForm, SeatMap, useSeatSelection } from "@/features/book-seats";
 import { SESSION_BOOKING_TEXT } from "@/views/session-booking/constants/session-booking.constant";
@@ -20,6 +21,7 @@ const formatSessionDate = (iso: string, timeZone: string): string =>
 
 export const SessionBookingView = ({ sessionId }: ISessionBookingViewProps) => {
   const { data, isLoading, isError } = useSessionSeats(sessionId);
+  const { data: customer } = useCustomerMe();
   const selection = useSeatSelection(data?.seats ?? []);
   const [step, setStep] = useState<BookingStep>("seats");
   const [activeOrder, setActiveOrder] = useState<IOrder | null>(null);
@@ -108,6 +110,7 @@ export const SessionBookingView = ({ sessionId }: ISessionBookingViewProps) => {
                 ageRating={data.film.ageRating}
                 selectedSeats={selection.selectedSeats}
                 totalAmount={selection.totalAmount}
+                customer={customer}
                 onBackToSeats={() => setStep("seats")}
                 onOrderCreated={(order) => {
                   setActiveOrder(order);

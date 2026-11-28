@@ -5,6 +5,7 @@ export const SITE_TEXT = {
   skipToContent: "К содержанию",
   homeLabel: "Кинотеатр «Луч», в начало",
   buyTicket: "Купить билет",
+  cabinet: "Кабинет",
   chooseSession: "Выбрать сеанс",
 } as const;
 

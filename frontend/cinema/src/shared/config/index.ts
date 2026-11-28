@@ -1,4 +1,4 @@
-export { AUTH_API_PATHS } from "@/shared/config/auth.constant";
+export { AUTH_API_PATHS, AUTH_COOKIES, GUEST_ONLY_ROUTES, PROTECTED_ROUTES } from "@/shared/config/auth.constant";
 export { COOKIE_KEYS } from "@/shared/config/cookie-keys.constant";
 export { IN_VIEW_ROOT_MARGIN, ITEM_DELAY_CLASSES, MEDIA_QUERIES, WORD_DELAY_CLASSES } from "@/shared/config/motion.constant";
 export { ROUTES, SECTION_IDS } from "@/shared/config/routes.constant";
