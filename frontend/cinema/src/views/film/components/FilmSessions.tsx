@@ -1,6 +1,8 @@
 "use client";
 
 import { formatRubles, formatTimeInZone } from "@luch/shared/lib";
+import Link from "next/link";
+import { ROUTES } from "@/shared/config";
 import { Button, MaskedHeading } from "@/shared/ui";
 import { useCurrentCinema } from "@/entities/cinema";
 import { SESSION_TEXT, useCinemaSessions } from "@/entities/session";
@@ -48,18 +50,20 @@ export const FilmSessions = ({ filmId }: IFilmSessionsProps) => {
                 const price = formatRubles(session.minPrice);
 
                 return (
-                  <li
-                    key={session.id}
-                    className="grid grid-cols-[5.5rem_minmax(0,1fr)_auto] items-center gap-x-6 border-b border-paper/13 px-2 py-5 transition-colors duration-200 hover:bg-paper/4 lg:grid-cols-[6.2rem_minmax(0,1fr)_10rem]"
-                  >
-                    <span className="font-display text-[1.4rem] leading-none font-medium tabular-nums lg:text-[clamp(1.5rem,2.4vw,2.1rem)]">
-                      {time}
-                    </span>
-                    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 text-[0.95rem]">
-                      <b className="font-medium text-paper">{session.hall.name}</b>
-                      <span className="font-mono text-xs text-paper/64">{session.format}</span>
-                    </div>
-                    <span className="justify-self-end font-mono text-base font-medium text-paper">{SESSION_TEXT.priceFrom(price)}</span>
+                  <li key={session.id} className="border-b border-paper/13">
+                    <Link
+                      href={ROUTES.session(session.id)}
+                      className="grid grid-cols-[5.5rem_minmax(0,1fr)_auto] items-center gap-x-6 px-2 py-5 transition-colors duration-200 hover:bg-paper/4 lg:grid-cols-[6.2rem_minmax(0,1fr)_10rem]"
+                    >
+                      <span className="font-display text-[1.4rem] leading-none font-medium tabular-nums lg:text-[clamp(1.5rem,2.4vw,2.1rem)]">
+                        {time}
+                      </span>
+                      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 text-[0.95rem]">
+                        <b className="font-medium text-paper">{session.hall.name}</b>
+                        <span className="font-mono text-xs text-paper/64">{session.format}</span>
+                      </div>
+                      <span className="justify-self-end font-mono text-base font-medium text-paper">{SESSION_TEXT.priceFrom(price)}</span>
+                    </Link>
                   </li>
                 );
               })

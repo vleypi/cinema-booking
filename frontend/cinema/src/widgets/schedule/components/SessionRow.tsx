@@ -32,7 +32,7 @@ export const SessionRow = ({ session, timeZone }: ISessionRowProps) => {
       </div>
       <div className="font-mono text-base font-medium text-paper max-lg:col-start-2">{SESSION_TEXT.priceFrom(price)}</div>
       <ButtonLink
-        href={ROUTES.film(session.filmId)}
+        href={ROUTES.session(session.id)}
         size="small"
         aria-label={SCHEDULE_TEXT.buyLabel(session.film.title, time)}
         className="justify-self-end max-lg:col-start-3 max-lg:row-start-1 max-lg:row-end-4"
