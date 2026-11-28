@@ -1,12 +1,14 @@
 import { randomUUID } from 'node:crypto';
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, In, QueryFailedError, type Repository } from 'typeorm';
+import { And, DataSource, In, LessThan, MoreThan, MoreThanOrEqual, QueryFailedError, type Repository } from 'typeorm';
 import { RedisClient } from '@/common/redis/redis.client.js';
+import { addDays, MIDNIGHT, toUtc } from '@/common/time/zoned-time.js';
 import { fieldError } from '@/common/validation/validation-errors.js';
 import { BOX_OFFICE_MESSAGES, BOX_OFFICE_SEARCH_LIMIT } from '@/modules/box-office/box-office.constant.js';
 import type { BoxOfficeOrderDto } from '@/modules/box-office/dto/box-office-order.dto.js';
 import type { CreateBoxOfficeOrderDto } from '@/modules/box-office/dto/create-box-office-order.dto.js';
+import { Cinema } from '@/modules/cinemas/entities/cinema.entity.js';
 import { Customer } from '@/modules/customers/entities/customer.entity.js';
 import { Seat } from '@/modules/halls/entities/seat.entity.js';
 import type { SessionSeatsDto } from '@/modules/orders/dto/session-seats.dto.js';
@@ -73,12 +75,30 @@ export class BoxOfficeService {
     private readonly redis: RedisClient,
     private readonly ordersService: OrdersService,
     private readonly ticketsService: TicketsService,
+    @InjectRepository(Cinema) private readonly cinemas: Repository<Cinema>,
     @InjectRepository(Session) private readonly sessions: Repository<Session>,
     @InjectRepository(Seat) private readonly seats: Repository<Seat>,
     @InjectRepository(TimeBand) private readonly timeBands: Repository<TimeBand>,
     @InjectRepository(Order) private readonly orders: Repository<Order>,
     @InjectRepository(Ticket) private readonly tickets: Repository<Ticket>,
   ) {}
+
+  async findSessionsByDay(cinemaId: string, date: string): Promise<Session[]> {
+    const { timezone } = await this.cinemas.findOneByOrFail({ id: cinemaId });
+    const dayStart = toUtc(date, MIDNIGHT, timezone);
+    const nextDayStart = toUtc(addDays(date, 1), MIDNIGHT, timezone);
+
+    return this.sessions.find({
+      where: {
+        hall: { cinemaId },
+        status: SessionStatus.Scheduled,
+        startsAt: And(MoreThanOrEqual(dayStart), LessThan(nextDayStart)),
+        endsAt: MoreThan(new Date()),
+      },
+      relations: { film: true, hall: true },
+      order: { startsAt: 'ASC', id: 'ASC' },
+    });
+  }
 
   async getSessionSeats(cinemaId: string, sessionId: string): Promise<SessionSeatsDto> {
     await this.ordersService.releaseExpiredHolds(sessionId);

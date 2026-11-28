@@ -10,6 +10,8 @@ import { CreateBoxOfficeOrderDto } from '@/modules/box-office/dto/create-box-off
 import { PrintOrderPdfQueryDto } from '@/modules/box-office/dto/print-order-pdf-query.dto.js';
 import { SearchOrdersQueryDto } from '@/modules/box-office/dto/search-orders-query.dto.js';
 import { SessionSeatsDto } from '@/modules/orders/dto/session-seats.dto.js';
+import { ListSessionsQueryDto } from '@/modules/sessions/dto/list-sessions-query.dto.js';
+import { SessionDto } from '@/modules/sessions/dto/session.dto.js';
 import type { StaffUser } from '@/modules/staff/entities/staff-user.entity.js';
 import { TicketsService } from '@/modules/tickets/tickets.service.js';
 
@@ -20,6 +22,16 @@ export class BoxOfficeController {
     private readonly boxOffice: BoxOfficeService,
     private readonly tickets: TicketsService,
   ) {}
+
+  @Get('sessions')
+  @Auth(Permission.SellTickets)
+  @ApiOkResponse({ type: [SessionDto] })
+  findSessionsByDay(
+    @Param('cinemaId', ParseIdPipe) cinemaId: string,
+    @Query() { date }: ListSessionsQueryDto,
+  ): Promise<SessionDto[]> {
+    return this.boxOffice.findSessionsByDay(cinemaId, date);
+  }
 
   @Get('sessions/:sessionId/seats')
   @Auth(Permission.SellTickets)

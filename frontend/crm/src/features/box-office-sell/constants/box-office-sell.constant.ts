@@ -1,0 +1,47 @@
+import type { SeatType } from "@/entities/hall";
+
+export const SEAT_TYPE_LABELS: Record<SeatType, string> = {
+  STANDARD: "Обычное",
+  SOFA: "Диван",
+  WHEELCHAIR: "Для маломобильных",
+};
+
+export const BOX_OFFICE_SELL_TEXT = {
+  dateLabel: "Дата сеансов",
+  previousDay: "Предыдущий день",
+  nextDay: "Следующий день",
+  today: "Сегодня",
+  sessionsHeading: "Сеансы на день",
+  noSessionsTitle: "На этот день нет доступных сеансов",
+  noSessionsDescription: "Выберите другую дату или добавьте сеансы в разделе «Расписание».",
+  selectSessionTitle: "Выберите сеанс",
+  selectSessionDescription: "Нажмите на сеанс выше, чтобы открыть схему зала и оформить продажу.",
+  screen: "Экран",
+  legendSelected: "Выбрано",
+  legendOccupied: "Занято",
+  seatSummary: (row: number, number: number) => `Ряд ${row}, место ${number}`,
+  seatAriaLabel: (row: number, number: number, type: string, price: string, available: boolean, selected: boolean) =>
+    `Ряд ${row}, место ${number}, ${type}, ${price}, ${!available ? "занято" : selected ? "выбрано" : "свободно"}`,
+  orderSummaryHeading: "Оформление продажи",
+  selectedSeatsEmpty: "Нажмите на свободные места на схеме зала",
+  clearSelection: "Сбросить выбор",
+  totalLabel: "К оплате",
+  paymentMethodLabel: "Способ оплаты",
+  customerHeading: "Данные зрителя (необязательно)",
+  emailLabel: "Электронная почта",
+  emailPlaceholder: "Если указать, билеты придут на почту",
+  nameLabel: "Имя",
+  namePlaceholder: "Имя зрителя",
+  phoneLabel: "Телефон",
+  phonePlaceholder: "+7 999 000-00-00",
+  submitLabel: "Продать билеты",
+  submittingLabel: "Оформление...",
+  successTitle: (orderNumber: string) => `Заказ ${orderNumber} оформлен`,
+  successSubtitle: "Билеты готовы к печати в формате A4 или на чековой ленте 80 мм.",
+  successEmailSent: (email: string) => `Копия билетов отправлена на ${email}.`,
+  newSaleLabel: "Новая продажа",
+  refreshSeatsLabel: "Обновить схему",
+  invalidEmail: "Укажите корректную электронную почту",
+  nameTooLong: "Не длиннее 120 символов",
+  phoneTooLong: "Не длиннее 32 символов",
+} as const;

@@ -14,4 +14,7 @@ export const QUERY_KEYS = {
   filmPage: (request: IListRequest<string>) => ["films", request],
   sessions: ["sessions"],
   cinemaSessions: (cinemaId: string, date: string) => ["sessions", cinemaId, date],
+  boxOfficeSessions: (cinemaId: string, date: string) => ["box-office", "sessions", cinemaId, date],
+  boxOfficeSessionSeats: (cinemaId: string, sessionId: string) => ["box-office", "seats", cinemaId, sessionId],
+  boxOfficeOrders: (cinemaId: string, query: string) => ["box-office", "orders", cinemaId, query],
 } as const;

@@ -8,4 +8,5 @@ export const ROUTES = {
   prices: "/prices",
   films: "/films",
   schedule: "/schedule",
+  boxOffice: "/box-office",
 } as const;

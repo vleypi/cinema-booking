@@ -3,6 +3,9 @@ import type { IViewer } from "@/entities/viewer/interfaces/viewer.interface";
 
 export const hasPermission = (viewer: IViewer | undefined, permission: Permission): boolean => Boolean(viewer?.permissions.includes(permission));
 
+export const hasAnyPermission = (viewer: IViewer | undefined, permission: Permission | readonly Permission[]): boolean =>
+  typeof permission === "string" ? hasPermission(viewer, permission) : permission.some((item) => hasPermission(viewer, item));
+
 export const canManageRole = (viewer: IViewer | undefined, role: StaffRole): boolean => {
   const permission = ROLE_MANAGE_PERMISSION[role];
   return permission !== null && hasPermission(viewer, permission);
@@ -11,4 +14,5 @@ export const canManageRole = (viewer: IViewer | undefined, role: StaffRole): boo
 export const getAssignableRoles = (viewer: IViewer | undefined): StaffRole[] =>
   Object.values(STAFF_ROLES).filter((role) => canManageRole(viewer, role));
 
-export const getAvailableNavItems = (viewer: IViewer | undefined): INavItem[] => NAV_ITEMS.filter(({ permission }) => hasPermission(viewer, permission));
+export const getAvailableNavItems = (viewer: IViewer | undefined): INavItem[] =>
+  NAV_ITEMS.filter(({ permission }) => hasAnyPermission(viewer, permission));
