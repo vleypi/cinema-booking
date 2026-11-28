@@ -4,8 +4,8 @@ import type { SessionFormat } from "@/entities/session";
 export type BoxOfficePaymentMethod = "CASH" | "CARD_TERMINAL";
 export type BoxOfficePrintFormat = "a4" | "receipt";
 export type OrderChannel = "ONLINE" | "BOX_OFFICE";
-export type OrderStatus = "PENDING" | "PAID" | "EXPIRED" | "PARTIALLY_REFUNDED" | "REFUNDED";
-export type TicketStatus = "RESERVED" | "ACTIVE" | "USED" | "REFUNDED" | "EXPIRED";
+export type OrderStatus = "PENDING_PAYMENT" | "PAID" | "EXPIRED" | "PARTIALLY_REFUNDED" | "REFUNDED";
+export type TicketStatus = "RESERVED" | "ACTIVE" | "USED" | "REFUND_PENDING" | "REFUNDED" | "RELEASED";
 
 export interface IBoxOfficeSession {
   id: string;

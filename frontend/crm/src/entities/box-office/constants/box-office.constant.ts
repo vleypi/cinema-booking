@@ -17,7 +17,7 @@ export const ORDER_CHANNEL_LABELS: Record<OrderChannel, string> = {
 };
 
 export const ORDER_STATUS_META: Record<OrderStatus, { label: string; tone: BadgeTone }> = {
-  PENDING: { label: "Ожидает оплаты", tone: "warning" },
+  PENDING_PAYMENT: { label: "Ожидает оплаты", tone: "warning" },
   PAID: { label: "Оплачен", tone: "success" },
   EXPIRED: { label: "Истёк", tone: "neutral" },
   PARTIALLY_REFUNDED: { label: "Частичный возврат", tone: "warning" },
@@ -28,8 +28,9 @@ export const TICKET_STATUS_META: Record<TicketStatus, { label: string; tone: Bad
   RESERVED: { label: "Бронь", tone: "warning" },
   ACTIVE: { label: "Активен", tone: "success" },
   USED: { label: "Использован", tone: "neutral" },
+  REFUND_PENDING: { label: "Возврат в обработке", tone: "warning" },
   REFUNDED: { label: "Возвращён", tone: "danger" },
-  EXPIRED: { label: "Истёк", tone: "neutral" },
+  RELEASED: { label: "Отменён", tone: "neutral" },
 };
 
 export const PRINT_FORMAT_LABELS = {
