@@ -10,10 +10,12 @@ import { createDatabaseOptions } from '@/database/database.options.js';
 import { AuthModule } from '@/modules/auth/auth.module.js';
 import { CatalogModule } from '@/modules/catalog/catalog.module.js';
 import { CinemasModule } from '@/modules/cinemas/cinemas.module.js';
+import { CustomersModule } from '@/modules/customers/customers.module.js';
 import { FilmsModule } from '@/modules/films/films.module.js';
 import { HallsModule } from '@/modules/halls/halls.module.js';
 import { HealthModule } from '@/modules/health/health.module.js';
 import { MediaModule } from '@/modules/media/media.module.js';
+import { OrdersModule } from '@/modules/orders/orders.module.js';
 import { SessionsModule } from '@/modules/sessions/sessions.module.js';
 import { StaffModule } from '@/modules/staff/staff.module.js';
 import { TimeBandsModule } from '@/modules/time-bands/time-bands.module.js';
@@ -41,6 +43,8 @@ import { TimeBandsModule } from '@/modules/time-bands/time-bands.module.js';
     FilmsModule,
     SessionsModule,
     CatalogModule,
+    CustomersModule,
+    OrdersModule,
     HealthModule,
   ],
   providers: [
