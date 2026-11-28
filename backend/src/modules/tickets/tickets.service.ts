@@ -11,6 +11,7 @@ import { Order } from '@/modules/orders/entities/order.entity.js';
 import { Ticket } from '@/modules/orders/entities/ticket.entity.js';
 import { OrderStatus } from '@/modules/orders/order-status.enum.js';
 import { TicketStatus } from '@/modules/orders/ticket-status.enum.js';
+import { createRefundToken } from '@/modules/refunds/refund-token.util.js';
 import { SessionStatus } from '@/modules/sessions/session-status.enum.js';
 import type { StaffUser } from '@/modules/staff/entities/staff-user.entity.js';
 import type { CheckInHallOptionDto, CheckInResultDto, CheckInTicketDetailsDto } from '@/modules/tickets/dto/check-in-result.dto.js';
@@ -169,7 +170,9 @@ export class TicketsService implements OnModuleInit, OnModuleDestroy {
     if (pdfData.tickets.length === 0) return;
 
     const pdfBuffer = await buildOrderTicketsPdf(pdfData, this.#qrSecret);
-    const refundUrl = `${this.#cinemaPublicUrl}/cabinet/orders/${order.id}`;
+    const refundToken = createRefundToken(order.id, order.session.startsAt, this.#qrSecret);
+    const refundUrl = `${this.#cinemaPublicUrl}/refund?token=${encodeURIComponent(refundToken)}`;
+    const cabinetUrl = `${this.#cinemaPublicUrl}/cabinet/orders/${order.id}`;
 
     await this.mail.sendMail({
       to: order.contactEmail,
@@ -180,14 +183,16 @@ export class TicketsService implements OnModuleInit, OnModuleDestroy {
         `Фильм: ${pdfData.filmTitle} (${pdfData.format})`,
         `Кинотеатр: ${pdfData.cinemaName}, ${pdfData.cinemaAddress}, зал ${pdfData.hallName}`,
         `PDF с билетами и QR-кодами приложен к этому письму.`,
-        `Управление заказом и возврат билетов: ${refundUrl}`,
+        `Личный кабинет: ${cabinetUrl}`,
+        `Одноразовая ссылка на возврат билетов (действует до начала сеанса): ${refundUrl}`,
       ].join('\n'),
       html: `<div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#060606;color:#ece6d8;">
   <h1 style="margin:0 0 12px;font-size:20px;">Кинотеатр «Луч»</h1>
   <p style="margin:0 0 12px;">Ваши билеты по заказу <strong>${order.number}</strong> готовы и приложены в PDF-файле.</p>
   <p style="margin:0 0 8px;"><strong>${pdfData.filmTitle}</strong> (${pdfData.format})</p>
-  <p style="margin:0 0 16px;color:#a8a298;">${pdfData.cinemaName} · ${pdfData.hallName}</p>
-  <p style="margin:0;font-size:13px;"><a href="${refundUrl}" style="color:#f0c779;">Открыть заказ или оформить возврат билетов</a></p>
+  <p style="margin:0 0 16px;color:#a8a298;">${pdfData.cinemaName}, ${pdfData.hallName}</p>
+  <p style="margin:0 0 8px;font-size:13px;"><a href="${cabinetUrl}" style="color:#f0c779;">Открыть заказ в личном кабинете</a></p>
+  <p style="margin:0;font-size:13px;"><a href="${refundUrl}" style="color:#f0c779;">Оформить возврат билетов (одноразовая ссылка)</a></p>
 </div>`,
       attachments: [
         {

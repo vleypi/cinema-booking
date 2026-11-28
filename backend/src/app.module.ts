@@ -19,6 +19,7 @@ import { HealthModule } from '@/modules/health/health.module.js';
 import { MediaModule } from '@/modules/media/media.module.js';
 import { OrdersModule } from '@/modules/orders/orders.module.js';
 import { PaymentsModule } from '@/modules/payments/payments.module.js';
+import { RefundsModule } from '@/modules/refunds/refunds.module.js';
 import { SessionsModule } from '@/modules/sessions/sessions.module.js';
 import { StaffModule } from '@/modules/staff/staff.module.js';
 import { TicketsModule } from '@/modules/tickets/tickets.module.js';
@@ -53,6 +54,7 @@ import { TimeBandsModule } from '@/modules/time-bands/time-bands.module.js';
     PaymentsModule,
     TicketsModule,
     BoxOfficeModule,
+    RefundsModule,
     HealthModule,
   ],
   providers: [
