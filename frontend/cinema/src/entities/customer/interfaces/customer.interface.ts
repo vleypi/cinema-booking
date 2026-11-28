@@ -53,3 +53,34 @@ export interface ICustomerOrdersList {
   upcoming: ICustomerOrder[];
   past: ICustomerOrder[];
 }
+
+export interface ICustomerRefundResult {
+  id: string;
+  orderId: string;
+  orderStatus: string;
+  paymentId: string;
+  amount: number;
+  reason: string;
+  initiatorType: string;
+  status: string;
+  ticketIds: string[];
+}
+
+export interface IRefundPreviewTicket {
+  id: string;
+  code: string;
+  row: number;
+  number: number;
+  price: number;
+  status: string;
+}
+
+export interface IRefundPreview {
+  orderId: string;
+  orderNumber: string;
+  filmTitle: string;
+  cinemaName: string;
+  hallName: string;
+  startsAt: string;
+  tickets: IRefundPreviewTicket[];
+}

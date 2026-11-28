@@ -10,6 +10,7 @@ export const ROUTES = {
   home: "/",
   login: "/login",
   cabinet: "/cabinet",
+  refund: "/refund",
   film: (filmId: string) => `/films/${filmId}`,
   session: (sessionId: string) => `/sessions/${sessionId}`,
   order: (orderNumber: string) => `/orders/${orderNumber}`,

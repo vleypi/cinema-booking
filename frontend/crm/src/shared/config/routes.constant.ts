@@ -10,4 +10,6 @@ export const ROUTES = {
   schedule: "/schedule",
   boxOffice: "/box-office",
   scanner: "/scanner",
+  reports: "/reports",
+  audit: "/audit",
 } as const;

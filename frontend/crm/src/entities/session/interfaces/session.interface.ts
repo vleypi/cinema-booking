@@ -23,3 +23,20 @@ export interface ISession {
   cancelReason: string | null;
   film: IFilm;
 }
+
+export interface ICancelSessionPreview {
+  sessionId: string;
+  status: SessionStatus;
+  activeTicketsCount: number;
+  refundAmount: number;
+  affectedOrdersCount: number;
+}
+
+export interface ICancelSessionResult {
+  sessionId: string;
+  status: SessionStatus;
+  cancelReason: string;
+  refundedOrdersCount: number;
+  refundedTicketsCount: number;
+  refundedAmount: number;
+}

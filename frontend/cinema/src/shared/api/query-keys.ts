@@ -8,4 +8,5 @@ export const QUERY_KEYS = {
   sessionSeats: (sessionId: string) => ["session-seats", sessionId],
   customerMe: ["customer", "me"],
   customerOrders: ["customer", "orders"],
+  refundByToken: (token: string) => ["refund", "token", token],
 } as const;
