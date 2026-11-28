@@ -52,6 +52,18 @@ export class EnvironmentVariables extends DatabaseEnvironment {
   @IsString()
   @IsNotEmpty()
   SMTP_FROM: string = 'Кинотеатр «Луч» <noreply@luch-cinema.local>';
+
+  @IsUrl({ protocols: ['http', 'https'], require_tld: false })
+  YOOKASSA_API_URL: string = 'https://api.yookassa.ru/v3';
+
+  @IsString()
+  YOOKASSA_SHOP_ID: string = '';
+
+  @IsString()
+  YOOKASSA_SECRET_KEY: string = '';
+
+  @IsUrl({ protocols: ['http', 'https'], require_tld: false })
+  CINEMA_PUBLIC_URL: string = 'http://localhost:3001';
 }
 
 export const validateEnvironment = <T extends object>(config: Record<string, unknown>, environmentClass: ClassConstructor<T>): T => {
