@@ -23,6 +23,8 @@ import { Customer } from '@/modules/customers/entities/customer.entity.js';
 import { buildOtpEmail, generateOtpCode, hashOtpValue, verifyOtpHash } from '@/modules/customers/otp.util.js';
 import { Order } from '@/modules/orders/entities/order.entity.js';
 import { OrderStatus } from '@/modules/orders/order-status.enum.js';
+import { TicketStatus } from '@/modules/orders/ticket-status.enum.js';
+import { TicketsService } from '@/modules/tickets/tickets.service.js';
 
 interface IStoredOtp {
   hash: string;
@@ -42,7 +44,7 @@ const toProfile = ({ id, email, name, phone, emailVerifiedAt }: Customer): Custo
   emailVerifiedAt,
 });
 
-const toCustomerOrder = (order: Order): CustomerOrderDto => ({
+const toCustomerOrder = (order: Order, signQr: (code: string) => string): CustomerOrderDto => ({
   id: order.id,
   number: order.number,
   channel: order.channel,
@@ -74,6 +76,7 @@ const toCustomerOrder = (order: Order): CustomerOrderDto => ({
     row: seat.row,
     number: seat.number,
     seatType: seat.type,
+    qrPayload: status === TicketStatus.Active ? signQr(code) : null,
   })),
 });
 
@@ -83,6 +86,7 @@ export class CustomersService {
     private readonly jwt: JwtService,
     private readonly redis: RedisClient,
     private readonly mail: MailService,
+    private readonly tickets: TicketsService,
     @InjectRepository(Customer) private readonly customers: Repository<Customer>,
     @InjectRepository(RefreshToken) private readonly refreshTokens: Repository<RefreshToken>,
     @InjectRepository(Order) private readonly orders: Repository<Order>,
@@ -213,7 +217,7 @@ export class CustomersService {
     const past: CustomerOrderDto[] = [];
 
     for (const order of orders) {
-      const dto = toCustomerOrder(order);
+      const dto = toCustomerOrder(order, (code) => this.tickets.signTicketQr(code));
       if (order.session.endsAt > now) {
         upcoming.push(dto);
       } else {
@@ -231,7 +235,7 @@ export class CustomersService {
     });
     if (!order) throw new NotFoundException(CUSTOMER_MESSAGES.orderNotFound);
 
-    return toCustomerOrder(order);
+    return toCustomerOrder(order, (code) => this.tickets.signTicketQr(code));
   }
 
   async #openSession(customer: Customer): Promise<ICustomerAuthSession> {

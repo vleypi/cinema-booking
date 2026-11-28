@@ -26,6 +26,9 @@ export class CustomerOrderTicketDto {
 
   @ApiProperty({ enum: SeatType })
   seatType: SeatType;
+
+  @ApiProperty({ type: String, nullable: true })
+  qrPayload: string | null;
 }
 
 export class CustomerOrderCinemaDto {

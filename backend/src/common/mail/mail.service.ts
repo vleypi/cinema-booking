@@ -3,11 +3,18 @@ import { ConfigService } from '@nestjs/config';
 import { createTransport, type Transporter } from 'nodemailer';
 import { type EnvironmentVariables, NodeEnvironment } from '@/config/environment.js';
 
+export interface IMailAttachment {
+  filename: string;
+  content: Buffer;
+  contentType?: string;
+}
+
 export interface ISendMailOptions {
   to: string;
   subject: string;
   text: string;
   html: string;
+  attachments?: IMailAttachment[];
 }
 
 @Injectable()
@@ -28,13 +35,14 @@ export class MailService {
         });
   }
 
-  async sendMail({ to, subject, text, html }: ISendMailOptions): Promise<void> {
+  async sendMail({ to, subject, text, html, attachments }: ISendMailOptions): Promise<void> {
     await this.#transporter.sendMail({
       from: this.#from,
       to,
       subject,
       text,
       html,
+      attachments: attachments?.map((attachment) => ({ ...attachment })),
     });
   }
 }

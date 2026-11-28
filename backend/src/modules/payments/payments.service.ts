@@ -20,6 +20,7 @@ import { PaymentStatus } from '@/modules/payments/payment-status.enum.js';
 import { PAYMENT_CURRENCY, PAYMENT_MESSAGES, YOOKASSA_WEBHOOK_EVENTS } from '@/modules/payments/payments.constant.js';
 import { YooKassaClient } from '@/modules/payments/yookassa.client.js';
 import { parseRublesToKopecks } from '@/modules/payments/yookassa.util.js';
+import { TicketsService } from '@/modules/tickets/tickets.service.js';
 
 @Injectable()
 export class PaymentsService {
@@ -30,6 +31,7 @@ export class PaymentsService {
     private readonly redis: RedisClient,
     private readonly ordersService: OrdersService,
     private readonly yooKassa: YooKassaClient,
+    private readonly ticketsService: TicketsService,
     config: ConfigService<EnvironmentVariables, true>,
     @InjectRepository(Order) private readonly orders: Repository<Order>,
     @InjectRepository(Payment) private readonly payments: Repository<Payment>,
@@ -143,6 +145,7 @@ export class PaymentsService {
 
       if (activatedTickets.length > 0) {
         await this.redis.del(...activatedTickets.map((ticket) => seatHoldKey(ticket.sessionId, ticket.seatId)));
+        await this.ticketsService.enqueueOrderTicketsEmail(payment.orderId).catch(() => undefined);
       }
 
       return { ok: true };
