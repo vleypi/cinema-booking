@@ -13,6 +13,7 @@
     "@hookform/resolvers": "catalog:",
     "@luch/shared": "workspace:*",
     "@tanstack/react-query": "catalog:",
+    "html5-qrcode": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

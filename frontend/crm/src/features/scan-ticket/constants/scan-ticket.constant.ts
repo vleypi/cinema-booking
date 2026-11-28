@@ -1,0 +1,32 @@
+export const SCANNER_CONFIG = {
+  fps: 10,
+  qrBoxSize: 240,
+  historyLimit: 10,
+} as const;
+
+export const SCAN_TICKET_TEXT = {
+  hallFilterLabel: "Зал на входе",
+  allHallsOption: "Любой зал кинотеатра",
+  cameraHeading: "Сканирование QR-кода",
+  cameraIdleHint: "Наведите камеру на QR-код билета для автоматической проверки.",
+  startCamera: "Включить камеру",
+  stopCamera: "Остановить камеру",
+  cameraUnavailable: "Не удалось получить доступ к камере. Проверьте разрешения браузера или введите код билета вручную.",
+  manualHeading: "Ручной ввод кода билета",
+  manualLabel: "Код билета",
+  manualPlaceholder: "Например, A1B2C3D4E5",
+  manualSubmit: "Проверить билет",
+  manualSubmitting: "Проверка...",
+  manualRequired: "Введите код билета",
+  manualTooLong: "Код не может быть длиннее 32 символов",
+  allowedTitle: "Проход разрешён",
+  deniedTitle: "Проход запрещён",
+  seatSummary: (row: number, number: number) => `Ряд ${row}, место ${number}`,
+  usedInfoLabel: "Билет уже использован",
+  usedByLabel: (name: string) => `Контролёр: ${name}`,
+  nextScanButton: "Сканировать следующий",
+  historyHeading: "Последние проверки",
+  historyAllowed: "Разрешён",
+  historyDenied: "Запрещён",
+  requestFailed: "Не удалось проверить билет. Попробуйте ещё раз.",
+} as const;

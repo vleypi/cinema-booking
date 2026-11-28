@@ -17,4 +17,5 @@ export const QUERY_KEYS = {
   boxOfficeSessions: (cinemaId: string, date: string) => ["box-office", "sessions", cinemaId, date],
   boxOfficeSessionSeats: (cinemaId: string, sessionId: string) => ["box-office", "seats", cinemaId, sessionId],
   boxOfficeOrders: (cinemaId: string, query: string) => ["box-office", "orders", cinemaId, query],
+  scannerHalls: (cinemaId: string) => ["scanner", "halls", cinemaId],
 } as const;

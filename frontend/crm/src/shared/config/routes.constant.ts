@@ -9,4 +9,5 @@ export const ROUTES = {
   films: "/films",
   schedule: "/schedule",
   boxOffice: "/box-office",
+  scanner: "/scanner",
 } as const;
