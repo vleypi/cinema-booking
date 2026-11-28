@@ -17,6 +17,7 @@ import { HallsModule } from '@/modules/halls/halls.module.js';
 import { HealthModule } from '@/modules/health/health.module.js';
 import { MediaModule } from '@/modules/media/media.module.js';
 import { OrdersModule } from '@/modules/orders/orders.module.js';
+import { PaymentsModule } from '@/modules/payments/payments.module.js';
 import { SessionsModule } from '@/modules/sessions/sessions.module.js';
 import { StaffModule } from '@/modules/staff/staff.module.js';
 import { TimeBandsModule } from '@/modules/time-bands/time-bands.module.js';
@@ -47,6 +48,7 @@ import { TimeBandsModule } from '@/modules/time-bands/time-bands.module.js';
     CatalogModule,
     CustomersModule,
     OrdersModule,
+    PaymentsModule,
     HealthModule,
   ],
   providers: [
