@@ -22,7 +22,7 @@ export const FilmSessions = ({ filmId }: IFilmSessionsProps) => {
   if (!cinema) return null;
 
   return (
-    <section>
+    <section className="min-w-0">
       <div className="mb-6">
         <MaskedHeading text={FILM_PAGE_TEXT.sessionsTitle(cinema.name)} className="font-display text-[clamp(1.75rem,3.5vw,3rem)] leading-none font-medium uppercase" />
       </div>

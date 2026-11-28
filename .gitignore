@@ -33,6 +33,8 @@ backend/storage/
 frontend/*/.next/
 frontend/*/out/
 frontend/*/next-env.d.ts
+frontend/*/test-results/
+frontend/*/playwright-report/
 *.tsbuildinfo
 
 # Docker

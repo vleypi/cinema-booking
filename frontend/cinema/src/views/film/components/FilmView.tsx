@@ -23,7 +23,7 @@ export const FilmView = ({ filmId }: IFilmViewProps) => {
         {!film ? (
           <p className="mt-8 text-paper/64">{isPending ? FILM_PAGE_TEXT.loading : FILM_PAGE_TEXT.notFound}</p>
         ) : (
-          <div className="mt-6 grid items-start gap-[clamp(2rem,4vw,4rem)] lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
+          <div className="mt-6 grid grid-cols-1 items-start gap-[clamp(2rem,4vw,4rem)] lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
             <aside className="flex flex-col items-start">
               <FilmPoster film={film} sizes={FILM_PAGE_POSTER_SIZES} className="w-full max-lg:max-w-72" />
               <h1 className="mt-5 font-display text-[clamp(2rem,3.2vw,2.75rem)] leading-[1.02] font-medium uppercase">{film.title}</h1>
