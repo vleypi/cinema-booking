@@ -9,7 +9,7 @@ import { Order } from '@/modules/orders/entities/order.entity.js';
 import { OrderStatus } from '@/modules/orders/order-status.enum.js';
 import { TicketStatus } from '@/modules/orders/ticket-status.enum.js';
 import { buildOrderTicketsPdf, type IOrderTicketsPdfData } from '@/modules/tickets/ticket-pdf.util.js';
-import { signTicketQrPayload } from '@/modules/tickets/ticket-qr.util.js';
+import { generateTicketQrPng, signTicketQrPayload } from '@/modules/tickets/ticket-qr.util.js';
 import { SEND_ORDER_TICKETS_JOB, TICKET_EMAILS_QUEUE, TICKET_MESSAGES } from '@/modules/tickets/tickets.constant.js';
 
 interface ISendOrderTicketsJobData {
@@ -173,6 +173,23 @@ export class TicketsService implements OnModuleInit, OnModuleDestroy {
     const buffer = await buildOrderTicketsPdf(pdfData, this.#qrSecret);
 
     return { filename: `tickets-${order.number}.pdf`, buffer };
+  }
+
+  async generateTicketQrPngForCustomer(customerId: string, orderId: string, ticketId: string): Promise<Buffer> {
+    const order = await this.#loadOrderForTickets(orderId);
+    if (!order || order.customerId !== customerId) {
+      throw new NotFoundException(TICKET_MESSAGES.orderNotFound);
+    }
+
+    const ticket = order.tickets.find((item) => item.id === ticketId);
+    if (!ticket) {
+      throw new NotFoundException(TICKET_MESSAGES.orderNotFound);
+    }
+    if (ticket.status !== TicketStatus.Active && ticket.status !== TicketStatus.Used) {
+      throw new ConflictException(TICKET_MESSAGES.ticketsNotReady);
+    }
+
+    return generateTicketQrPng(signTicketQrPayload(ticket.code, this.#qrSecret));
   }
 
   #loadOrderForTickets(orderId: string): Promise<Order | null> {

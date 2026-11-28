@@ -120,6 +120,21 @@ export class CustomersController {
     response.send(buffer);
   }
 
+  @Get('orders/:id/tickets/:ticketId/qr')
+  @CustomerAuth()
+  @ApiNotFoundResponse()
+  async getTicketQrImage(
+    @CurrentCustomer() customer: Customer,
+    @Param('id', ParseIdPipe) id: string,
+    @Param('ticketId', ParseIdPipe) ticketId: string,
+    @Res() response: Response,
+  ): Promise<void> {
+    const buffer = await this.tickets.generateTicketQrPngForCustomer(customer.id, id, ticketId);
+    response.setHeader('Content-Type', 'image/png');
+    response.setHeader('Cache-Control', 'private, max-age=3600');
+    response.send(buffer);
+  }
+
   #setCookies(response: Response, { accessToken, refreshToken }: IAuthTokens): void {
     response.cookie(CUSTOMER_COOKIE_NAMES.access, accessToken, { ...this.#cookieOptions, maxAge: ACCESS_TOKEN_TTL_SECONDS * 1000 });
     response.cookie(CUSTOMER_COOKIE_NAMES.refresh, refreshToken, { ...this.#cookieOptions, maxAge: REFRESH_TOKEN_TTL_MS });

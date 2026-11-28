@@ -26,9 +26,18 @@ export const SiteHeader = () => {
             </Link>
             <CinemaSwitcher />
           </div>
-          <ScrollButton sectionId={SECTION_IDS.schedule} size="small" className="shrink-0">
-            {SITE_TEXT.buyTicket}
-          </ScrollButton>
+          <div className="flex shrink-0 items-center gap-3">
+            <Link
+              href={ROUTES.cabinet}
+              prefetch={false}
+              className="inline-flex min-h-11 items-center px-3 text-[0.9rem] font-medium text-paper/76 transition-colors hover:text-paper"
+            >
+              {SITE_TEXT.cabinet}
+            </Link>
+            <ScrollButton sectionId={SECTION_IDS.schedule} size="small" className="shrink-0">
+              {SITE_TEXT.buyTicket}
+            </ScrollButton>
+          </div>
         </div>
       </header>
     </>

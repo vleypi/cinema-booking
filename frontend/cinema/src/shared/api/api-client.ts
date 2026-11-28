@@ -4,5 +4,5 @@ import { AUTH_API_PATHS, ROUTES } from "@/shared/config";
 export const apiClient = createApiClient({
   refreshPath: AUTH_API_PATHS.refresh,
   loginRoute: ROUTES.login,
-  ownAuthErrorPaths: [],
+  ownAuthErrorPaths: [AUTH_API_PATHS.requestOtp, AUTH_API_PATHS.verifyOtp, AUTH_API_PATHS.me],
 });
