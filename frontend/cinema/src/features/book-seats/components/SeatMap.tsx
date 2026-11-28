@@ -46,7 +46,7 @@ export const SeatMap = ({ seats, priceZones, selectedIds, disabled = false, onTo
   const columns = Array.from({ length: maxCol + 1 }, (_, index) => index);
 
   return (
-    <div className={joinClassNames(PANEL_CLASS_NAME, "bg-ink-2 p-5 sm:p-8 lg:p-10")}>
+    <div className={joinClassNames(PANEL_CLASS_NAME, "min-w-0 bg-ink-2 p-5 sm:p-8 lg:p-10")}>
       <div className="mb-8 flex flex-col items-center gap-2.5">
         <div className="h-1.5 w-full max-w-2xl rounded-full bg-gradient-to-r from-paper/10 via-warm/75 to-paper/10" />
         <span className={MONO_LABEL_CLASS_NAME}>{BOOK_SEATS_TEXT.screen}</span>

@@ -39,7 +39,7 @@ export const SessionBookingView = ({ sessionId }: ISessionBookingViewProps) => {
             </ButtonLink>
           </div>
         ) : (
-          <div className="grid gap-8">
+          <div className="grid grid-cols-1 gap-8">
             <div className="grid gap-3">
               <Link
                 href={ROUTES.film(data.film.id)}
